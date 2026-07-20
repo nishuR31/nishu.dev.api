@@ -1,0 +1,37 @@
+{
+  "name": "authservice",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "module": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.ts",
+    "build": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
+    "format": "bun prettier --write .",
+    "start": "bun src/index.ts",
+    "git": "git add . && git commit -m \"kuch toh kiya hu\" && git push -f origin main"
+  },
+  "keywords": [],
+  "author": "nishur31",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/compress": "^9.1.0",
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/cors": "^11.2.0",
+    "@fastify/multipart": "^10.1.0",
+    "@fastify/swagger": "^9.8.1",
+    "@fastify/swagger-ui": "^6.1.0",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.10.0",
+    "helmet": "^8.1.0",
+    "status-map": "^1.0.7"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.5.0",
+    "prettier": "^3.8.1",
+    "typescript": "^7.0.2"
+  },
+  "private": true
+}
