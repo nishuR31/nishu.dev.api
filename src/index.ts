@@ -1,5 +1,5 @@
 import app from "./app";
-import { PORT, NODE_ENV } from "./config/envConfig";
+import { PORT } from "./config/envConfig";
 
 const startServer = async () => {
   try {

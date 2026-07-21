@@ -13,6 +13,22 @@ const config = <Record<any, any>>{
       "When I'm not writing code, I enjoy breaking down complex problems and continuously learning about modern infrastructure to build high-performance applications.",
     ],
   },
+  featuredProjects: [
+    "devclip-hub",
+    "ghControl",
+    "baksy",
+    "githubRecap",
+    "beat",
+    "lunarity",
+    "Memory-Web2",
+    "focusMode",
+    "mathematicsForAll",
+    "nmoh",
+    "scafe",
+    "ranchiKart",
+    "nishu.dev",
+    "boardVault"
+  ],
   social: {
     github: "nishuR31",
     discord: "#",
