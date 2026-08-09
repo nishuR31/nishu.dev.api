@@ -33,10 +33,13 @@ const config = <Record<any, any>>{
     github: "nishuR31",
     discord: "#",
     linkedin: "nishan-rajak-98b2ab3b8",
+    leetcode: "nishanr_19",
+    hackerone: "nishur",
   },
   NAV_ITEMS: [
     { href: "/projects", label: "Projects" },
     { href: "/certificates", label: "Certificates" },
+    { href: "/contact", label: "Contact" },
   ],
   recentTracks: true, // Enable/disable Spotify recent tracks
   projects: [
@@ -168,6 +171,7 @@ const config = <Record<any, any>>{
       iconClass: "text-emerald-500",
       skills: [
         { name: "Node.js", level: "Advanced", hot: true },
+        { name: "bun.js", level: "Advanced", hot: true },
         { name: "Express.js", level: "Advanced", hot: true },
         { name: "Fastify", level: "Advanced", hot: true },
         { name: "Fastapi", level: "Beginner" },
@@ -177,7 +181,7 @@ const config = <Record<any, any>>{
         { name: "JWT Authentication", level: "Advanced", hot: true },
         { name: "Mongoose", level: "Intermediate" },
         { name: "Prisma", level: "Intermediate", hot: true },
-        { name: "Error Handling", level: "Advanced" },
+        { name: "Error Handling", level: "Intermediate" },
       ],
     },
     {
@@ -193,6 +197,7 @@ const config = <Record<any, any>>{
         { name: "Git", level: "Intermediate" },
         { name: "GitHub", level: "Advanced" },
         { name: "VS Code", level: "Advanced" },
+        { name: "VS Code Stable", level: "Intermediate", hot: true },
         { name: "Antigravity", level: "Advanced", hot: true },
         { name: "Python", level: "Intermediate" },
         { name: "SQL", level: "Intermediate" },
@@ -269,12 +274,18 @@ const config = <Record<any, any>>{
       value: "Raghunathpur, West Bengal",
       link: null,
     },
-    /*{
+    {
+      iconKey: "code",
+      label: "Leetcode",
+      value: "nishanr_19",
+      link: "https://leetcode.com/u/nishanr_19",
+    },
+    {
       iconKey: "briefcase",
       label: "LinkedIn",
-      value: "linkedin.com/in/nishan-rajak-98b2ab3b8",
+      value: "nishan-rajak-98b2ab3b8",
       link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
-    },*/
+    },
   ],
   certificates: [
     {
