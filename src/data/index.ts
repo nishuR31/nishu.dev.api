@@ -30,9 +30,10 @@ const config = <Record<any, any>>{
     "boardVault"
   ],
   social: {
+    email: "nishan.developer.dev@gmail.com",
     github: "nishuR31",
     discord: "#",
-    linkedin: "nishan-rajak-98b2ab3b8",
+    // linkedin: "nishan-rajak-98b2ab3b8",
     leetcode: "nishanr_19",
     hackerone: "nishur",
   },
@@ -232,7 +233,7 @@ const config = <Record<any, any>>{
         "Optimized API testing workflows and request validation using Postman collections",
         "Applied Git-based version control strategies for scalable project structuring",
       ],
-      technologies: ["Node.js", "Express", "JWT", "MongoDB", "Postman", "Git"],
+      technologies: ["Node.js", "Bun", "Fastify", "TypeScript", "JavaScript", "Express", "JWT", "MongoDB", "Postman", "Git"],
     },
     /*{
       position: "B.Tech Computer Science Engineering",
@@ -283,8 +284,10 @@ const config = <Record<any, any>>{
     {
       iconKey: "briefcase",
       label: "LinkedIn",
-      value: "nishan-rajak-98b2ab3b8",
-      link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
+      // value: "nishan-rajak-98b2ab3b8",
+      value: "",
+      // link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
+      link: "",
     },
   ],
   certificates: [
@@ -383,6 +386,7 @@ const config = <Record<any, any>>{
     "FocusMode — Productivity interface",
     "GitHub Recap Tool — Data summarization utility",
     "HBday — Cron-based email automation",
+    "RanchiKart — Ranchi's own ecom portal for single vendor",
     "Gitignore Generator — Developer utility tool",
     "Interruption — Focus tracking system",
     "ProjectNexus — Modular backend architecture experiment",
@@ -391,6 +395,7 @@ const config = <Record<any, any>>{
   strengths: [
     "System architecture thinking",
     "Clean code practices",
+    "Efficient use of AI tools",
     "API design and optimization",
     "Analytical problem-solving",
   ],
@@ -398,3 +403,6 @@ const config = <Record<any, any>>{
 
 export default config;
 export type Config = typeof config;
+
+
+// hey in my nishu.dev.api cna you make the frontend to see he current data and ability to change it also the data might be more wordy lenght make sure of it, make secure backend based on my backend practices,for auth use auth headers and cookies with google sigin,2fa,passkey from webauthn,also make sure only one user can do rgistration and seed my data nishan.dev.portfolio
