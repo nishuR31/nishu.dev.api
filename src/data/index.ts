@@ -368,28 +368,28 @@ const config = <Record<any, any>>{
       ],
       technologies: ["Node.js", "Bun", "Fastify", "TypeScript", "JavaScript", "Express", "JWT", "MongoDB", "Postman", "Git"],
     },
-    {
-      position: "B.Tech Computer Science Engineering",
-      company: "ICFAI University Jharkhand",
-      period: "2023 - 2027",
-      location: "Jharkhand, India",
-      description:
-        "Undergraduate engineering program with focus on software engineering, system design, data structures, and backend development.",
-      responsibilities: [
-        "Focused on core computer science and software engineering principles",
-        "Applied OOP and data structure concepts in practical projects",
-        "Built multiple backend and full-stack projects with scalable architecture",
-      ],
-      technologies: [
-        "Data Structures",
-        "OOP",
-        "JavaScript",
-        "TypeScript",
-        "Node.js",
-        "SQL",
-        "MongoDB",
-      ],
-    },
+    //   {
+    //     position: "B.Tech Computer Science Engineering",
+    //     company: "ICFAI University Jharkhand",
+    //     period: "2023 - 2027",
+    //     location: "Jharkhand, India",
+    //     description:
+    //       "Undergraduate engineering program with focus on software engineering, system design, data structures, and backend development.",
+    //     responsibilities: [
+    //       "Focused on core computer science and software engineering principles",
+    //       "Applied OOP and data structure concepts in practical projects",
+    //       "Built multiple backend and full-stack projects with scalable architecture",
+    //     ],
+    //     technologies: [
+    //       "Data Structures",
+    //       "OOP",
+    //       "JavaScript",
+    //       "TypeScript",
+    //       "Node.js",
+    //       "SQL",
+    //       "MongoDB",
+    //     ],
+    //   },
   ],
   contactInfo: [
     {
