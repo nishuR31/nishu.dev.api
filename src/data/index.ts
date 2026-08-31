@@ -11,6 +11,8 @@ const config = <Record<any, any>>{
       "I am a passionate software engineering student with a strong focus on backend system architecture and clean, modular code.",
       "My journey began with a fascination for how data flows behind the scenes, leading me to deeply explore RESTful APIs, authentication protocols, and database optimization.",
       "When I'm not writing code, I enjoy breaking down complex problems and continuously learning about modern infrastructure to build high-performance applications.",
+      "Deeply passionate about scalable multi-database architectures, event-driven microservices, and high-concurrency request routing.",
+      "Continuously building full-stack platforms like Maa Tara Sweets, Devclip Hub, and GH Control to solve real-world engineering challenges.",
     ],
   },
   featuredProjects: [
@@ -27,17 +29,22 @@ const config = <Record<any, any>>{
     "scafe",
     "ranchiKart",
     "nishu.dev",
-    "boardVault"
+    "boardVault",
+    "maaTaraSweets",
+    "solfinder",
+    "guardiannest"
   ],
   social: {
     email: "nishan.developer.dev@gmail.com",
     github: "nishuR31",
     discord: "#",
-    // linkedin: "nishan-rajak-98b2ab3b8",
+    linkedin: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
     leetcode: "nishanr_19",
     hackerone: "nishur",
+    twitter: "https://x.com/nishuR31",
   },
   NAV_ITEMS: [
+    { href: "/#experience", label: "Experience" },
     { href: "/projects", label: "Projects" },
     { href: "/certificates", label: "Certificates" },
     { href: "/contact", label: "Contact" },
@@ -49,7 +56,7 @@ const config = <Record<any, any>>{
       title: "Devclip Hub",
       description:
         "Developer-focused utility hub with modular frontend architecture and productivity-driven tooling.",
-      image: "/projects/project-1.webp",
+      image: "/projects/project-1.avif",
       technologies: ["Next.js", "React", "JavaScript", "TailwindCSS", "UI/UX"],
       github: "https://github.com/nishuR31/devclip-hub",
       demo: "https://devclip-hub.vercel.app",
@@ -59,7 +66,7 @@ const config = <Record<any, any>>{
       title: "Gh Control",
       description:
         "Power-user GitHub command center with repo, PR, webhook, and job controls in one dashboard.",
-      image: "/projects/project-2.webp",
+      image: "/projects/project-2.avif",
       technologies: [
         "Github",
         "github ghp token",
@@ -77,7 +84,7 @@ const config = <Record<any, any>>{
       title: "Baksy",
       description:
         "Product-focused full-stack application with scalable backend and polished frontend experiences.",
-      image: "/projects/project-3.webp",
+      image: "/projects/project-3.avif",
       technologies: ["React", "Node.js", "Express", "JavaScript", "MongoDB", "API"],
       github: "https://github.com/nishuR31/baksy",
       demo: "https://baksy.vercel.app",
@@ -87,7 +94,7 @@ const config = <Record<any, any>>{
       title: "Lunarity",
       description:
         "Experimental project focused on modern UI systems, interaction polish, and modular architecture.",
-      image: "/projects/project-4.webp",
+      image: "/projects/project-4.avif",
       technologies: ["TypeScript", "React", "Mathematics", "TailwindCSS", "Animation"],
       github: "https://github.com/nishuR31/lunarity",
       demo: "https://lunarity-xi.vercel.app",
@@ -97,7 +104,7 @@ const config = <Record<any, any>>{
       title: "FocusMode",
       description:
         "Focus and productivity tracking system designed to reduce interruptions and improve workflow quality.",
-      image: "/projects/project-5.webp",
+      image: "/projects/project-5.avif",
       technologies: ["React", "Node.js", "TypeScript", "State Management", "UX"],
       github: "https://github.com/nishuR31/focusMode",
       demo: "https://focus-mode-on.vercel.app",
@@ -106,7 +113,7 @@ const config = <Record<any, any>>{
       id: 6,
       title: "Mathematics for All",
       description: "A curated website designed for Dr. Samir Kumar Pandey",
-      image: "/projects/project-6.webp",
+      image: "/projects/project-6.avif",
       technologies: [
         "Nodejs",
         "React",
@@ -124,7 +131,7 @@ const config = <Record<any, any>>{
       id: 7,
       title: "Nmoh",
       description: "A small warehouse for our team",
-      image: "/projects/project-7.webp",
+      image: "/projects/project-7.avif",
       technologies: ["Nodejs", "React", "JavaScript", "TailwindCSS", "Animation"],
       github: "https://github.com/nishuR31/nmoh",
       demo: "https://nmoh.vercel.app",
@@ -133,7 +140,7 @@ const config = <Record<any, any>>{
       id: 8,
       title: "Scafe",
       description: "A menu based website for Scafe for Mr. Gaurav Sahu",
-      image: "/projects/project-8.webp",
+      image: "/projects/project-8.avif",
       technologies: [
         "Nodejs",
         "React",
@@ -147,6 +154,75 @@ const config = <Record<any, any>>{
       ],
       github: "https://github.com/nishuR31/scafe",
       demo: "https://scafeakasahu.vercel.app",
+    },
+    {
+      id: 9,
+      title: "Maa Tara Sweets Platform",
+      description:
+        "Multi-database e-commerce platform featuring split Admin and Application Prisma schemas, JWT authentication, and real-time order management.",
+      image: "/projects/project-9.avif",
+      technologies: [
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "Prisma",
+        "MySQL",
+        "Redis",
+        "JWT",
+        "REST API",
+      ],
+      github: "https://github.com/nishuR31/maaTaraSweets",
+      demo: "https://maatarasweets.vercel.app",
+    },
+    {
+      id: 10,
+      title: "Solfinder",
+      description:
+        "Solar feasibility calculator and automated solar radiation analysis tool for environmental engineering.",
+      image: "/projects/project-10.avif",
+      technologies: [
+        "TypeScript",
+        "React",
+        "Node.js",
+        "TailwindCSS",
+        "REST API",
+      ],
+      github: "https://github.com/nishuR31/solfinder",
+      demo: "https://solfinder.vercel.app",
+    },
+    {
+      id: 11,
+      title: "GuardianNest",
+      description:
+        "Smart surveillance and parental safety control hub built with event-driven Socket.io streaming.",
+      image: "/projects/project-11.avif",
+      technologies: [
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "Socket.io",
+        "React",
+        "TailwindCSS",
+      ],
+      github: "https://github.com/nishuR31/guardiannest",
+      demo: "https://guardiannest.vercel.app",
+    },
+    {
+      id: 12,
+      title: "RanchiKart",
+      description:
+        "Local e-commerce platform with single-vendor store management, dynamic product cataloging, and quick orders.",
+      image: "/projects/project-12.avif",
+      technologies: [
+        "React",
+        "Node.js",
+        "Express",
+        "MongoDB",
+        "TailwindCSS",
+        "JavaScript",
+      ],
+      github: "https://github.com/nishuR31/ranchiKart",
+      demo: "https://ranchikart.vercel.app",
     },
   ],
   skills: [
@@ -235,7 +311,7 @@ const config = <Record<any, any>>{
       ],
       technologies: ["Node.js", "Bun", "Fastify", "TypeScript", "JavaScript", "Express", "JWT", "MongoDB", "Postman", "Git"],
     },
-    /*{
+    {
       position: "B.Tech Computer Science Engineering",
       company: "ICFAI University Jharkhand",
       period: "2023 - 2027",
@@ -253,8 +329,10 @@ const config = <Record<any, any>>{
         "JavaScript",
         "TypeScript",
         "Node.js",
+        "SQL",
+        "MongoDB",
       ],
-    },*/
+    },
   ],
   contactInfo: [
     {
@@ -284,10 +362,8 @@ const config = <Record<any, any>>{
     {
       iconKey: "briefcase",
       label: "LinkedIn",
-      // value: "nishan-rajak-98b2ab3b8",
-      value: "",
-      // link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
-      link: "",
+      value: "nishan-rajak-98b2ab3b8",
+      link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
     },
   ],
   certificates: [
@@ -391,6 +467,10 @@ const config = <Record<any, any>>{
     "Interruption — Focus tracking system",
     "ProjectNexus — Modular backend architecture experiment",
     "SportsSpirit — TypeScript project",
+    "Maa Tara Sweets — Multi-database e-commerce platform",
+    "Solfinder — Solar radiation feasibility calculator",
+    // "GuardianNest — IoT smart surveillance management system",
+    "RanchiKart — Multi vendor e-commerce platform portal for local commerce",
   ],
   strengths: [
     "System architecture thinking",
@@ -398,6 +478,9 @@ const config = <Record<any, any>>{
     "Efficient use of AI tools",
     "API design and optimization",
     "Analytical problem-solving",
+    "Multi-database schema partitioning",
+    "Asynchronous message queues & caching (Redis/BullMQ)",
+    "Full-stack state hydration & Redux toolkit orchestration",
   ],
 };
 
