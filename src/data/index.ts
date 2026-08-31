@@ -44,7 +44,7 @@ const config = <Record<any, any>>{
     twitter: "https://x.com/nishuR31",
   },
   NAV_ITEMS: [
-    { href: "/#experience", label: "Experience" },
+    { href: "/experience", label: "Experience" },
     { href: "/projects", label: "Projects" },
     { href: "/certificates", label: "Certificates" },
     { href: "/contact", label: "Contact" },
@@ -54,177 +54,234 @@ const config = <Record<any, any>>{
     {
       id: 1,
       title: "Devclip Hub",
-      description:
-        "Developer-focused utility hub with modular frontend architecture and productivity-driven tooling.",
+      description: "Developer-focused utility hub with modular frontend architecture and productivity-driven tooling.",
       image: "/projects/project-1.avif",
       technologies: ["Next.js", "React", "JavaScript", "TailwindCSS", "UI/UX"],
       github: "https://github.com/nishuR31/devclip-hub",
       demo: "https://devclip-hub.vercel.app",
+      problem: "Developers constantly switch between multiple disconnected tools — clipboard managers, snippet stores, and productivity dashboards — losing flow and wasting time.",
+      solution: "Built a unified developer utility hub with a modular Next.js frontend, combining clipboard management, code snippet storage, and productivity widgets in a single fast-loading interface.",
+      role: "Full-stack developer and designer — built the entire frontend architecture, component library, and UX flow from scratch.",
+      timeline: "2024 — Ongoing",
+      highlights: [
+        "Modular component-driven architecture makes feature addition trivial",
+        "Sub-2s initial page load with Next.js SSG and AVIF image optimization",
+        "TailwindCSS design system with dark/light mode support"
+      ],
+      categories: ["Frontend", "Productivity", "Tooling"]
     },
     {
       id: 2,
       title: "Gh Control",
-      description:
-        "Power-user GitHub command center with repo, PR, webhook, and job controls in one dashboard.",
+      description: "Power-user GitHub command center with repo, PR, webhook, and job controls in one dashboard.",
       image: "/projects/project-2.avif",
-      technologies: [
-        "Github",
-        "github ghp token",
-        "Node.js",
-        "MongoDB",
-        "Redis",
-        "BullMQ",
-        "REST API",
-      ],
+      technologies: ["GitHub API", "GHP Token", "Node.js", "MongoDB", "Redis", "BullMQ", "REST API"],
       github: "https://github.com/nishuR31/ghControl",
       demo: "https://gh-ctrl.vercel.app",
+      problem: "Managing GitHub repos, PRs, webhooks, and CI jobs requires jumping between multiple interfaces, slowing down development operations for power users.",
+      solution: "Built a centralized command center that uses the GitHub REST API via personal access tokens to aggregate repo metadata, PR queues, webhook events, and job status into a single dashboard, with BullMQ handling webhook event queuing.",
+      role: "Sole developer — designed the API architecture, integrated the GitHub API, set up BullMQ job queues with Redis, and built the full dashboard UI.",
+      timeline: "2024",
+      highlights: [
+        "Webhook event queue via BullMQ + Redis prevents data loss under high throughput",
+        "Token-scoped access control for per-repo permission management",
+        "Real-time PR and job status updates without polling"
+      ],
+      categories: ["Backend", "DevTools", "API Integration"]
     },
     {
       id: 3,
       title: "Baksy",
-      description:
-        "Product-focused full-stack application with scalable backend and polished frontend experiences.",
+      description: "Product-focused full-stack application with scalable backend and polished frontend experiences.",
       image: "/projects/project-3.avif",
-      technologies: ["React", "Node.js", "Express", "JavaScript", "MongoDB", "API"],
+      technologies: ["React", "Node.js", "Express", "JavaScript", "MongoDB", "REST API"],
       github: "https://github.com/nishuR31/baksy",
       demo: "https://baksy.vercel.app",
+      problem: "Building a full-stack product requires balancing a clean frontend UX with a performant, scalable backend API — a challenge that requires disciplined architecture from day one.",
+      solution: "Developed a complete full-stack application with a React frontend, Express REST API, and MongoDB database, applying MVC architecture and modular route organization throughout.",
+      role: "Full-stack developer — built the API, database schema, frontend components, and deployment pipeline.",
+      timeline: "2024",
+      highlights: [
+        "Clean MVC separation of concerns across backend modules",
+        "RESTful API with proper error handling and input validation",
+        "MongoDB schema design with Mongoose models"
+      ],
+      categories: ["Full-Stack", "Backend", "API"]
     },
     {
       id: 4,
       title: "Lunarity",
-      description:
-        "Experimental project focused on modern UI systems, interaction polish, and modular architecture.",
+      description: "Experimental project focused on modern UI systems, interaction polish, and modular architecture.",
       image: "/projects/project-4.avif",
       technologies: ["TypeScript", "React", "Mathematics", "TailwindCSS", "Animation"],
       github: "https://github.com/nishuR31/lunarity",
       demo: "https://lunarity-xi.vercel.app",
+      problem: "Most web UIs lack visual sophistication — animations are either absent or feel janky, and mathematical visualizations are rarely integrated into frontend work.",
+      solution: "Built an experimental UI playground that combines mathematical rendering with polished animation systems, using TypeScript for type-safe component design and TailwindCSS for a consistent design language.",
+      role: "Solo developer — designed and built the entire animation system, mathematical rendering layer, and UI component architecture.",
+      timeline: "2024",
+      highlights: [
+        "Custom animation primitives built without animation libraries",
+        "Mathematical functions rendered visually in the browser",
+        "Full TypeScript type coverage across all components"
+      ],
+      categories: ["Frontend", "UI/UX", "Experimental"]
     },
     {
       id: 5,
       title: "FocusMode",
-      description:
-        "Focus and productivity tracking system designed to reduce interruptions and improve workflow quality.",
+      description: "Focus and productivity tracking system designed to reduce interruptions and improve workflow quality.",
       image: "/projects/project-5.avif",
       technologies: ["React", "Node.js", "TypeScript", "State Management", "UX"],
       github: "https://github.com/nishuR31/focusMode",
       demo: "https://focus-mode-on.vercel.app",
+      problem: "Developers lose significant deep-work time to untracked interruptions and fragmented focus sessions with no data to understand or improve the pattern.",
+      solution: "Built a focus-mode tracker that logs work sessions, visualizes interruption patterns, and provides session summaries, helping users understand and optimize their productivity rhythm.",
+      role: "Full-stack developer and product designer — built the session tracking logic, state management, and analytics UI.",
+      timeline: "2024",
+      highlights: [
+        "Session-based focus tracking with interruption logging",
+        "State management architecture that persists sessions across reloads",
+        "Clean analytics dashboard for reviewing work patterns"
+      ],
+      categories: ["Full-Stack", "Productivity", "UX"]
     },
     {
       id: 6,
       title: "Mathematics for All",
-      description: "A curated website designed for Dr. Samir Kumar Pandey",
+      description: "A curated mathematics resource website built for Dr. Samir Kumar Pandey.",
       image: "/projects/project-6.avif",
-      technologies: [
-        "Nodejs",
-        "React",
-        "JavaScript",
-        "API",
-        "MongoDB",
-        "Google Console",
-        "TailwindCSS",
-        "Animation",
-      ],
+      technologies: ["Node.js", "React", "JavaScript", "MongoDB", "Google Console", "TailwindCSS", "Animation"],
       github: "https://github.com/nishuR31/mathematicsForAll",
       demo: "https://mathematics-for-all.vercel.app",
+      problem: "Dr. Samir Kumar Pandey needed a professional online platform to share curated mathematical resources, lecture notes, and educational content with students and the public.",
+      solution: "Designed and built a full-stack educational website with a CMS-backed content structure, Google authentication for admin access, and an animated, accessible frontend to present mathematical resources clearly.",
+      role: "Lead developer — built the full-stack application, integrated Google OAuth, designed the content schema, and delivered the complete production deployment.",
+      timeline: "2024 — Client Project",
+      highlights: [
+        "Google OAuth integration for secure admin content management",
+        "Dynamic content rendering from MongoDB for easy updates",
+        "Accessible, animated frontend optimized for academic audiences"
+      ],
+      categories: ["Full-Stack", "Client Project", "Education"]
     },
     {
       id: 7,
       title: "Nmoh",
-      description: "A small warehouse for our team",
+      description: "A team-internal warehouse management tool for inventory and logistics.",
       image: "/projects/project-7.avif",
-      technologies: ["Nodejs", "React", "JavaScript", "TailwindCSS", "Animation"],
+      technologies: ["Node.js", "React", "JavaScript", "TailwindCSS", "Animation"],
       github: "https://github.com/nishuR31/nmoh",
       demo: "https://nmoh.vercel.app",
+      problem: "Small teams managing shared inventory lack affordable internal tools, relying on spreadsheets that are error-prone and difficult to share.",
+      solution: "Built a lightweight internal warehouse tool that allows the team to track inventory, log movements, and visualize stock levels through a clean React interface backed by a Node.js API.",
+      role: "Full-stack developer — built the API, frontend interface, and internal deployment for the team.",
+      timeline: "2024 — Internal Tool",
+      highlights: [
+        "Lightweight Node.js REST API with no unnecessary dependencies",
+        "Inventory state tracking with movement history logs",
+        "Responsive TailwindCSS UI suitable for mobile warehouse use"
+      ],
+      categories: ["Full-Stack", "Internal Tool", "Backend"]
     },
     {
       id: 8,
       title: "Scafe",
-      description: "A menu based website for Scafe for Mr. Gaurav Sahu",
+      description: "A dynamic menu and ordering website built for Scafe café, owned by Mr. Gaurav Sahu.",
       image: "/projects/project-8.avif",
-      technologies: [
-        "Nodejs",
-        "React",
-        "ImgBB",
-        "Redis",
-        "Bullmq",
-        "MVCP",
-        "JavaScript",
-        "TailwindCSS",
-        "Animation",
-      ],
+      technologies: ["Node.js", "React", "ImgBB", "Redis", "BullMQ", "JavaScript", "TailwindCSS"],
       github: "https://github.com/nishuR31/scafe",
       demo: "https://scafeakasahu.vercel.app",
+      problem: "Scafe café had no digital menu or online ordering system, forcing customers to order in person only and limiting the café's reach and efficiency.",
+      solution: "Built a full-stack café website with a dynamic menu management system, ImgBB-hosted images, Redis-backed session management, and BullMQ for handling order processing queues reliably.",
+      role: "Lead developer — delivered the entire product from design to production deployment for the client.",
+      timeline: "2024 — Client Project",
+      highlights: [
+        "ImgBB integration for lightweight, client-managed image uploads",
+        "BullMQ order queue ensures no order is lost under load",
+        "Redis session management for fast, stateless API authentication"
+      ],
+      categories: ["Full-Stack", "Client Project", "E-Commerce"]
     },
     {
       id: 9,
       title: "Maa Tara Sweets Platform",
-      description:
-        "Multi-database e-commerce platform featuring split Admin and Application Prisma schemas, JWT authentication, and real-time order management.",
+      description: "Multi-database e-commerce platform with split Admin and Application Prisma schemas, JWT authentication, and real-time order management.",
       image: "/projects/project-9.avif",
-      technologies: [
-        "TypeScript",
-        "Node.js",
-        "Express",
-        "Prisma",
-        "MySQL",
-        "Redis",
-        "JWT",
-        "REST API",
-      ],
+      technologies: ["TypeScript", "Node.js", "Express", "Prisma", "MySQL", "Redis", "JWT", "REST API"],
       github: "https://github.com/nishuR31/maaTaraSweets",
       demo: "https://maatarasweets.vercel.app",
+      problem: "Traditional single-database e-commerce architectures mix admin and customer data, creating security risks and making it difficult to scale the admin and customer-facing systems independently.",
+      solution: "Architected a production-grade platform with two fully isolated Prisma MySQL databases — one for admin operations and one for application data — connected via a TypeScript Express backend with JWT auth, Redis caching, and a modular domain-driven API structure.",
+      role: "Sole architect and developer — designed the multi-database schema, built the full backend from scratch, implemented auth flows, and structured the entire codebase for future scalability.",
+      timeline: "2024 — Ongoing",
+      highlights: [
+        "Two isolated Prisma schemas (Admin DB + App DB) for security and scalability",
+        "JWT + cookie-based auth with role-based access control",
+        "Redis caching layer for high-frequency catalog and session reads",
+        "Domain-driven modular backend: Auth, Orders, Catalog, Reviews, Settings modules"
+      ],
+      categories: ["Backend", "E-Commerce", "Architecture", "TypeScript"]
     },
     {
       id: 10,
       title: "Solfinder",
-      description:
-        "Solar feasibility calculator and automated solar radiation analysis tool for environmental engineering.",
+      description: "Solar feasibility calculator and automated solar radiation analysis tool for environmental engineering.",
       image: "/projects/project-10.avif",
-      technologies: [
-        "TypeScript",
-        "React",
-        "Node.js",
-        "TailwindCSS",
-        "REST API",
-      ],
+      technologies: ["TypeScript", "React", "Node.js", "TailwindCSS", "REST API"],
       github: "https://github.com/nishuR31/solfinder",
       demo: "https://solfinder.vercel.app",
+      problem: "Assessing solar radiation feasibility for a given location requires manual calculations using complex meteorological data, which is time-consuming and inaccessible to non-specialists.",
+      solution: "Built a web application that automates solar radiation calculations, taking geographic and environmental parameters as inputs and returning feasibility reports with computed solar energy potential, presented through a clean TypeScript React frontend.",
+      role: "Full-stack developer — designed the calculation engine, built the REST API, and delivered the complete frontend UI.",
+      timeline: "2024",
+      highlights: [
+        "Automated solar radiation feasibility analysis from location parameters",
+        "Full TypeScript type safety across frontend and backend",
+        "REST API designed for potential integration with third-party GIS tools"
+      ],
+      categories: ["Full-Stack", "Engineering", "TypeScript"]
     },
     {
       id: 11,
       title: "GuardianNest",
-      description:
-        "Smart surveillance and parental safety control hub built with event-driven Socket.io streaming.",
+      description: "Smart surveillance and parental safety control hub built with event-driven Socket.io streaming.",
       image: "/projects/project-11.avif",
-      technologies: [
-        "TypeScript",
-        "Node.js",
-        "Express",
-        "Socket.io",
-        "React",
-        "TailwindCSS",
-      ],
+      technologies: ["TypeScript", "Node.js", "Express", "Socket.io", "React", "TailwindCSS"],
       github: "https://github.com/nishuR31/guardiannest",
       demo: "https://guardiannest.vercel.app",
+      problem: "Parents and home security users lack a simple, real-time monitoring solution that can stream and log surveillance events without requiring expensive proprietary hardware or cloud subscriptions.",
+      solution: "Built an event-driven surveillance control hub using Socket.io for real-time event streaming, a TypeScript Express backend for device event ingestion, and a React dashboard for live monitoring and historical event review.",
+      role: "Full-stack developer — architected the real-time event system, built the WebSocket server, and designed the monitoring dashboard.",
+      timeline: "2024",
+      highlights: [
+        "Real-time bi-directional event streaming with Socket.io WebSockets",
+        "Event-driven backend architecture for scalable device connections",
+        "Full TypeScript coverage for both server and client"
+      ],
+      categories: ["Full-Stack", "Real-Time", "IoT", "TypeScript"]
     },
     {
       id: 12,
       title: "RanchiKart",
-      description:
-        "Local e-commerce platform with single-vendor store management, dynamic product cataloging, and quick orders.",
+      description: "Local e-commerce platform with single-vendor store management, dynamic product cataloging, and quick orders.",
       image: "/projects/project-12.avif",
-      technologies: [
-        "React",
-        "Node.js",
-        "Express",
-        "MongoDB",
-        "TailwindCSS",
-        "JavaScript",
-      ],
+      technologies: ["React", "Node.js", "Express", "MongoDB", "TailwindCSS", "JavaScript"],
       github: "https://github.com/nishuR31/ranchiKart",
       demo: "https://ranchikart.vercel.app",
+      problem: "Local vendors in Ranchi lack accessible, affordable digital storefronts, limiting their reach to walk-in customers only while larger e-commerce platforms ignore local commerce.",
+      solution: "Built a focused local e-commerce platform with single-vendor store management, a dynamic product catalog with MongoDB, quick order processing, and a clean React storefront — enabling local vendors to go online at zero platform cost.",
+      role: "Full-stack developer — built the entire platform including vendor management, product catalog API, and customer-facing storefront.",
+      timeline: "2024 — Ongoing",
+      highlights: [
+        "Single-vendor store management with dynamic product cataloging",
+        "MongoDB-backed catalog with flexible product schema",
+        "Optimized for low-bandwidth local users with minimal JS payload"
+      ],
+      categories: ["Full-Stack", "E-Commerce", "Local Commerce"]
     },
   ],
+
   skills: [
     {
       title: "Frontend",
