@@ -371,6 +371,31 @@ const config: Portfolio = {
       ],
       technologies: ["Node.js", "Bun", "Fastify", "TypeScript", "JavaScript", "Express", "JWT", "MongoDB", "Postman", "Git"],
     },
+    {
+      position: "Software Engineering Intern",
+      company: "Tech Startup (Example)",
+      period: "Summer 2024",
+      location: "Remote",
+      description: "Contributed to backend architecture and built scalable RESTful APIs.",
+      responsibilities: [
+        "Designed and implemented modular backend services using Node.js and Express.",
+        "Integrated third-party APIs and managed database migrations with Prisma.",
+        "Optimized database queries in MongoDB to reduce load times by 20%."
+      ],
+      technologies: ["Node.js", "Express", "MongoDB", "Prisma"],
+    },
+    {
+      position: "Participant",
+      company: "Global Hackathon 2024",
+      period: "October 2024",
+      location: "Remote",
+      description: "Developed a real-time collaborative tool focusing on backend performance.",
+      responsibilities: [
+        "Architected the real-time event streaming pipeline using Socket.io and Redis.",
+        "Led backend integration and deployment processes under tight deadlines."
+      ],
+      technologies: ["Socket.io", "Redis", "TypeScript", "Next.js"],
+    },
     //   {
     //     position: "B.Tech Computer Science Engineering",
     //     company: "ICFAI University Jharkhand",
