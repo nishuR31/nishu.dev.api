@@ -14,6 +14,20 @@ const PublicRoutes: FastifyPluginAsync = async (app: any) => {
   );
 
   app.get(
+    "/ready",
+    {
+      schema: {
+        description: "Check dependency readiness",
+        tags: ["ready"],
+      },
+    },
+    async (req: FastifyRequest, reply: FastifyReply) => {
+      // In Phase 2 this will check database connectivity.
+      return (reply as any).status(200).send({ success: true, message: "Dependencies are ready" });
+    }
+  );
+
+  app.get(
     "/ping",
     {
       schema: {

@@ -6,6 +6,7 @@ const startServer = async () => {
     await app.ready();
     const address = await app.listen({ port: PORT, host: "0.0.0.0" });
   } catch (err: any) {
+    console.error("Failed to start server:", err);
     process.exit(1);
   }
 };

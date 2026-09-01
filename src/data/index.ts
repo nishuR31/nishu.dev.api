@@ -1,4 +1,6 @@
-const config = <Record<any, any>>{
+import { Portfolio } from "../schema/portfolio";
+
+const config: Portfolio = {
   developer: {
     name: "Nishan Rajak",
     shortName: "Nishu",
@@ -425,94 +427,184 @@ const config = <Record<any, any>>{
   ],
   certificates: [
     {
+      id: "cert-1",
+      title: "Comprehensive Javascript Course From Beginner To Full Stack Pro",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Comprehensive%20JavaScript%20Course%20From%20Beginner%20to%20Full%20Stack%20Pro.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-2",
+      title: "Full Stack Web Development Bootcamp (Html, Css, Javascript,Jquery, Web Templates, Php, Mysql,Mysqli, With Source Code)",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Full%20Stack%20Web%20Development%20Bootcamp%20(HTML,%20CSS,%20JavaScript,jQuery,%20Web%20Templates,%20PHP,%20MySQL,MySQLi,%20with%20Source%20Code).pdf",
+      type: "pdf",
     },
     {
+      id: "cert-3",
+      title: "Git",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/git.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-4",
+      title: "Hackerrank Certificate",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/certificate-zn269pmhqc4t-1773898986.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-5",
+      title: "Htmlforbiginners",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/htmlForBiginners.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-6",
+      title: "Introduction To Python",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Introduction%20to%20Python.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-7",
+      title: "Javascript Functions & Arrays In Javascript",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/JavaScript%20Functions%20&%20Arrays%20in%20JavaScript.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-8",
+      title: "Javascript Getting Started With Javascript Programming",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/JavaScript%20Getting%20Started%20with%20JavaScript%20Programming.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-9",
+      title: "Js Array Func",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/js%20array%20func.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-10",
+      title: "Js From Scratch",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/js%20from%20scratch.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-11",
+      title: "Learn Javascript Basics In Under 6 Hours",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Learn%20JavaScript%20Basics%20in%20Under%206%20Hours.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-12",
+      title: "Learn Javascript Programming Language With Practical Interaction",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Learn%20Javascript%20Programming%20Language%20With%20Practical%20Interaction.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-13",
+      title: "Learn The Basics Of Html And Css And Get Started With Web Design",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Learn%20the%20Basics%20of%20HTML%20and%20CSS%20and%20get%20Started%20with%20Web%20Design.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-14",
+      title: "Level Up Your Skills In Html And Css , Learn How To Create Responsive Web Templates Pt3",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Level%20up%20your%20skills%20in%20HTML%20and%20CSS%20,%20learn%20how%20to%20create%20responsive%20web%20templates%20pt3.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-15",
+      title: "Certificate Of Appreciation",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/12.png",
+      type: "image",
     },
     {
+      id: "cert-16",
+      title: "A Comprehensive Guide To Html Online Course",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/A%20Comprehensive%20Guide%20to%20HTML%20Online%20Course.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-17",
+      title: "Mysql Database Development Introduction",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/MySQL%20Database%20Development%20Introduction.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-18",
+      title: "Nishan Participation Certificate",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Nishan%20-%20Participation%20Certificate.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-19",
+      title: "Nishan Sql",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Nishan%20sql.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-20",
+      title: "Workshop Certificate",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Picsart_25-05-17_14-08-00-215.png",
+      type: "image",
     },
     {
+      id: "cert-21",
+      title: "Prompting",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/prompting.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-22",
+      title: "Python Clean Coding",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Python%20Clean%20Coding.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-23",
+      title: "Python Dev First Step",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Python%20dev%20first%20step.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-24",
+      title: "Python",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/python.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-25",
+      title: "Python Development Essentials Course By Mtf Institute",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Python%20Development%20Essentials%20course%20by%20MTF%20Institute.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-26",
+      title: "Start Your Career With Python",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Start%20Your%20Career%20With%20Python.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-27",
+      title: "Tsc",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/tsc.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-28",
+      title: "Upgrade Your Html & Css Conception And Start Building Awesome Templates Pt2",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/Upgrade%20your%20HTML%20&%20CSS%20conception%20and%20start%20building%20awesome%20templates%20pt2.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-29",
+      title: "Website Portfolio Using Gpt",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/website%20portfolio%20using%20gpt.pdf",
+      type: "pdf",
     },
     {
+      id: "cert-30",
+      title: "Webdevseminar",
       url: "https://dzrkiprblxcrdaijnuaf.supabase.co/storage/v1/object/public/certificates/WebDevSeminar.pdf",
+      type: "pdf",
     },
   ],
   additionalProjects: [

@@ -5,26 +5,34 @@ import swaggerUi from "@fastify/swagger-ui";
 import { sendSuccess } from "../utils/common/response";
 import { health, ping, portfolio } from "../controllers/authController";
 import PublicRoutes from "../routes/public/publicRoutes";
+import { NODE_ENV } from "./envConfig";
 
 let app = fastify({ logger: true, exposeHeadRoutes: true });
 
-app.register(cors, { origin: true });
+const allowedOrigins = [
+  "https://nishudevportfolio.vercel.app",
+  "http://localhost:3000",
+];
 
-app.register(swagger, {
-  openapi: {
-    info: {
-      title: "Portfolio API",
-      description: "Portfolio API for nishu.dev",
-      version: "1.0.0",
+app.register(cors, { origin: allowedOrigins });
+
+if (NODE_ENV !== "production") {
+  app.register(swagger, {
+    openapi: {
+      info: {
+        title: "Portfolio API",
+        description: "Portfolio API for nishu.dev",
+        version: "1.0.0",
+      },
     },
-  },
-});
+  });
 
-app.register(swaggerUi, {
-  routePrefix: "/docs",
-  uiConfig: { deepLinking: true },
-  staticCSP: false,
-});
+  app.register(swaggerUi, {
+    routePrefix: "/docs",
+    uiConfig: { deepLinking: true },
+    staticCSP: false,
+  });
+}
 
 app.register(PublicRoutes);
 

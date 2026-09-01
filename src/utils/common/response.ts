@@ -2,20 +2,25 @@
 
 import { FastifyReply } from "fastify";
 
-export function sendSuccess(
+export function sendSuccess<T>(
   res: FastifyReply,
   message: string,
   statusCode: number,
-  data: Record<string, any> | string | number | boolean | null,
+  data: T,
   details?: Record<string, any>,
 ) {
-  return res.code(statusCode).send({
+  const payload: any = {
     success: true,
     statusCode,
     message,
     data,
-    details,
-  });
+  };
+  
+  if (details !== undefined) {
+    payload.details = details;
+  }
+  
+  return (res as any).code(statusCode).send(payload);
 }
 
 export function sendError(
@@ -24,7 +29,7 @@ export function sendError(
   statusCode: number = 500,
   errors?: any,
 ) {
-  return res
+  return (res as any)
     .code(statusCode)
     .send({ success: false, statusCode, message, ...(errors && { errors }) });
 }
