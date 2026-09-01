@@ -11,12 +11,27 @@ app.setNotFoundHandler((_req: FastifyRequest, res: FastifyReply) => {
   return sendError(res, "Route not found", 404);
 });
 
-app.setErrorHandler((err: any, _req: FastifyRequest, res: FastifyReply) => {
+app.setErrorHandler((err: any, req: FastifyRequest, res: FastifyReply) => {
   const statusCode = err?.statusCode || 500;
+  
+  // Log server-side
+  req.log.error({
+    err,
+    requestId: req.id,
+    route: req.routeOptions.url,
+    method: req.method
+  }, err?.message || "Unhandled Error");
+
+  // Keep client response generic in production
+  if (NODE_ENV === "production") {
+    return sendError(res, statusCode === 500 ? "Internal Server Error" : err?.message, statusCode);
+  }
+
+  // Expose details in development
   return sendError(res, err?.message || "Something went wrong", statusCode, {
     name: err?.name,
     details: err?.details || {},
-    ...(NODE_ENV === "development" ? { stack: err?.stack } : {}),
+    stack: err?.stack,
   });
 });
 
