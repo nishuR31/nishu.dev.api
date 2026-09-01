@@ -46,6 +46,7 @@ const config: Portfolio = {
     twitter: "https://x.com/nishuR31",
   },
   NAV_ITEMS: [
+    { href: "/", label: "Home" },
     { href: "/experience", label: "Experience" },
     { href: "/projects", label: "Projects" },
     { href: "/certificates", label: "Certificates" },
