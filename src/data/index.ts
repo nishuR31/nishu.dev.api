@@ -448,7 +448,8 @@ const config: Portfolio = {
       iconKey: "briefcase",
       label: "LinkedIn",
       value: "nishan-rajak-98b2ab3b8",
-      link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
+      // link: "https://linkedin.com/in/nishan-rajak-98b2ab3b8",
+      link: "#",
     },
   ],
   certificates: [
