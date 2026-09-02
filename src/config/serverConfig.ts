@@ -5,14 +5,11 @@ import swaggerUi from "@fastify/swagger-ui";
 import { sendSuccess } from "../utils/common/response";
 import { health, ping, portfolio } from "../controllers/authController";
 import PublicRoutes from "../routes/public/publicRoutes";
-import { NODE_ENV } from "./envConfig";
+import { NODE_ENV, CORS_ORIGIN, REDIS } from "./envConfig";
 
 let app = fastify({ logger: true, exposeHeadRoutes: true });
 
-const allowedOrigins = [
-  "https://nishudevportfolio.vercel.app",
-  "http://localhost:3000",
-];
+const allowedOrigins = CORS_ORIGIN.split(",").map(origin => origin.trim());
 
 app.register(cors, { origin: allowedOrigins });
 
@@ -29,22 +26,22 @@ import path from "path";
 app.register(authPlugin);
 app.register(fastifyMultipart);
 
-if (process.env.REDIS) {
-  app.register(fastifyRedis, { url: process.env.REDIS });
+if (REDIS) {
+  app.register(fastifyRedis, { url: REDIS });
 }
 
 // Global Maintenance Mode Middleware
-app.addHook("preHandler", async (request, reply) => {
+app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
   // Allow developer auth paths, settings paths, and CRM static assets
   if (
-    request.url.startsWith("/api/auth") || 
+    request.url.startsWith("/api/auth") ||
     request.url.startsWith("/api/settings") ||
     request.url.startsWith("/admin") ||
     request.url.startsWith("/assets")
   ) {
     return;
   }
-  
+
   // Skip maintenance check in dev mode for convenience, or allow if token has developer role
   try {
     const settings = await prisma.systemSettings.findUnique({ where: { id: "global" } });
@@ -58,10 +55,10 @@ app.addHook("preHandler", async (request, reply) => {
         }
       } catch (err) {
         // Not a developer, block request
-        return reply.code(503).send({ 
-          success: false, 
-          statusCode: 503, 
-          message: "Service is currently undergoing maintenance. Please try again later." 
+        return reply.code(503).send({
+          success: false,
+          statusCode: 503,
+          message: "Service is currently undergoing maintenance. Please try again later."
         });
       }
     }
@@ -92,11 +89,11 @@ if (NODE_ENV !== "production") {
 app.register(fastifyStatic, {
   root: path.join(__dirname, "../../dist/client"),
   prefix: "/admin/",
-  wildcard: false // Disable wildcard to avoid overriding API routes
+  wildcard: true // Allow wildcard so CSS/JS assets are served
 });
 
-app.get("/admin/*", (req, reply) => {
-  reply.sendFile("index.html");
+app.get("/admin", (req: FastifyRequest, reply: FastifyReply) => {
+  reply.redirect("/admin/");
 });
 
 app.register(PublicRoutes);

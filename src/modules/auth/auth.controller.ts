@@ -5,10 +5,12 @@ import { authenticator } from "otplib";
 import qrcode from "qrcode";
 import { RegisterSchema, LoginSchema } from "./auth.schema";
 import { generateRegistrationOptions, verifyRegistrationResponse, generateAuthenticationOptions, verifyAuthenticationResponse } from "@simplewebauthn/server";
+import { sendSuccess, sendError, sendUnauthorizedError } from "../../utils/common/response";
+import { NODE_ENV, COOKIE_DOMAIN, RP_ID, FRONTEND_URL } from "../../config/envConfig";
 
 const rpName = "Nishu Dev CRM";
-const rpID = "api.nishu.dev"; // Update in production to your domain
-const origin = "https://nishu.dev"; // Update in production
+const rpID = RP_ID;
+const origin = FRONTEND_URL;
 
 export class AuthController {
   
@@ -19,7 +21,7 @@ export class AuthController {
       // Enforce ONLY one user (the Developer)
       const existingUserCount = await prisma.user.count();
       if (existingUserCount > 0) {
-        return reply.code(403).send({ success: false, statusCode: 403, message: "Registration locked: Developer already exists." });
+        return sendError(reply, "Registration locked: Developer already exists.", 403);
       }
 
       const passwordHash = await bcrypt.hash(data.password, 10);
@@ -32,9 +34,9 @@ export class AuthController {
         }
       });
 
-      return reply.send({ success: true, statusCode: 200, message: "Developer registered successfully.", data: { id: user.id, email: user.email } });
+      return sendSuccess(reply, "Developer registered successfully.", 200, { id: user.id, email: user.email });
     } catch (error) {
-      return reply.code(400).send({ success: false, statusCode: 400, message: "Registration failed", errors: error });
+      return sendError(reply, "Registration failed", 400, error);
     }
   }
 
@@ -44,37 +46,37 @@ export class AuthController {
       
       const user = await prisma.user.findUnique({ where: { email: data.email } });
       if (!user || !user.passwordHash) {
-        return reply.code(401).send({ success: false, statusCode: 401, message: "Invalid credentials." });
+        return sendUnauthorizedError(reply, "Invalid credentials.");
       }
 
       const isValid = await bcrypt.compare(data.password, user.passwordHash);
       if (!isValid) {
-        return reply.code(401).send({ success: false, statusCode: 401, message: "Invalid credentials." });
+        return sendUnauthorizedError(reply, "Invalid credentials.");
       }
 
       if (user.is2FAEnabled) {
         if (!data.token2FA) {
-          return reply.code(401).send({ success: false, statusCode: 401, message: "2FA token required." });
+          return sendUnauthorizedError(reply, "2FA token required.");
         }
         const isValid2FA = authenticator.authenticator.verify({ token: data.token2FA, secret: user.twoFactorSecret! });
         if (!isValid2FA) {
-          return reply.code(401).send({ success: false, statusCode: 401, message: "Invalid 2FA token." });
+          return sendUnauthorizedError(reply, "Invalid 2FA token.");
         }
       }
 
       const token = await reply.jwtSign({ id: user.id, role: user.role, email: user.email });
 
       reply.setCookie("access_token", token, {
-        domain: "nishu.dev", // Update for prod
+        domain: COOKIE_DOMAIN,
         path: "/",
-        secure: process.env.NODE_ENV === "production",
+        secure: NODE_ENV === "production",
         httpOnly: true,
         sameSite: "strict",
       });
 
-      return reply.send({ success: true, statusCode: 200, message: "Login successful", data: { token } });
+      return sendSuccess(reply, "Login successful", 200, { token });
     } catch (error) {
-      return reply.code(400).send({ success: false, statusCode: 400, message: "Login failed", errors: error });
+      return sendError(reply, "Login failed", 400, error);
     }
   }
 
@@ -89,11 +91,16 @@ export class AuthController {
       data: { twoFactorSecret: secret, is2FAEnabled: true }
     });
 
-    return reply.send({ success: true, statusCode: 200, message: "2FA Setup Initialized", data: { qrCodeUrl, secret } });
+    return sendSuccess(reply, "2FA Setup Initialized", 200, { qrCodeUrl, secret });
   }
 
   static async logout(req: FastifyRequest, reply: FastifyReply) {
     reply.clearCookie("access_token", { path: "/" });
-    return reply.send({ success: true, statusCode: 200, message: "Logged out successfully" });
+    return sendSuccess(reply, "Logged out successfully", 200, null);
+  }
+
+  static async me(req: FastifyRequest, reply: FastifyReply) {
+    // req.user is populated by the authorizeDeveloper preValidation hook
+    return sendSuccess(reply, "Authenticated", 200, req.user);
   }
 }

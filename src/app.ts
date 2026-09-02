@@ -3,12 +3,17 @@ import { NODE_ENV } from "./config/envConfig";
 import { sendError } from "./utils/common/response";
 import fastifyApp from "./config/serverConfig";
 import { FastifyReply, FastifyRequest } from "fastify";
+import path from "path";
 const app = fastifyApp;
 
 // app.register(apiRouter, { prefix: "/api" });
 
-app.setNotFoundHandler((_req: FastifyRequest, res: FastifyReply) => {
-  return sendError(res, "Route not found", 404);
+app.setNotFoundHandler((req: FastifyRequest, reply: FastifyReply) => {
+  if (req.url.startsWith("/admin")) {
+    reply.sendFile("index.html", path.join(__dirname, "../dist/client"));
+  } else {
+    return sendError(reply, "Route not found", 404);
+  }
 });
 
 app.setErrorHandler((err: any, req: FastifyRequest, res: FastifyReply) => {

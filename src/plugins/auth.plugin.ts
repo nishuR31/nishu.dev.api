@@ -3,15 +3,17 @@ import fastifyJwt from "@fastify/jwt";
 import fastifyCookie from "@fastify/cookie";
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import prisma from "../providers/db.provider";
+import { COOKIE_SECRET, JWT_SECRET } from "../config/envConfig";
+import { sendError, sendUnauthorizedError } from "../utils/common/response";
 
 export default fp(async (fastify: FastifyInstance) => {
   fastify.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET || "super-secret-cookie-key", 
+    secret: COOKIE_SECRET, 
     parseOptions: {} 
   });
 
   fastify.register(fastifyJwt, {
-    secret: process.env.JWT_SECRET || "your-super-secret-jwt-key",
+    secret: JWT_SECRET,
     cookie: {
       cookieName: 'access_token',
       signed: false
@@ -23,7 +25,7 @@ export default fp(async (fastify: FastifyInstance) => {
     try {
       await request.jwtVerify();
     } catch (err) {
-      reply.code(401).send({ success: false, statusCode: 401, message: "Unauthorized: Invalid or missing token." });
+      sendUnauthorizedError(reply, "Unauthorized: Invalid or missing token.");
     }
   });
 
@@ -35,17 +37,17 @@ export default fp(async (fastify: FastifyInstance) => {
       const payload = request.user as { id: string; role: string };
       
       if (payload.role !== "developer") {
-        return reply.code(403).send({ success: false, statusCode: 403, message: "Forbidden: Developer role required." });
+        return sendError(reply, "Forbidden: Developer role required.", 403);
       }
 
       // Ensure user still exists
       const user = await prisma.user.findUnique({ where: { id: payload.id } });
       if (!user || user.role !== "developer") {
-        return reply.code(403).send({ success: false, statusCode: 403, message: "Forbidden: Access revoked." });
+        return sendError(reply, "Forbidden: Access revoked.", 403);
       }
 
     } catch (err) {
-      reply.code(401).send({ success: false, statusCode: 401, message: "Unauthorized: Invalid or missing token." });
+      sendUnauthorizedError(reply, "Unauthorized: Invalid or missing token.");
     }
   });
 });

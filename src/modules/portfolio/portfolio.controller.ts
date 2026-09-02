@@ -1,10 +1,11 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import prisma from "../../providers/db.provider";
-import { PortfolioDataSchema, ProjectSchema, ExperienceSchema, CertificateSchema } from "./portfolio.schema";
+import { PortfolioDataSchema, ProjectSchema, ExperienceSchema, CertificateSchema, ServiceSchema, TestimonialSchema, EducationSchema } from "./portfolio.schema";
 import { StorageProvider } from "../../providers/storage.provider";
+import config from "../../data/index";
 
 export class PortfolioController {
-  
+
   static async getPortfolio(req: FastifyRequest, reply: FastifyReply) {
     try {
       const redis = req.server.redis;
@@ -26,9 +27,12 @@ export class PortfolioController {
           experiences: true,
           certificates: true,
           cvs: true,
+          services: true,
+          testimonials: true,
+          education: true,
         }
       });
-      
+
       if (!data) {
         return reply.code(404).send({ success: false, statusCode: 404, message: "Portfolio data not found." });
       }
@@ -52,9 +56,20 @@ export class PortfolioController {
         experiences: data.experiences,
         certificates: data.certificates,
         cvs: data.cvs,
+        services: data.services,
+        testimonials: data.testimonials,
+        education: data.education,
         featuredProjects: data.projects.filter(p => p.featured).map(p => p.title),
         recentTracks: data.recentTracks,
         keywords: data.keywords,
+        showAbout: data.showAbout,
+        showSkills: data.showSkills,
+        showExperience: data.showExperience,
+        showProjects: data.showProjects,
+        showEducation: data.showEducation,
+        showCertificates: data.showCertificates,
+        showServices: data.showServices,
+        showTestimonials: data.showTestimonials,
       };
 
       if (redis) {
@@ -212,6 +227,123 @@ export class PortfolioController {
     }
   }
 
+  // --- Services CRUD ---
+  static async createService(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const parsedData = ServiceSchema.parse(req.body);
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+
+      const service = await prisma.service.create({ data: { ...parsedData, portfolioId: portfolio.id } });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Service created", data: service });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to create service", errors: e });
+    }
+  }
+
+  static async updateService(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const parsedData = ServiceSchema.parse(req.body);
+      const params = req.params as { id: string };
+      const service = await prisma.service.update({ where: { id: params.id }, data: parsedData });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Service updated", data: service });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to update service", errors: e });
+    }
+  }
+
+  static async deleteService(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const params = req.params as { id: string };
+      await prisma.service.delete({ where: { id: params.id } });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Service deleted" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to delete service", errors: e });
+    }
+  }
+
+  // --- Testimonials CRUD ---
+  static async createTestimonial(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const parsedData = TestimonialSchema.parse(req.body);
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+
+      const testimonial = await prisma.testimonial.create({ data: { ...parsedData, portfolioId: portfolio.id } });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Testimonial created", data: testimonial });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to create testimonial", errors: e });
+    }
+  }
+
+  static async updateTestimonial(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const parsedData = TestimonialSchema.parse(req.body);
+      const params = req.params as { id: string };
+      const testimonial = await prisma.testimonial.update({ where: { id: params.id }, data: parsedData });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Testimonial updated", data: testimonial });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to update testimonial", errors: e });
+    }
+  }
+
+  static async deleteTestimonial(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const params = req.params as { id: string };
+      await prisma.testimonial.delete({ where: { id: params.id } });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Testimonial deleted" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to delete testimonial", errors: e });
+    }
+  }
+
+  // --- Education CRUD ---
+  static async createEducation(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const parsedData = EducationSchema.parse(req.body);
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+
+      const edu = await prisma.education.create({ data: { ...parsedData, portfolioId: portfolio.id } });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Education created", data: edu });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to create education", errors: e });
+    }
+  }
+
+  static async updateEducation(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const parsedData = EducationSchema.parse(req.body);
+      const params = req.params as { id: string };
+      const edu = await prisma.education.update({ where: { id: params.id }, data: parsedData });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Education updated", data: edu });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to update education", errors: e });
+    }
+  }
+
+  static async deleteEducation(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const params = req.params as { id: string };
+      await prisma.education.delete({ where: { id: params.id } });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Education deleted" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to delete education", errors: e });
+    }
+  }
+
   // --- Media Upload ---
   static async uploadMedia(req: FastifyRequest, reply: FastifyReply) {
     try {
@@ -237,6 +369,173 @@ export class PortfolioController {
     } catch (e: any) {
       console.error(e);
       return reply.code(500).send({ success: false, message: "Upload failed", errors: e.message });
+    }
+  }
+
+  // --- Database Seed ---
+  static async seedDatabase(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+
+      // Check if data already exists
+      const existing = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (existing) {
+        return reply.code(400).send({ success: false, message: "Portfolio already seeded" });
+      }
+
+      // Start transaction
+      const portfolio = await prisma.$transaction(async (tx) => {
+        // Create base portfolio
+        const p = await tx.portfolioData.create({
+          data: {
+            userId: userPayload.id,
+            name: config.developer.name,
+            shortName: config.developer.shortName,
+            role: config.developer.role,
+            tagline: config.developer.tagline,
+            bio: config.developer.bio,
+            location: config.developer.location,
+            email: config.developer.email,
+            about: config.developer.about,
+            recentTracks: config.recentTracks,
+          }
+        });
+
+        // Add Social
+        await tx.social.create({
+          data: {
+            portfolioId: p.id,
+            email: config.social.email,
+            github: config.social.github,
+            linkedin: config.social.linkedin,
+            discord: config.social.discord,
+            twitter: config.social.twitter,
+            leetcode: config.social.leetcode,
+            hackerone: config.social.hackerone,
+          }
+        });
+
+        // Add NavItems
+        if (config.NAV_ITEMS) {
+          for (const item of config.NAV_ITEMS) {
+            await tx.navItem.create({
+              data: {
+                portfolioId: p.id,
+                href: item.href,
+                label: item.label,
+              }
+            });
+          }
+        }
+
+        // Add Projects
+        if (config.projects) {
+          for (const proj of config.projects) {
+            await tx.project.create({
+              data: {
+                portfolioId: p.id,
+                title: proj.title,
+                description: proj.description,
+                image: proj.image,
+                technologies: proj.technologies,
+                github: proj.github,
+                demo: proj.demo,
+                problem: proj.problem,
+                solution: proj.solution,
+                role: proj.role,
+                timeline: proj.timeline,
+                highlights: proj.highlights,
+                categories: proj.categories,
+                featured: config.featuredProjects.includes(proj.title),
+              }
+            });
+          }
+        }
+
+        // Add Skills
+        if (config.skills) {
+          for (const skillCat of config.skills) {
+            const cat = await tx.skillCategory.create({
+              data: {
+                portfolioId: p.id,
+                title: skillCat.title,
+                iconKey: skillCat.iconKey,
+                description: skillCat.description,
+                bgClass: skillCat.bgClass,
+                iconClass: skillCat.iconClass,
+              }
+            });
+
+            for (const skill of skillCat.skills) {
+              await tx.skill.create({
+                data: {
+                  skillCategoryId: cat.id,
+                  name: skill.name,
+                  level: skill.level,
+                  hot: skill.hot || false,
+                }
+              });
+            }
+          }
+        }
+
+        // Add Experiences
+        if (config.experiences) {
+          for (const exp of config.experiences) {
+            await tx.experience.create({
+              data: {
+                portfolioId: p.id,
+                position: exp.position,
+                company: exp.company,
+                period: exp.period,
+                location: exp.location,
+                description: exp.description,
+                responsibilities: exp.responsibilities,
+                technologies: exp.technologies,
+              }
+            });
+          }
+        }
+
+        // Add Certificates
+        if (config.certificates) {
+          for (const cert of config.certificates) {
+            await tx.certificate.create({
+              data: {
+                portfolioId: p.id,
+                certId: cert.id,
+                title: cert.title,
+                url: cert.url,
+                type: cert.type,
+              }
+            });
+          }
+        }
+
+        // Add CVs
+        if (config.cvs) {
+          for (const cv of config.cvs) {
+            await tx.cV.create({
+              data: {
+                portfolioId: p.id,
+                cvId: cv.id,
+                title: cv.title,
+                url: cv.url,
+                description: cv.description,
+                lastUpdated: cv.lastUpdated,
+              }
+            });
+          }
+        }
+
+        return p;
+      }, { timeout: 30000, maxWait: 10000 });
+
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Database seeded successfully", data: portfolio });
+    } catch (e: any) {
+      console.error(e);
+      return reply.code(500).send({ success: false, message: "Failed to seed database", errors: e.message });
     }
   }
 }

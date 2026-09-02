@@ -45,6 +45,15 @@ model PortfolioData {
   recentTracks Boolean @default(true)
   keywords     String  @default("portfolio,developer")
 
+  showAbout        Boolean @default(true)
+  showSkills       Boolean @default(true)
+  showExperience   Boolean @default(true)
+  showProjects     Boolean @default(true)
+  showEducation    Boolean @default(true)
+  showCertificates Boolean @default(true)
+  showServices     Boolean @default(true)
+  showTestimonials Boolean @default(true)
+
   userId       String @unique
   user         User   @relation(fields: [userId], references: [id])
 
@@ -55,6 +64,11 @@ model PortfolioData {
   experiences  Experience[]
   certificates Certificate[]
   cvs          CV[]
+  
+  services     Service[]
+  testimonials Testimonial[]
+  education    Education[]
+  messages     ContactMessage[]
 }
 
 model Social {
@@ -81,6 +95,7 @@ model NavItem {
 
 model Project {
   id           Int      @id @default(autoincrement())
+  slug         String?  @unique
   title        String
   description  String
   image        String
@@ -94,6 +109,12 @@ model Project {
   highlights   String[]
   categories   String[]
   featured     Boolean  @default(false)
+  
+  status       String?  @default("Completed")
+  architecture String[]
+  company      String?
+  stars        Int?     @default(0)
+  visible      Boolean  @default(true)
   
   portfolioId  String
   portfolio    PortfolioData @relation(fields: [portfolioId], references: [id])
@@ -118,6 +139,7 @@ model Skill {
   name            String
   level           String
   hot             Boolean @default(false)
+  yearsOfExperience Int?  @default(1)
   
   skillCategoryId String
   skillCategory   SkillCategory @relation(fields: [skillCategoryId], references: [id])
@@ -127,25 +149,34 @@ model Experience {
   id               String @id @default(uuid())
   position         String
   company          String
+  companyUrl       String?
+  companyLogo      String?
   period           String
+  isCurrent        Boolean @default(false)
   location         String
   description      String
   responsibilities String[]
   technologies     String[]
+  visible          Boolean @default(true)
 
   portfolioId      String
   portfolio        PortfolioData @relation(fields: [portfolioId], references: [id])
 }
 
 model Certificate {
-  id          String @id @default(uuid())
-  certId      String // The id from original data like 'cert-1'
-  title       String
-  url         String
-  type        String
+  id             String @id @default(uuid())
+  certId         String // The id from original data like 'cert-1'
+  title          String
+  url            String
+  type           String
+  
+  issueDate      DateTime?
+  expirationDate DateTime?
+  issuer         String?
+  visible        Boolean @default(true)
 
-  portfolioId String
-  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+  portfolioId    String
+  portfolio      PortfolioData @relation(fields: [portfolioId], references: [id])
 }
 
 model CV {
@@ -163,6 +194,58 @@ model CV {
 model SystemSettings {
   id              String   @id @default("global")
   maintenanceMode Boolean  @default(false)
-  siteName        String   @default("nishu.dev")
+  siteName        String   @default("nishudevportfolio")
   updatedAt       DateTime @updatedAt
+}
+
+model Service {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  icon        String?
+  pricing     String?
+  visible     Boolean @default(true)
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Testimonial {
+  id            String @id @default(uuid())
+  authorName    String
+  authorRole    String
+  authorCompany String?
+  content       String
+  avatarUrl     String?
+  visible       Boolean @default(true)
+
+  portfolioId   String
+  portfolio     PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Education {
+  id          String @id @default(uuid())
+  institution String
+  degree      String
+  field       String
+  startDate   String?
+  endDate     String?
+  grade       String?
+  visible     Boolean @default(true)
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model ContactMessage {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  subject     String?
+  message     String
+  status      String   @default("Unread")
+  createdAt   DateTime @default(now())
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
 }

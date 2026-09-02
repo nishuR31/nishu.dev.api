@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Plus, Trash2, Edit2, Loader2, Award, Save, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, Edit2, Loader2, Award, Save, ExternalLink, X, Eye, EyeOff } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+
+type CertificateFormData = {
+  certId: string;
+  title: string;
+  url: string;
+  type: string;
+  issuer: string;
+  issueDate: string;
+  expirationDate: string;
+  visible: boolean;
+};
 
 export default function CertificatesView() {
   const [certificates, setCertificates] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  
-  // Form State
-  const [certId, setCertId] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [type, setType] = useState("");
-  const [saving, setSaving] = useState(false);
+
+  const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CertificateFormData>({
+    defaultValues: {
+      certId: "", title: "", url: "", type: "Certificate", issuer: "", issueDate: "", expirationDate: "", visible: true
+    }
+  });
 
   useEffect(() => {
     fetchCertificates();
@@ -32,39 +43,45 @@ export default function CertificatesView() {
 
   const handleEdit = (cert: any) => {
     setEditingId(cert.id);
-    setCertId(cert.certId);
-    setTitle(cert.title);
-    setUrl(cert.url);
-    setType(cert.type);
+    reset({
+      certId: cert.certId,
+      title: cert.title,
+      url: cert.url,
+      type: cert.type,
+      issuer: cert.issuer || "",
+      issueDate: cert.issueDate ? new Date(cert.issueDate).toISOString().split('T')[0] : "",
+      expirationDate: cert.expirationDate ? new Date(cert.expirationDate).toISOString().split('T')[0] : "",
+      visible: cert.visible ?? true
+    });
     setIsFormOpen(true);
   };
 
-  const resetForm = () => {
+  const openNewForm = () => {
     setEditingId(null);
-    setCertId("");
-    setTitle("");
-    setUrl("");
-    setType("Certificate");
-    setIsFormOpen(false);
+    reset({ certId: "", title: "", url: "", type: "Certificate", issuer: "", issueDate: "", expirationDate: "", visible: true });
+    setIsFormOpen(true);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSaving(true);
+  const onSubmit = async (data: CertificateFormData) => {
     try {
-      const payload = { certId, title, url, type };
+      const payload = {
+        ...data,
+        issuer: data.issuer || null,
+        issueDate: data.issueDate ? new Date(data.issueDate).toISOString() : null,
+        expirationDate: data.expirationDate ? new Date(data.expirationDate).toISOString() : null,
+        visible: data.visible
+      };
+
       if (editingId) {
         await axios.put(`/api/portfolio/certificates/${editingId}`, payload, { withCredentials: true });
       } else {
         await axios.post('/api/portfolio/certificates', payload, { withCredentials: true });
       }
       await fetchCertificates();
-      resetForm();
+      setIsFormOpen(false);
     } catch (err) {
       console.error('Failed to save certificate', err);
       alert('Error saving certificate');
-    } finally {
-      setSaving(false);
     }
   };
 
@@ -79,94 +96,143 @@ export default function CertificatesView() {
     }
   };
 
+  const toggleVisibility = async (cert: any) => {
+    try {
+      const payload = {
+        ...cert,
+        visible: !cert.visible
+      };
+      await axios.put(`/api/portfolio/certificates/${cert.id}`, payload, { withCredentials: true });
+      await fetchCertificates();
+    } catch (error) {
+      console.error('Failed to toggle visibility', error);
+      alert('Failed to toggle visibility.');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="animate-pulse flex flex-col items-center">
+          <div className="h-12 w-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">Loading Certificates...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <Award className="w-7 h-7 text-[var(--primary)]" />
+    <div className="space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
+      <div className="flex items-center justify-between bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-sm">
+        <h2 className="text-3xl font-bold flex items-center gap-3">
+          <Award className="w-8 h-8 text-amber-500" />
           Certificates
         </h2>
         <button 
-          onClick={() => { resetForm(); setIsFormOpen(true); }}
-          className="bg-[var(--primary)] text-white px-4 py-2 rounded-xl flex items-center gap-2 hover:opacity-90 transition-all font-semibold shadow-lg shadow-blue-500/20"
+          onClick={openNewForm}
+          className="bg-amber-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md"
         >
           <Plus className="w-5 h-5" /> Add Certificate
         </button>
       </div>
 
-      {loading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-[var(--primary)]" />
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {certificates.map((cert) => (
-            <div key={cert.id} className="bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-sm hover:shadow-md transition-all group relative overflow-hidden flex flex-col">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                <Award className="w-20 h-20 text-[var(--primary)]" />
-              </div>
-              <div className="flex-1 relative z-10">
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 mb-3 border border-blue-500/20">
-                  {cert.type}
-                </span>
-                <h3 className="text-lg font-bold text-[var(--foreground)] mb-2 line-clamp-2">{cert.title}</h3>
-                <p className="text-sm text-slate-400 font-mono bg-slate-900/50 px-3 py-1.5 rounded-lg inline-block">ID: {cert.certId}</p>
-              </div>
-              
-              <div className="flex items-center justify-between mt-6 pt-4 border-t border-[var(--border)] relative z-10">
-                <a href={cert.url} target="_blank" rel="noreferrer" className="text-sm font-medium text-[var(--primary)] hover:text-blue-400 flex items-center gap-1 transition-colors">
-                  View Credential <ExternalLink className="w-4 h-4" />
-                </a>
-                <div className="flex gap-2">
-                  <button onClick={() => handleEdit(cert)} className="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors">
-                    <Edit2 className="w-4 h-4" />
-                  </button>
-                  <button onClick={() => handleDelete(cert.id)} className="p-2 hover:bg-red-500/10 rounded-lg text-slate-400 hover:text-red-500 transition-colors">
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {certificates.map((cert) => (
+          <div key={cert.id} className={`bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all group relative overflow-hidden flex flex-col duration-300 ${cert.visible === false ? 'opacity-50 grayscale-[0.5]' : ''}`}>
+            <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
+              <Award className="w-24 h-24 text-amber-500" />
+            </div>
+            <div className="flex-1 relative z-10">
+              <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-500/10 text-amber-600 dark:text-amber-400 mb-4 border border-amber-500/20 shadow-sm">
+                {cert.type}
+              </span>
+              <h3 className="text-xl font-bold text-[var(--foreground)] mb-1 line-clamp-2">{cert.title}</h3>
+              {cert.issuer && <p className="text-sm font-medium text-slate-400 mb-3">{cert.issuer}</p>}
+              <p className="text-xs text-amber-600 dark:text-amber-400 font-mono bg-amber-500/10 px-3 py-1.5 rounded-xl inline-block border border-amber-500/20 font-bold">ID: {cert.certId}</p>
+              {(cert.issueDate || cert.expirationDate) && (
+                <div className="mt-4 text-xs font-semibold text-slate-400 flex flex-col gap-1">
+                  {cert.issueDate && <span>Issued: {new Date(cert.issueDate).toLocaleDateString()}</span>}
+                  {cert.expirationDate && <span>Expires: {new Date(cert.expirationDate).toLocaleDateString()}</span>}
                 </div>
+              )}
+            </div>
+            
+            <div className="flex items-center justify-between mt-8 pt-5 border-t border-[var(--border)] relative z-10">
+              <a href={cert.url} target="_blank" rel="noreferrer" className="text-sm font-bold text-blue-500 hover:text-blue-600 flex items-center gap-1.5 transition-colors">
+                View Credential <ExternalLink className="w-4 h-4" />
+              </a>
+              <div className="flex gap-2">
+                <button onClick={() => toggleVisibility(cert)} className={`p-2.5 rounded-xl transition-colors shadow-sm ${cert.visible !== false ? 'text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 border' : 'text-slate-400 bg-slate-400/10 hover:bg-slate-400/20 border-[var(--border)] border'}`} title="Toggle Visibility">
+                  {cert.visible !== false ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                </button>
+                <button onClick={() => handleEdit(cert)} className="p-2.5 bg-[var(--background)] border border-[var(--border)] hover:border-blue-500/50 rounded-xl text-slate-400 hover:text-blue-500 transition-colors shadow-sm">
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button onClick={() => handleDelete(cert.id)} className="p-2.5 bg-[var(--background)] border border-[var(--border)] hover:border-red-500/50 rounded-xl text-slate-400 hover:text-red-500 transition-colors shadow-sm">
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
-          ))}
-          {certificates.length === 0 && (
-            <div className="col-span-full py-20 text-center text-slate-500 border border-dashed border-[var(--border)] rounded-3xl">
-              No certificates found. Add your achievements!
-            </div>
-          )}
-        </div>
-      )}
+          </div>
+        ))}
+        {certificates.length === 0 && (
+          <div className="col-span-full py-20 text-center opacity-50 border-2 border-dashed border-[var(--border)] rounded-3xl">
+             <Award className="w-12 h-12 mx-auto mb-4 opacity-50" />
+            No certificates found. Add your achievements!
+          </div>
+        )}
+      </div>
 
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-[var(--card)] w-full max-w-lg rounded-3xl p-8 border border-[var(--border)] shadow-2xl animate-in zoom-in-95 duration-200">
-            <h3 className="text-2xl font-bold mb-6">{editingId ? 'Edit' : 'Add'} Certificate</h3>
-            <form onSubmit={handleSave} className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Title</label>
-                <input type="text" required value={title} onChange={e => setTitle(e.target.value)} className="w-full bg-slate-900/50 border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all" placeholder="e.g. AWS Certified Solutions Architect" />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
+          <div className="bg-[var(--card)] w-full max-w-lg rounded-[2rem] border border-[var(--border)] shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="p-6 border-b border-[var(--border)] flex items-center justify-between bg-[var(--card)] rounded-t-[2rem]">
+              <h3 className="text-2xl font-bold">{editingId ? 'Edit' : 'Add'} Certificate</h3>
+              <button onClick={() => setIsFormOpen(false)} className="p-2 hover:bg-[var(--background)] rounded-full transition-colors"><X className="w-6 h-6" /></button>
+            </div>
+            <form onSubmit={handleSubmit(onSubmit)} className="p-6 space-y-5">
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold opacity-80">Title *</label>
+                <input required {...register("title")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium" placeholder="e.g. AWS Certified Solutions Architect" />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Credential ID</label>
-                <input type="text" required value={certId} onChange={e => setCertId(e.target.value)} className="w-full bg-slate-900/50 border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all" placeholder="e.g. AWS-12345" />
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold opacity-80">Credential ID *</label>
+                <input required {...register("certId")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium" placeholder="e.g. AWS-12345" />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Credential URL</label>
-                <input type="url" required value={url} onChange={e => setUrl(e.target.value)} className="w-full bg-slate-900/50 border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all" placeholder="https://..." />
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold opacity-80">Credential URL *</label>
+                <input type="url" required {...register("url")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium" placeholder="https://..." />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-300">Type</label>
-                <select value={type} onChange={e => setType(e.target.value)} className="w-full bg-slate-900/50 border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-all text-white">
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold opacity-80">Type</label>
+                <select {...register("type")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium">
                   <option value="Certificate">Certificate</option>
                   <option value="Degree">Degree</option>
                   <option value="Badge">Badge</option>
                   <option value="Award">Award</option>
                 </select>
               </div>
+
+              <div className="space-y-1.5">
+                <label className="text-sm font-bold opacity-80">Issuer (Optional)</label>
+                <input {...register("issuer")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium" placeholder="e.g. Amazon Web Services" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-sm font-bold opacity-80">Issue Date (Optional)</label>
+                  <input type="date" {...register("issueDate")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium [color-scheme:dark]" />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-bold opacity-80">Expiration Date (Optional)</label>
+                  <input type="date" {...register("expirationDate")} className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all font-medium [color-scheme:dark]" />
+                </div>
+              </div>
               
-              <div className="flex justify-end gap-3 pt-4">
-                <button type="button" onClick={resetForm} className="px-6 py-2.5 rounded-xl border border-[var(--border)] hover:bg-slate-800 transition-colors font-medium">Cancel</button>
-                <button type="submit" disabled={saving} className="px-6 py-2.5 rounded-xl bg-[var(--primary)] hover:bg-blue-600 text-white transition-colors font-medium flex items-center gap-2">
-                  {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} Save
+              <div className="flex justify-end gap-3 pt-6 border-t border-[var(--border)] mt-4">
+                <button type="button" onClick={() => setIsFormOpen(false)} className="px-6 py-3 rounded-xl border border-[var(--border)] hover:bg-[var(--background)] transition-colors font-bold opacity-70">Cancel</button>
+                <button type="submit" disabled={isSubmitting} className="px-8 py-3 rounded-xl bg-amber-500 text-white hover:scale-105 transition-transform font-bold flex items-center gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100">
+                  {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} {editingId ? "Update" : "Create"}
                 </button>
               </div>
             </form>

@@ -18,15 +18,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
-    // Check if token exists in localStorage (since we can't easily read httpOnly cookies)
-    // Actually, because it's httpOnly, we should just attempt a protected request
-    // or rely on a "logged_in" flag in localStorage.
-    const loggedIn = localStorage.getItem('crm_logged_in');
-    if (loggedIn === 'true') {
-      setIsAuthenticated(true);
-      setUser(JSON.parse(localStorage.getItem('crm_user') || '{}'));
-    }
-    setLoading(false);
+    const verifyAuth = async () => {
+      try {
+        const response = await axios.get('/api/auth/me');
+        if (response.data.success) {
+          setIsAuthenticated(true);
+          setUser(response.data.data);
+          localStorage.setItem('crm_logged_in', 'true');
+        }
+      } catch (error) {
+        setIsAuthenticated(false);
+        setUser(null);
+        localStorage.removeItem('crm_logged_in');
+        localStorage.removeItem('crm_user');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    verifyAuth();
   }, []);
 
   const login = (token: string, userData: any) => {
