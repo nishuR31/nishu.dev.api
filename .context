@@ -1,0 +1,25 @@
+# nishu.dev.api Project Context (LLM Token-Optimized)
+# Format: Compact YAML-like DSL | Version: 1.0.0 | Updated: 2026-09-02
+
+PROJECT:
+  name: nishu.dev.api
+  type: Backend API CRM
+  owner: Nishan Rajak (Backend-Focused Software Engineering Student)
+  description: High-performance REST API built using Fastify and TypeScript, running on Bun. Serves dynamic portfolio configurations and manages CRM for nishu.dev.
+
+TECH_STACK:
+  runtime: Bun
+  framework: Fastify
+  language: TypeScript
+  database: PostgreSQL via Prisma ORM
+  storage: Supabase Storage
+  architecture: MVCP SaaS Microservices Structure
+  auth: JWT via HTTP-only Cookies and Headers, Role-based (developer), Google Sign-In, 2FA, Passkeys (WebAuthn)
+  validation: Zod
+
+STANDARDS:
+  response_format:
+    success: "{ success: true, statusCode: 200, message: '...', data: { ... } }"
+    error: "{ success: false, statusCode: 4xx, message: '...', errors: { name: '...', details: {} } }"
+  routing: versioned (e.g. /v1/), modularized by feature.
+  security: 1-user locked registration for Developer role.

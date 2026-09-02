@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
 
     "rootDir": "./src",
     "outDir": "./dist",
@@ -13,9 +13,6 @@
     "allowSyntheticDefaultImports": true,
 
     "resolveJsonModule": true,
-
-    "types": ["bun", "node"],
-
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
 
@@ -23,7 +20,7 @@
     "declaration": true,
 
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true
+    "exactOptionalPropertyTypes": false
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]

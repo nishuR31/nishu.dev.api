@@ -81,6 +81,14 @@ export const CertificateSchema = z.object({
   type: z.enum(["pdf", "image"]),
 });
 
+export const CVSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  url: z.string(),
+  description: z.string(),
+  lastUpdated: z.string().optional(),
+});
+
 export const PortfolioSchema = z.object({
   developer: DeveloperSchema,
   featuredProjects: z.array(z.string()),
@@ -92,6 +100,7 @@ export const PortfolioSchema = z.object({
   experiences: z.array(ExperienceSchema),
   contactInfo: z.array(ContactInfoSchema),
   certificates: z.array(CertificateSchema),
+  cvs: z.array(CVSchema).optional(),
   additionalProjects: z.array(z.string()),
   strengths: z.array(z.string()),
 });
@@ -105,4 +114,5 @@ export type SubSkill = z.infer<typeof SubSkillSchema>;
 export type Experience = z.infer<typeof ExperienceSchema>;
 export type ContactInfo = z.infer<typeof ContactInfoSchema>;
 export type Certificate = z.infer<typeof CertificateSchema>;
+export type CV = z.infer<typeof CVSchema>;
 export type Portfolio = z.infer<typeof PortfolioSchema>;

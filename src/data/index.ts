@@ -634,6 +634,22 @@ const config: Portfolio = {
       type: "pdf",
     },
   ],
+  cvs: [
+    {
+      id: "cv-1",
+      title: "Backend Engineer Resume",
+      url: "#", 
+      description: "Comprehensive resume highlighting backend architecture, API design, and multi-database systems.",
+      lastUpdated: "2024",
+    },
+    {
+      id: "cv-2",
+      title: "Full-Stack Developer Resume",
+      url: "#",
+      description: "Detailed CV covering both frontend UI/UX skills and robust backend engineering experience.",
+      lastUpdated: "2024",
+    }
+  ],
   additionalProjects: [
     "FocusMode — Productivity interface",
     "GitHub Recap Tool — Data summarization utility",
