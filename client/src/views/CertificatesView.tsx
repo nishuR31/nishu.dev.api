@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Trash2, Edit2, Loader2, Award, Save, ExternalLink, X, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import JsonEditorModal from '../components/JsonEditorModal';
-import { FileJson } from 'lucide-react';
 
 type CertificateFormData = {
   certId: string;
@@ -21,7 +19,6 @@ export default function CertificatesView() {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [isJsonEditorOpen, setIsJsonEditorOpen] = useState(false);
 
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<CertificateFormData>({
     defaultValues: {
@@ -113,17 +110,6 @@ export default function CertificatesView() {
     }
   };
 
-  
-  const handleBulkSave = async (parsedData: any) => {
-    try {
-      await axios.post('/api/portfolio/certificates/bulk', parsedData, { withCredentials: true });
-      await fetchCertificates();
-    } catch (err) {
-      console.error('Failed to bulk save', err);
-      throw new Error('Failed to save JSON data. Check console for details.');
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -142,7 +128,7 @@ export default function CertificatesView() {
           <Award className="w-8 h-8 text-amber-500" />
           Certificates
         </h2>
-        <div className="flex items-center"><button 
+        <button 
           onClick={openNewForm}
           className="bg-amber-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md"
         >
@@ -181,7 +167,7 @@ export default function CertificatesView() {
                 </button>
                 <button onClick={() => handleEdit(cert)} className="p-2.5 bg-[var(--background)] border border-[var(--border)] hover:border-blue-500/50 rounded-xl text-slate-400 hover:text-blue-500 transition-colors shadow-sm">
                   <Edit2 className="w-4 h-4" />
-                </button></div>
+                </button>
                 <button onClick={() => handleDelete(cert.id)} className="p-2.5 bg-[var(--background)] border border-[var(--border)] hover:border-red-500/50 rounded-xl text-slate-400 hover:text-red-500 transition-colors shadow-sm">
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -253,14 +239,6 @@ export default function CertificatesView() {
           </div>
         </div>
       )}
-    
-      <JsonEditorModal 
-        isOpen={isJsonEditorOpen} 
-        onClose={() => setIsJsonEditorOpen(false)} 
-        onSave={handleBulkSave} 
-        initialData={certificates} 
-        title="Certificates" 
-      />
     </div>
   );
 }

@@ -148,17 +148,6 @@ export default function ProjectsView() {
     }
   };
 
-  
-  const handleBulkSave = async (parsedData: any) => {
-    try {
-      await axios.post('/api/portfolio/projects/bulk', parsedData, { withCredentials: true });
-      await fetchProjects();
-    } catch (err) {
-      console.error('Failed to bulk save', err);
-      throw new Error('Failed to save JSON data. Check console for details.');
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -349,14 +338,6 @@ export default function ProjectsView() {
           </div>
         </div>
       )}
-    
-      <JsonEditorModal 
-        isOpen={isJsonEditorOpen} 
-        onClose={() => setIsJsonEditorOpen(false)} 
-        onSave={handleBulkSave} 
-        initialData={projects} 
-        title="Projects" 
-      />
     </div>
   );
 }
