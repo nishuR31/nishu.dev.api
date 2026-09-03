@@ -9,6 +9,8 @@ const authRoutes = async (fastify: FastifyInstance) => {
   // Protected Routes
   fastify.get("/me", { preValidation: [fastify.authorizeDeveloper] }, AuthController.me);
   fastify.post("/2fa/setup", { preValidation: [fastify.authorizeDeveloper] }, AuthController.setup2FA);
+  fastify.post("/passkey/generate-options", { preValidation: [fastify.authorizeDeveloper] }, AuthController.generatePasskeyOptions);
+  fastify.post("/passkey/verify-registration", { preValidation: [fastify.authorizeDeveloper] }, AuthController.verifyPasskeyRegistration);
 };
 
 export default authRoutes;

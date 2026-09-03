@@ -32,12 +32,12 @@ function AppContent() {
     <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] transition-colors duration-200">
       {!isLoginPage && (
         <header className="border-b border-[var(--border)] bg-[var(--card)] px-6 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-[var(--primary)] flex items-center gap-2">
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            <h1 className="text-xl font-bold text-[var(--primary)] flex items-center gap-2 shrink-0">
               <LayoutDashboard className="w-6 h-6" />
               Nishu CRM
             </h1>
-            <nav className="hidden md:flex gap-6 ml-8 overflow-x-auto">
+            <nav className="hidden md:flex gap-6 ml-8 overflow-x-auto min-w-0 flex-1 scrollbar-hide">
               <Link to="/" className="text-sm font-semibold hover:text-[var(--primary)] transition-colors flex items-center gap-1 whitespace-nowrap">
                 Dashboard
               </Link>
@@ -93,28 +93,40 @@ function AppContent() {
       </main>
 
       {!isLoginPage && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--card)]/80 backdrop-blur-xl border-t border-[var(--border)] z-50 flex items-center justify-around p-3 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.1)]">
-          <Link to="/" className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${location.pathname === '/' ? 'text-blue-500 bg-blue-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--card)]/80 backdrop-blur-xl border-t border-[var(--border)] z-50 flex items-center overflow-x-auto p-3 pb-safe shadow-[0_-4px_24px_rgba(0,0,0,0.1)] gap-2 [&::-webkit-scrollbar]:hidden">
+          <Link to="/" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/' ? 'text-blue-500 bg-blue-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
             <LayoutDashboard className="w-5 h-5" />
             <span className="text-[10px] font-medium">Home</span>
           </Link>
-          <Link to="/projects" className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${location.pathname === '/projects' ? 'text-blue-500 bg-blue-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+          <Link to="/projects" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/projects' ? 'text-blue-500 bg-blue-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
             <FolderGit2 className="w-5 h-5" />
             <span className="text-[10px] font-medium">Projects</span>
           </Link>
-          <Link to="/experiences" className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${location.pathname === '/experiences' ? 'text-purple-500 bg-purple-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+          <Link to="/experiences" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/experiences' ? 'text-purple-500 bg-purple-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
             <Briefcase className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Experience</span>
+            <span className="text-[10px] font-medium">Exp</span>
           </Link>
-          <Link to="/certificates" className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${location.pathname === '/certificates' ? 'text-amber-500 bg-amber-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+          <Link to="/education" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/education' ? 'text-purple-500 bg-purple-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+            <GraduationCap className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Edu</span>
+          </Link>
+          <Link to="/certificates" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/certificates' ? 'text-amber-500 bg-amber-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
             <Award className="w-5 h-5" />
             <span className="text-[10px] font-medium">Certs</span>
           </Link>
-          <Link to="/media" className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${location.pathname === '/media' ? 'text-emerald-500 bg-emerald-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+          <Link to="/services" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/services' ? 'text-blue-500 bg-blue-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+            <Layers className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Services</span>
+          </Link>
+          <Link to="/testimonials" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/testimonials' ? 'text-blue-500 bg-blue-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+            <MessageSquare className="w-5 h-5" />
+            <span className="text-[10px] font-medium">Tests</span>
+          </Link>
+          <Link to="/media" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/media' ? 'text-emerald-500 bg-emerald-500/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
             <ImageIcon className="w-5 h-5" />
             <span className="text-[10px] font-medium">Media</span>
           </Link>
-          <Link to="/settings" className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-colors ${location.pathname === '/settings' ? 'text-[var(--foreground)] bg-[var(--foreground)]/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
+          <Link to="/settings" className={`shrink-0 flex flex-col items-center justify-center gap-1 min-w-[4rem] p-2 rounded-xl transition-colors ${location.pathname === '/settings' ? 'text-[var(--foreground)] bg-[var(--foreground)]/10' : 'text-slate-500 hover:text-[var(--foreground)]'}`}>
             <Settings className="w-5 h-5" />
             <span className="text-[10px] font-medium">Settings</span>
           </Link>

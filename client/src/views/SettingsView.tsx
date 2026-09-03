@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Settings, ShieldAlert, Globe, Save, KeyRound, Fingerprint, ShieldCheck, QrCode } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
+import { startRegistration } from '@simplewebauthn/browser';
 
 export default function SettingsView() {
   const [loading, setLoading] = useState(true);
@@ -54,6 +55,29 @@ export default function SettingsView() {
     alert("Backend logic pending for: " + JSON.stringify(data));
   };
 
+  
+  const handleAddPasskey = async () => {
+    try {
+      // 1. Get options from server
+      const optRes = await axios.post('/api/auth/passkey/generate-options');
+      const options = optRes.data.data;
+      
+      // 2. Pass options to browser authenticator
+      const attResp = await startRegistration(options);
+      
+      // 3. Send response to server to verify
+      await axios.post('/api/auth/passkey/verify-registration', attResp);
+      alert("Passkey successfully registered!");
+    } catch (err: any) {
+      console.error("Passkey registration failed", err);
+      if (err.name === 'NotAllowedError') {
+        alert('Passkey registration was cancelled or timed out.');
+      } else {
+        alert('Failed to register passkey: ' + (err.response?.data?.message || err.message));
+      }
+    }
+  };
+
   const handleEnable2FA = async () => {
     if (totpEnabled) {
       // In a real app, you would have a disable endpoint. For now, just hide the UI.
@@ -102,7 +126,7 @@ export default function SettingsView() {
 
       {/* General Settings */}
       <form onSubmit={handleSettingsSubmit(onSettingsSave)}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-[200px]">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[200px]">
           
           {/* Maintenance Mode Card */}
           <div className="p-8 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
@@ -304,7 +328,7 @@ export default function SettingsView() {
                    <span className="text-xs opacity-60">You can add up to 5 devices.</span>
                  </div>
                  <button 
-                   onClick={() => alert("Passkey backend integration pending.")}
+                   onClick={handleAddPasskey}
                    className="px-4 py-2 bg-[var(--foreground)] text-[var(--background)] font-medium text-sm rounded-xl hover:scale-105 transition-transform shadow-md"
                  >
                    Add Passkey

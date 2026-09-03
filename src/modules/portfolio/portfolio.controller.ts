@@ -111,6 +111,28 @@ export class PortfolioController {
   }
 
   // --- Projects CRUD ---
+  
+  static async bulkUpdateProjects(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as any[];
+      if (!Array.isArray(rawArray)) return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+      const parsedArray = rawArray.map(item => ProjectSchema.parse(item));
+      await prisma.$transaction(async (tx) => {
+        await tx.project.deleteMany({ where: { portfolioId: portfolio.id } });
+        for (const item of parsedArray) {
+          await tx.project.create({ data: { ...item, portfolioId: portfolio.id } });
+        }
+      });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Projects bulk updated" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to bulk update Projects", errors: e });
+    }
+  }
+
   static async createProject(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -150,6 +172,28 @@ export class PortfolioController {
   }
 
   // --- Experiences CRUD ---
+  
+  static async bulkUpdateExperiences(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as any[];
+      if (!Array.isArray(rawArray)) return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+      const parsedArray = rawArray.map(item => ExperienceSchema.parse(item));
+      await prisma.$transaction(async (tx) => {
+        await tx.experience.deleteMany({ where: { portfolioId: portfolio.id } });
+        for (const item of parsedArray) {
+          await tx.experience.create({ data: { ...item, portfolioId: portfolio.id } });
+        }
+      });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Experiences bulk updated" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to bulk update Experiences", errors: e });
+    }
+  }
+
   static async createExperience(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -189,6 +233,28 @@ export class PortfolioController {
   }
 
   // --- Certificates CRUD ---
+  
+  static async bulkUpdateCertificates(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as any[];
+      if (!Array.isArray(rawArray)) return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+      const parsedArray = rawArray.map(item => CertificateSchema.parse(item));
+      await prisma.$transaction(async (tx) => {
+        await tx.certificate.deleteMany({ where: { portfolioId: portfolio.id } });
+        for (const item of parsedArray) {
+          await tx.certificate.create({ data: { ...item, portfolioId: portfolio.id } });
+        }
+      });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Certificates bulk updated" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to bulk update Certificates", errors: e });
+    }
+  }
+
   static async createCertificate(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -228,6 +294,28 @@ export class PortfolioController {
   }
 
   // --- Services CRUD ---
+  
+  static async bulkUpdateServices(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as any[];
+      if (!Array.isArray(rawArray)) return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+      const parsedArray = rawArray.map(item => ServiceSchema.parse(item));
+      await prisma.$transaction(async (tx) => {
+        await tx.service.deleteMany({ where: { portfolioId: portfolio.id } });
+        for (const item of parsedArray) {
+          await tx.service.create({ data: { ...item, portfolioId: portfolio.id } });
+        }
+      });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Services bulk updated" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to bulk update Services", errors: e });
+    }
+  }
+
   static async createService(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -267,6 +355,28 @@ export class PortfolioController {
   }
 
   // --- Testimonials CRUD ---
+  
+  static async bulkUpdateTestimonials(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as any[];
+      if (!Array.isArray(rawArray)) return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+      const parsedArray = rawArray.map(item => TestimonialSchema.parse(item));
+      await prisma.$transaction(async (tx) => {
+        await tx.testimonial.deleteMany({ where: { portfolioId: portfolio.id } });
+        for (const item of parsedArray) {
+          await tx.testimonial.create({ data: { ...item, portfolioId: portfolio.id } });
+        }
+      });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Testimonials bulk updated" });
+    } catch (e) {
+      return reply.code(400).send({ success: false, message: "Failed to bulk update Testimonials", errors: e });
+    }
+  }
+
   static async createTestimonial(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
