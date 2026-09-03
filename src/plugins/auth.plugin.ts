@@ -8,8 +8,8 @@ import { sendError, sendUnauthorizedError } from "../utils/common/response";
 
 export default fp(async (fastify: FastifyInstance) => {
   fastify.register(fastifyCookie, {
-    secret: COOKIE_SECRET, 
-    parseOptions: {} 
+    secret: COOKIE_SECRET,
+    parseOptions: {}
   });
 
   fastify.register(fastifyJwt, {
@@ -33,11 +33,11 @@ export default fp(async (fastify: FastifyInstance) => {
   fastify.decorate("authorizeDeveloper", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       await request.jwtVerify();
-      
+
       const payload = request.user as { id: string; role: string };
-      
+
       if (payload.role !== "developer") {
-        return sendError(reply, "Forbidden: Developer role required.", 403);
+        return sendError(reply, "Forbidden: Required role not found.", 403);
       }
 
       // Ensure user still exists

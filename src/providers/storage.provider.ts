@@ -3,7 +3,10 @@ import sharp from "sharp";
 import crypto from "crypto";
 import { SUPABASE_URL, SUPABASE_KEY } from "../config/envConfig";
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+// Only initialize if keys are present to prevent server crash on boot
+export const supabase = (SUPABASE_URL && SUPABASE_KEY) 
+  ? createClient(SUPABASE_URL, SUPABASE_KEY) 
+  : null as any;
 
 export class StorageProvider {
   /**
@@ -16,6 +19,8 @@ export class StorageProvider {
     folder: string = ""
   ): Promise<string> {
     try {
+      if (!supabase) throw new Error("Supabase is not configured. Missing environment variables.");
+
       // Optimize image (AVIF is a great modern format)
       const optimizedBuffer = await sharp(fileBuffer)
         .resize({ width: 1200, withoutEnlargement: true })
@@ -57,6 +62,8 @@ export class StorageProvider {
     folder: string = ""
   ): Promise<string> {
     try {
+      if (!supabase) throw new Error("Supabase is not configured. Missing environment variables.");
+
       const extension = originalName.split(".").pop();
       const fileName = `${folder ? folder + "/" : ""}${crypto.randomUUID()}.${extension}`;
 
@@ -81,6 +88,8 @@ export class StorageProvider {
   }
 
   static async deleteFile(bucket: string, path: string): Promise<void> {
+    if (!supabase) throw new Error("Supabase is not configured. Missing environment variables.");
+    
     // path is the portion after the bucket name in the URL
     // We would need to extract it, but for simplicity we assume path is known
     const { error } = await supabase.storage.from(bucket).remove([path]);
