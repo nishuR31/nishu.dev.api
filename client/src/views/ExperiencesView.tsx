@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Trash2, Edit2, Loader2, Briefcase, Save, MapPin, Calendar, Building, X, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import JsonEditorModal from '../components/JsonEditorModal';
+import { FileJson } from 'lucide-react';
 
 type ExperienceFormData = {
   position: string;
@@ -22,6 +24,7 @@ export default function ExperiencesView() {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isJsonEditorOpen, setIsJsonEditorOpen] = useState(false);
 
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<ExperienceFormData>({
     defaultValues: {
@@ -119,6 +122,17 @@ export default function ExperiencesView() {
     }
   };
 
+
+  const handleBulkSave = async (parsedData: any) => {
+    try {
+      await axios.post('/api/portfolio/experiences/bulk', parsedData, { withCredentials: true });
+      await fetchExperiences();
+    } catch (err) {
+      console.error('Failed to bulk save', err);
+      throw new Error('Failed to save JSON data. Check console for details.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -137,12 +151,13 @@ export default function ExperiencesView() {
           <Briefcase className="w-8 h-8 text-purple-500" />
           Experiences
         </h2>
-        <button 
+        <div className="flex items-center"><button 
           onClick={openNewForm}
           className="bg-purple-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md"
         >
           <Plus className="w-5 h-5" /> Add Experience
         </button>
+        <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md ml-3"><FileJson className="w-5 h-5" /> Edit JSON</button></div>
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
@@ -277,6 +292,14 @@ export default function ExperiencesView() {
           </div>
         </div>
       )}
+    
+      <JsonEditorModal 
+        isOpen={isJsonEditorOpen} 
+        onClose={() => setIsJsonEditorOpen(false)} 
+        onSave={handleBulkSave} 
+        initialData={experiences} 
+        title="Experiences" 
+      />
     </div>
   );
 }

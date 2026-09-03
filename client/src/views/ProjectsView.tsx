@@ -148,6 +148,17 @@ export default function ProjectsView() {
     }
   };
 
+
+  const handleBulkSave = async (parsedData: any) => {
+    try {
+      await axios.post('/api/portfolio/projects/bulk', parsedData, { withCredentials: true });
+      await fetchProjects();
+    } catch (err) {
+      console.error('Failed to bulk save', err);
+      throw new Error('Failed to save JSON data. Check console for details.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -163,9 +174,10 @@ export default function ProjectsView() {
     <div className="space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex items-center justify-between bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-sm">
         <h2 className="text-3xl font-bold flex items-center gap-3"><FolderGit2 className="text-blue-500 w-8 h-8" /> Projects</h2>
-        <button onClick={() => openForm()} className="bg-blue-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform shadow-md font-semibold">
+        <div className="flex items-center"><button onClick={() => openForm()} className="bg-blue-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform shadow-md font-semibold">
           <Plus className="w-5 h-5" /> Add Project
         </button>
+        <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md ml-3"><FileJson className="w-5 h-5" /> Edit JSON</button></div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -338,6 +350,14 @@ export default function ProjectsView() {
           </div>
         </div>
       )}
+    
+      <JsonEditorModal 
+        isOpen={isJsonEditorOpen} 
+        onClose={() => setIsJsonEditorOpen(false)} 
+        onSave={handleBulkSave} 
+        initialData={projects} 
+        title="Projects" 
+      />
     </div>
   );
 }

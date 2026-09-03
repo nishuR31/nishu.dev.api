@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Plus, Trash2, Edit2, Loader2, Save, X, GraduationCap, Calendar, Eye, EyeOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import JsonEditorModal from '../components/JsonEditorModal';
+import { FileJson } from 'lucide-react';
 
 type EducationFormData = {
   institution: string;
@@ -18,6 +20,7 @@ export default function EducationView() {
   const [loading, setLoading] = useState(true);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [isJsonEditorOpen, setIsJsonEditorOpen] = useState(false);
 
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<EducationFormData>({
     defaultValues: { institution: "", degree: "", field: "", startDate: "", endDate: "", grade: "", visible: true }
@@ -106,6 +109,17 @@ export default function EducationView() {
     }
   };
 
+
+  const handleBulkSave = async (parsedData: any) => {
+    try {
+      await axios.post('/api/portfolio/education/bulk', parsedData, { withCredentials: true });
+      await fetchEducation();
+    } catch (err) {
+      console.error('Failed to bulk save', err);
+      throw new Error('Failed to save JSON data. Check console for details.');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -124,12 +138,13 @@ export default function EducationView() {
           <GraduationCap className="w-8 h-8 text-emerald-500" />
           Education
         </h2>
-        <button 
+        <div className="flex items-center"><button 
           onClick={openNewForm}
           className="bg-emerald-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md"
         >
           <Plus className="w-5 h-5" /> Add Education
         </button>
+        <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md ml-3"><FileJson className="w-5 h-5" /> Edit JSON</button></div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -226,6 +241,14 @@ export default function EducationView() {
           </div>
         </div>
       )}
+    
+      <JsonEditorModal 
+        isOpen={isJsonEditorOpen} 
+        onClose={() => setIsJsonEditorOpen(false)} 
+        onSave={handleBulkSave} 
+        initialData={education} 
+        title="Educations" 
+      />
     </div>
   );
 }
