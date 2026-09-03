@@ -11,7 +11,7 @@
     "format": "bun prettier --write .",
     "start": "bun src/index.ts",
     "git": "git add . && git commit -m \"kuch toh kiya hu\" && git push -f origin main",
-    "postinstall": "prisma skills sync || exit 0"
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "nishur31",
