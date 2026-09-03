@@ -1,12 +1,12 @@
 import { NODE_ENV } from "./config/envConfig";
-// import apiRouter from "./routes/apiRoutes";
+import apiRouter from "./routes/apiRoutes";
 import { sendError } from "./utils/common/response";
 import fastifyApp from "./config/serverConfig";
 import { FastifyReply, FastifyRequest } from "fastify";
 import path from "path";
 const app = fastifyApp;
 
-// app.register(apiRouter, { prefix: "/api" });
+app.register(apiRouter, { prefix: "/api" });
 
 app.setNotFoundHandler((req: FastifyRequest, reply: FastifyReply) => {
   if (req.url.startsWith("/admin")) {
