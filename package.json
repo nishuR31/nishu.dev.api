@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.ts",
   "module": "module",
+  "type": "module",
   "scripts": {
     "dev": "bun --watch src/index.ts",
     "build": "vite build",
