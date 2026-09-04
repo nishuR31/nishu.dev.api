@@ -82,6 +82,12 @@ model Social {
   leetcode  String
   hackerone String
 
+  githubFollowers Int @default(0)
+  githubRepos     Int @default(0)
+  leetcodeSolved  Int @default(0)
+  leetcodeRanking Int @default(0)
+  statsUpdatedAt  DateTime @default(now())
+
   portfolioId String @unique
   portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
 }

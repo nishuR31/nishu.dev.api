@@ -75,6 +75,102 @@ async function fetchSocialStats(social: any) {
 
 export class PortfolioController {
 
+  static async syncSocialStats(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const { force } = req.query as { force?: string };
+      const userPayload = req.user as { id: string };
+
+      const portfolio = await prisma.portfolioData.findUnique({
+        where: { userId: userPayload.id },
+        include: { social: true }
+      });
+
+      if (!portfolio || !portfolio.social) {
+        return reply.code(404).send({ success: false, message: "Portfolio or social data not found." });
+      }
+
+      // Check if we need to sync based on time (1 day) unless forced
+      const now = new Date();
+      const lastUpdated = new Date(portfolio.social.statsUpdatedAt);
+      const hoursSinceUpdate = (now.getTime() - lastUpdated.getTime()) / (1000 * 60 * 60);
+
+      if (force !== 'true' && hoursSinceUpdate < 24) {
+        return reply.send({ success: true, message: "Stats are already up to date.", data: portfolio.social });
+      }
+
+      const stats = await fetchSocialStats(portfolio.social);
+      
+      const updatedSocial = await prisma.social.update({
+        where: { id: portfolio.social.id },
+        data: {
+          githubFollowers: stats.github?.followers ?? portfolio.social.githubFollowers,
+          githubRepos: stats.github?.public_repos ?? portfolio.social.githubRepos,
+          leetcodeSolved: stats.leetcode?.solved ?? portfolio.social.leetcodeSolved,
+          leetcodeRanking: stats.leetcode?.ranking ?? portfolio.social.leetcodeRanking,
+          statsUpdatedAt: new Date(),
+        }
+      });
+
+      await PortfolioController.invalidateCache(req.server.redis);
+
+      return reply.send({ success: true, message: "Social stats synced successfully", data: updatedSocial });
+    } catch (e: any) {
+      return reply.code(500).send({ success: false, message: "Failed to sync social stats", errors: e.message });
+    }
+  }
+
+  static async exportData(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      // Dump the DB to JSON structure
+      const data = await prisma.portfolioData.findFirst({
+        include: {
+          social: true,
+          navItems: true,
+          projects: true,
+          skills: { include: { skills: true } },
+          experiences: true,
+          certificates: true,
+          cvs: true,
+          services: true,
+          testimonials: true,
+          education: true,
+        }
+      });
+
+      if (!data) return reply.code(404).send({ success: false, message: "No data found." });
+
+      const exportObj = {
+        developer: {
+          name: data.name,
+          shortName: data.shortName,
+          role: data.role,
+          tagline: data.tagline,
+          bio: data.bio,
+          location: data.location,
+          email: data.email,
+          about: data.about,
+        },
+        social: data.social,
+        NAV_ITEMS: data.navItems,
+        projects: data.projects,
+        skills: data.skills,
+        experiences: data.experiences,
+        certificates: data.certificates,
+        cvs: data.cvs,
+        services: data.services,
+        testimonials: data.testimonials,
+        education: data.education,
+        featuredProjects: data.projects.filter(p => p.featured).map(p => p.title),
+        recentTracks: data.recentTracks,
+        keywords: data.keywords,
+      };
+
+      return reply.send({ success: true, message: "Data exported successfully", data: exportObj });
+    } catch (e: any) {
+      return reply.code(500).send({ success: false, message: "Failed to export data", errors: e.message });
+    }
+  }
+
   static async getPortfolio(req: FastifyRequest, reply: FastifyReply) {
     try {
       const redis = req.server.redis;
@@ -105,9 +201,6 @@ export class PortfolioController {
       if (!data) {
         return reply.code(404).send({ success: false, statusCode: 404, message: "Portfolio data not found." });
       }
-
-      // Fetch dynamic social stats before formatting
-      const socialStats = await fetchSocialStats(data.social);
 
       // Restructure data to match old static JSON structure
       const formatted = {
@@ -142,7 +235,6 @@ export class PortfolioController {
         showCertificates: data.showCertificates,
         showServices: data.showServices,
         showTestimonials: data.showTestimonials,
-        socialStats,
       };
 
       if (redis) {

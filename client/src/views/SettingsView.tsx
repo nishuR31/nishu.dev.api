@@ -208,13 +208,59 @@ export default function SettingsView() {
       {/* Security & Authentication Section */}
       <section className="space-y-4 sm:space-y-6">
         <header>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1 sm:mb-2">Security & Profile</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1 sm:mb-2">Security & Integration</h2>
           <p className="text-sm sm:text-base md:text-lg text-[var(--foreground)] opacity-60">
-            Manage your credentials, 2FA, and Passkeys.
+            Manage your credentials, 2FA, Passkeys, and external API Stats.
           </p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* Social Stats Sync */}
+          <div className="p-8 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group">
+            <div className="absolute -right-12 -top-12 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+            <div className="flex items-center gap-4 mb-6 relative z-10">
+               <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500">
+                  <Globe className="w-6 h-6" />
+               </div>
+               <div>
+                 <h3 className="text-xl font-bold">Social Stats Sync</h3>
+                 <p className="text-xs opacity-60 mt-1">Force update GitHub & LeetCode data</p>
+               </div>
+            </div>
+            <div className="relative z-10">
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const res = await axios.post('/api/portfolio/social/sync-stats?force=true');
+                    alert("Social stats successfully synced from external APIs!");
+                  } catch (e: any) {
+                    alert("Failed to sync stats: " + e.message);
+                  }
+                }}
+                className="w-full mt-2 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold rounded-xl transition-colors"
+              >
+                Force Sync External Stats
+              </button>
+              
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const res = await axios.get('/api/portfolio/export');
+                    navigator.clipboard.writeText(JSON.stringify(res.data.data, null, 2));
+                    alert("Data exported and copied to clipboard! Paste this in data/index.ts to hardcode the backup.");
+                  } catch (e: any) {
+                    alert("Failed to export data: " + e.message);
+                  }
+                }}
+                className="w-full mt-4 py-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)] font-semibold rounded-xl transition-colors"
+              >
+                Export JSON to Clipboard
+              </button>
+            </div>
+          </div>
           
           {/* Change Password */}
           <div className="p-8 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden">

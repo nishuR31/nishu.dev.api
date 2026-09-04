@@ -8,6 +8,8 @@ export default async function portfolioRoutes(fastify: FastifyInstance) {
   // Protected Developer Routes
   fastify.post("/profile", { preValidation: [fastify.authorizeDeveloper] }, PortfolioController.updateProfile);
   fastify.post("/seed", { preValidation: [fastify.authorizeDeveloper] }, PortfolioController.seedDatabase);
+  fastify.post("/social/sync-stats", { preValidation: [fastify.authorizeDeveloper] }, PortfolioController.syncSocialStats);
+  fastify.get("/export", { preValidation: [fastify.authorizeDeveloper] }, PortfolioController.exportData);
 
   // Projects
   fastify.post("/projects", { preValidation: [fastify.authorizeDeveloper] }, PortfolioController.createProject);
