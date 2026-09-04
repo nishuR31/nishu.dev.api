@@ -23,8 +23,13 @@ export default fp(async (fastify: FastifyInstance) => {
   // Decorate fastify instance with authentication middleware
   fastify.decorate("authenticate", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      await request.jwtVerify();
+      if (request.cookies.access_token) {
+        await request.jwtVerify({ onlyCookie: true });
+      } else {
+        await request.jwtVerify();
+      }
     } catch (err) {
+      request.log.error(err);
       sendUnauthorizedError(reply, "Unauthorized: Invalid or missing token.");
     }
   });
@@ -32,7 +37,11 @@ export default fp(async (fastify: FastifyInstance) => {
   // Decorate fastify instance with developer role authorization
   fastify.decorate("authorizeDeveloper", async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      await request.jwtVerify();
+      if (request.cookies.access_token) {
+        await request.jwtVerify({ onlyCookie: true });
+      } else {
+        await request.jwtVerify();
+      }
 
       const payload = request.user as { id: string; role: string };
 
@@ -47,6 +56,7 @@ export default fp(async (fastify: FastifyInstance) => {
       }
 
     } catch (err) {
+      request.log.error(err);
       sendUnauthorizedError(reply, "Unauthorized: Invalid or missing token.");
     }
   });
