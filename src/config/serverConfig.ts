@@ -11,7 +11,7 @@ let app = fastify({ logger: true, exposeHeadRoutes: true });
 
 const allowedOrigins = CORS_ORIGIN.split(",").map(origin => origin.trim());
 
-app.register(cors, { origin: allowedOrigins });
+app.register(cors, { origin: allowedOrigins, credentials: true });
 
 import authPlugin from "../plugins/auth.plugin";
 import authRoutes from "../modules/auth/auth.routes";

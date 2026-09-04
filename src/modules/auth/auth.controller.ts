@@ -69,9 +69,9 @@ export class AuthController {
       reply.setCookie("access_token", token, {
         domain: COOKIE_DOMAIN,
         path: "/",
-        secure: NODE_ENV === "production",
+        secure: true,
         httpOnly: true,
-        sameSite: "strict",
+        sameSite: "none",
       });
 
       return sendSuccess(reply, "Login successful", 200, { token });
@@ -267,9 +267,9 @@ export class AuthController {
         reply.setCookie("access_token", token, {
           domain: COOKIE_DOMAIN,
           path: "/",
-          secure: NODE_ENV === "production",
+          secure: true,
           httpOnly: true,
-          sameSite: "strict",
+          sameSite: "none",
         });
 
         return sendSuccess(reply, "Passkey login successful", 200, { token });
