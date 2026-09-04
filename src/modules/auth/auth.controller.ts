@@ -67,11 +67,10 @@ export class AuthController {
       const token = await reply.jwtSign({ id: user.id, role: user.role, email: user.email });
 
       reply.setCookie("access_token", token, {
-          domain: COOKIE_DOMAIN === "localhost" ? undefined : COOKIE_DOMAIN,
         path: "/",
-          secure: NODE_ENV === "production",
-          httpOnly: true,
-          sameSite: NODE_ENV === "production" ? "none" : "lax",
+        secure: NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: NODE_ENV === "production" ? "none" : "lax",
       });
 
       return sendSuccess(reply, "Login successful", 200, { token });
@@ -265,7 +264,6 @@ export class AuthController {
         const token = await reply.jwtSign({ id: user.id, role: user.role, email: user.email });
 
         reply.setCookie("access_token", token, {
-            domain: COOKIE_DOMAIN === "localhost" ? undefined : COOKIE_DOMAIN,
           path: "/",
           secure: NODE_ENV === "production",
           httpOnly: true,
