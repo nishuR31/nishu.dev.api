@@ -24,13 +24,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (response.data.success) {
           setIsAuthenticated(true);
           setUser(response.data.data);
-          localStorage.setItem('crm_logged_in', 'true');
         }
       } catch (error) {
         setIsAuthenticated(false);
         setUser(null);
-        localStorage.removeItem('crm_logged_in');
-        localStorage.removeItem('crm_user');
       } finally {
         setLoading(false);
       }
@@ -42,8 +39,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (token: string, userData: any) => {
     setIsAuthenticated(true);
     setUser(userData);
-    localStorage.setItem('crm_logged_in', 'true');
-    localStorage.setItem('crm_user', JSON.stringify(userData));
   };
 
   const logout = async () => {
@@ -52,8 +47,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (e) {}
     setIsAuthenticated(false);
     setUser(null);
-    localStorage.removeItem('crm_logged_in');
-    localStorage.removeItem('crm_user');
   };
 
   return (
