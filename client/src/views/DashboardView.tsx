@@ -106,7 +106,7 @@ export default function DashboardView() {
       </header>
 
       {data ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 auto-rows-auto md:auto-rows-[160px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 md:auto-rows-min">
           
           {/* Main Stat Card - Spans 2 cols, 2 rows */}
           <div className="col-span-2 md:col-span-2 md:row-span-2 p-4 sm:p-6 md:p-8 bg-[var(--card)] rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-transform duration-300 flex flex-col justify-between group relative overflow-hidden">

@@ -1,11 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Settings, ShieldAlert, Globe, Save, KeyRound, Fingerprint, ShieldCheck, QrCode } from 'lucide-react';
+import { Settings, ShieldAlert, Globe, Save, KeyRound, Fingerprint, ShieldCheck, QrCode, CheckCircle2, XCircle } from 'lucide-react';
 import { useForm, Controller } from 'react-hook-form';
 import { startRegistration } from '@simplewebauthn/browser';
 
 export default function SettingsView() {
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState<{message: string, type: 'success'|'error'} | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   // Forms
   const { register: regSettings, handleSubmit: handleSettingsSubmit, reset: resetSettings, control: controlSettings, watch: watchSettings, formState: { isSubmitting: savingSettings } } = useForm({
@@ -44,15 +50,15 @@ export default function SettingsView() {
   const onSettingsSave = async (data: any) => {
     try {
       await axios.post('/api/settings', data);
-      alert("Settings saved successfully!");
+      showToast("Settings saved successfully!", 'success');
     } catch (error) {
       console.error('Failed to save settings', error);
-      alert("Failed to save settings. Please check your developer authorization.");
+      showToast("Failed to save settings. Please check your developer authorization.", 'error');
     }
   };
 
   const onPasswordSave = async (data: any) => {
-    alert("Backend logic pending for: " + JSON.stringify(data));
+    showToast("Backend logic pending for password update.", 'error');
   };
 
   
@@ -67,13 +73,13 @@ export default function SettingsView() {
       
       // 3. Send response to server to verify
       await axios.post('/api/auth/passkey/verify-registration', attResp);
-      alert("Passkey successfully registered!");
+      showToast("Passkey successfully registered!", 'success');
     } catch (err: any) {
       console.error("Passkey registration failed", err);
       if (err.name === 'NotAllowedError') {
-        alert('Passkey registration was cancelled or timed out.');
+        showToast('Passkey registration was cancelled or timed out.', 'error');
       } else {
-        alert('Failed to register passkey: ' + (err.response?.data?.message || err.message));
+        showToast('Failed to register passkey: ' + (err.response?.data?.message || err.message), 'error');
       }
     }
   };
@@ -96,7 +102,7 @@ export default function SettingsView() {
       }
     } catch (error) {
       console.error("Failed to setup 2FA", error);
-      alert("Failed to initialize 2FA setup.");
+      showToast("Failed to initialize 2FA setup.", 'error');
     } finally {
       setIsGeneratingTotp(false);
     }
@@ -234,9 +240,9 @@ export default function SettingsView() {
                 onClick={async () => {
                   try {
                     const res = await axios.post('/api/portfolio/social/sync-stats?force=true');
-                    alert("Social stats successfully synced from external APIs!");
+                    showToast("Social stats successfully synced from external APIs!", 'success');
                   } catch (e: any) {
-                    alert("Failed to sync stats: " + e.message);
+                    showToast("Failed to sync stats: " + (e.response?.data?.message || e.message), 'error');
                   }
                 }}
                 className="w-full mt-2 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold rounded-xl transition-colors"
@@ -250,9 +256,9 @@ export default function SettingsView() {
                   try {
                     const res = await axios.get('/api/portfolio/export');
                     navigator.clipboard.writeText(JSON.stringify(res.data.data, null, 2));
-                    alert("Data exported and copied to clipboard! Paste this in data/index.ts to hardcode the backup.");
+                    showToast("Data exported and copied to clipboard!", 'success');
                   } catch (e: any) {
-                    alert("Failed to export data: " + e.message);
+                    showToast("Failed to export data: " + (e.response?.data?.message || e.message), 'error');
                   }
                 }}
                 className="w-full mt-4 py-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)] font-semibold rounded-xl transition-colors"
@@ -385,6 +391,16 @@ export default function SettingsView() {
           </div>
         </div>
       </section>
+
+      {/* Toast Notification */}
+      {toast && (
+        <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+          <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${toast.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'} backdrop-blur-xl`}>
+            {toast.type === 'success' ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
+            <span className="font-semibold">{toast.message}</span>
+          </div>
+        </div>
+      )}
       
     </div>
   );

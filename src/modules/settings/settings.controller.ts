@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import prisma from "../../providers/db.provider";
 import { z } from "zod";
+import { PortfolioController } from "../portfolio/portfolio.controller";
 
 const SettingsSchema = z.object({
   maintenanceMode: z.boolean(),
@@ -33,6 +34,8 @@ export class SettingsController {
         update: data,
         create: { id: "global", ...data }
       });
+
+      await PortfolioController.invalidateCache(req.server.redis);
 
       return reply.send({ success: true, statusCode: 200, message: "Settings updated", data: updated });
     } catch (error) {

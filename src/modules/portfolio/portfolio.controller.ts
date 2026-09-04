@@ -202,6 +202,8 @@ export class PortfolioController {
         return reply.code(404).send({ success: false, statusCode: 404, message: "Portfolio data not found." });
       }
 
+      const settings = await prisma.systemSettings.findUnique({ where: { id: "global" } });
+
       // Restructure data to match old static JSON structure
       const formatted = {
         developer: {
@@ -235,6 +237,7 @@ export class PortfolioController {
         showCertificates: data.showCertificates,
         showServices: data.showServices,
         showTestimonials: data.showTestimonials,
+        maintenanceMode: settings?.maintenanceMode ?? false,
       };
 
       if (redis) {
