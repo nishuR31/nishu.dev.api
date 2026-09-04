@@ -6,8 +6,18 @@ type Environment = "development" | "test" | "production";
 export const PORT: number = Number(process.env.PORT) || 3001;
 export const NODE_ENV: Environment =
   (process.env.NODE_ENV as Environment) || "development";
-export const COOKIE_DOMAIN: string = process.env.COOKIE_DOMAIN || "localhost";
-export const RP_ID: string = process.env.RP_ID || "localhost";
+export const BACKEND_URL: string = process.env.BACKEND_URL || "http://localhost:4000";
+
+// Try to safely parse the BACKEND_URL to derive domain defaults
+let derivedDomain = "localhost";
+try {
+  derivedDomain = new URL(BACKEND_URL).hostname;
+} catch (e) {
+  console.warn("Invalid BACKEND_URL provided, defaulting derived domains to localhost");
+}
+
+export const COOKIE_DOMAIN: string = process.env.COOKIE_DOMAIN || derivedDomain;
+export const RP_ID: string = process.env.RP_ID || derivedDomain;
 export const FRONTEND_URL: string = process.env.FRONTEND_URL || "http://localhost:3000";
 export const CORS_ORIGIN: string = process.env.CORS_ORIGIN || "http://localhost:3000,http://localhost:5173,https://nishudevportfolio.vercel.app";
 
