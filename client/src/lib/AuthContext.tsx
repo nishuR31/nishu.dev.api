@@ -18,6 +18,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   
   useEffect(() => {
+    const token = localStorage.getItem('crm_token');
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+
     const verifyAuth = async () => {
       try {
         const response = await axios.get('/api/auth/me');
@@ -31,6 +36,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(null);
         localStorage.removeItem('crm_logged_in');
         localStorage.removeItem('crm_user');
+        localStorage.removeItem('crm_token');
+        delete axios.defaults.headers.common['Authorization'];
       } finally {
         setLoading(false);
       }
@@ -44,6 +51,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(userData);
     localStorage.setItem('crm_logged_in', 'true');
     localStorage.setItem('crm_user', JSON.stringify(userData));
+    localStorage.setItem('crm_token', token);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   };
 
   const logout = async () => {
@@ -54,6 +63,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     localStorage.removeItem('crm_logged_in');
     localStorage.removeItem('crm_user');
+    localStorage.removeItem('crm_token');
+    delete axios.defaults.headers.common['Authorization'];
   };
 
   return (
