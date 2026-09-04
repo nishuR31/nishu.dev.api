@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Activity, FolderGit2, Award, Briefcase, ChevronRight, Database, CheckCircle2, XCircle, Eye, EyeOff } from 'lucide-react';
+import { Activity, FolderGit2, Award, Briefcase, ChevronRight, Database, CheckCircle2, XCircle, Eye, EyeOff, User, Layers, GraduationCap, Target, Star, MessageSquare, Rocket } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function DashboardView() {
@@ -193,20 +193,20 @@ export default function DashboardView() {
 
             <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-5">
               {[
-                { id: 'showAbout', label: 'About', icon: '👤' },
-                { id: 'showServices', label: 'Services', icon: '⚡' },
-                { id: 'showExperience', label: 'Experience', icon: '💼' },
-                { id: 'showEducation', label: 'Education', icon: '🎓' },
-                { id: 'showProjects', label: 'Projects', icon: '🚀' },
-                { id: 'showSkills', label: 'Skills', icon: '🎯' },
-                { id: 'showCertificates', label: 'Certs', icon: '🏆' },
-                { id: 'showTestimonials', label: 'Reviews', icon: '⭐' },
+                { id: 'showAbout', label: 'About', icon: <User className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showServices', label: 'Services', icon: <Layers className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showExperience', label: 'Experience', icon: <Briefcase className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showEducation', label: 'Education', icon: <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showProjects', label: 'Projects', icon: <Rocket className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showSkills', label: 'Skills', icon: <Target className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showCertificates', label: 'Certs', icon: <Award className="w-5 h-5 sm:w-6 sm:h-6" /> },
+                { id: 'showTestimonials', label: 'Reviews', icon: <Star className="w-5 h-5 sm:w-6 sm:h-6" /> },
               ].map((section) => {
                 const isVisible = data[section.id] ?? true;
                 return (
                   <div key={section.id} className={`flex items-center justify-between p-3 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl border transition-all duration-300 ${isVisible ? 'bg-[var(--background)] border-emerald-500/20 shadow-[0_4px_12px_rgba(16,185,129,0.05)]' : 'bg-[var(--background)] border-[var(--border)] opacity-60 hover:opacity-100'}`}>
                     <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 min-w-0">
-                      <span className="text-base sm:text-lg md:text-xl shrink-0">{section.icon}</span>
+                      <div className={`shrink-0 ${isVisible ? 'text-emerald-500' : 'text-[var(--foreground)] opacity-60'}`}>{section.icon}</div>
                       <span className={`font-semibold text-xs sm:text-sm truncate ${isVisible ? 'text-emerald-500' : 'text-[var(--foreground)]'}`}>{section.label}</span>
                     </div>
                     <button
