@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Lock, Mail, KeyRound, ArrowRight, ShieldCheck, Fingerprint, Sparkles, UserPlus, Link, Eye, EyeOff } from 'lucide-react';
 import axios from 'axios';
 import { useAuth } from '../lib/AuthContext';
+import { startAuthentication } from '@simplewebauthn/browser';
 
 export default function LoginView() {
   const [isLoginMode, setIsLoginMode] = useState(true);
@@ -56,6 +57,44 @@ export default function LoginView() {
       } else {
         setError(errMsg);
       }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasskeyLogin = async () => {
+    if (!email) {
+      setError("Please enter your email to use passkey.");
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      // 1. Get options from server
+      const optionsResp = await axios.post('/api/auth/passkey/login-options', { email });
+      if (!optionsResp.data.success) {
+        throw new Error(optionsResp.data.message || "Failed to get passkey options");
+      }
+      
+      // 2. Start authentication in browser
+      const asseResp = await startAuthentication(optionsResp.data.data);
+      
+      // 3. Verify response with server
+      const verificationResp = await axios.post('/api/auth/passkey/login-verify', {
+        email,
+        credential: asseResp
+      });
+      
+      if (verificationResp.data.success) {
+        login(verificationResp.data.data.token, { email });
+        navigate(from, { replace: true });
+      } else {
+        throw new Error(verificationResp.data.message || "Passkey login failed");
+      }
+    } catch (err: any) {
+      setError(err.message || err.response?.data?.message || 'Passkey authentication failed');
     } finally {
       setLoading(false);
     }
@@ -210,7 +249,9 @@ export default function LoginView() {
               </button>
               <button 
                 type="button"
-                className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg flex justify-center items-center gap-2 transition-colors shadow-sm"
+                onClick={handlePasskeyLogin}
+                disabled={loading}
+                className="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 rounded-lg flex justify-center items-center gap-2 transition-colors shadow-sm disabled:opacity-50"
               >
                 <Fingerprint className="w-4 h-4 text-zinc-400" />
                 <span className="text-sm font-medium text-zinc-300">Passkey</span>

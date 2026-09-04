@@ -138,6 +138,37 @@ export class AuthController {
     }
   }
 
+  static async generatePasskeyAuthOptions(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const body = req.body as { email: string };
+      const user = await prisma.user.findUnique({ where: { email: body.email }, include: { passkeys: true } });
+      if (!user) return sendUnauthorizedError(reply, "User not found");
+
+      if (user.passkeys.length === 0) {
+        return sendError(reply, "No passkeys registered for this user", 400);
+      }
+
+      const options = await generateAuthenticationOptions({
+        rpID,
+        allowCredentials: user.passkeys.map(key => ({
+          id: key.credentialID.toString("base64url"),
+          type: 'public-key',
+          transports: key.transports ? key.transports.split(",") as any : undefined,
+        })),
+        userVerification: 'preferred',
+      });
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: { currentChallenge: options.challenge }
+      });
+
+      return sendSuccess(reply, "Authentication options generated", 200, options);
+    } catch (error: any) {
+      return sendError(reply, "Failed to generate auth options", 500, error.message);
+    }
+  }
+
   static async verifyPasskeyRegistration(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -184,6 +215,68 @@ export class AuthController {
       return sendError(reply, "Passkey not verified", 400);
     } catch (error: any) {
       return sendError(reply, "Failed to verify passkey", 500, error.message);
+    }
+  }
+
+  static async verifyPasskeyAuthentication(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const body = req.body as any;
+      const email = body.email;
+      const response = body.credential;
+
+      const user = await prisma.user.findUnique({ where: { email }, include: { passkeys: true } });
+      if (!user || !user.currentChallenge) {
+        return sendError(reply, "User or challenge not found", 400);
+      }
+
+      const passkey = user.passkeys.find(k => k.credentialID.toString("base64url") === response.id);
+      if (!passkey) {
+        return sendError(reply, "Passkey not found", 404);
+      }
+
+      let verification;
+      try {
+        verification = await verifyAuthenticationResponse({
+          response,
+          expectedChallenge: user.currentChallenge,
+          expectedOrigin: origin,
+          expectedRPID: rpID,
+          authenticator: {
+            credentialID: passkey.credentialID,
+            credentialPublicKey: passkey.credentialPublicKey,
+            counter: Number(passkey.counter),
+          }
+        });
+      } catch (error: any) {
+        return sendError(reply, "Verification failed", 400, error.message);
+      }
+
+      if (verification.verified) {
+        await prisma.passkey.update({
+          where: { id: passkey.id },
+          data: { counter: BigInt(verification.authenticationInfo.newCounter) }
+        });
+
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { currentChallenge: null }
+        });
+
+        const token = await reply.jwtSign({ id: user.id, role: user.role, email: user.email });
+
+        reply.setCookie("access_token", token, {
+          domain: COOKIE_DOMAIN,
+          path: "/",
+          secure: NODE_ENV === "production",
+          httpOnly: true,
+          sameSite: "strict",
+        });
+
+        return sendSuccess(reply, "Passkey login successful", 200, { token });
+      }
+      return sendError(reply, "Passkey not verified", 400);
+    } catch (error: any) {
+      return sendError(reply, "Failed to verify passkey login", 500, error.message);
     }
   }
 
