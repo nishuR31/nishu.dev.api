@@ -122,22 +122,23 @@ export default function TestimonialsView() {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
-      <div className="flex items-center justify-between bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-sm">
-        <h2 className="text-3xl font-bold flex items-center gap-3">
-          <MessageSquareQuote className="w-8 h-8 text-pink-500" />
+    <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[var(--card)] p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-sm">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-2 sm:gap-3">
+          <MessageSquareQuote className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
           Testimonials
         </h2>
-        <div className="flex items-center"><button 
-          onClick={openNewForm}
-          className="bg-pink-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md"
-        >
-          <Plus className="w-5 h-5" /> Add Testimonial
-        </button>
-        <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md ml-3"><FileJson className="w-5 h-5" /> Edit JSON</button></div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button onClick={openNewForm} className="bg-pink-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base">
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
+          </button>
+          <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base">
+            <FileJson className="w-4 h-4 sm:w-5 sm:h-5" /> JSON
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {testimonials.map((testimonial) => (
           <div key={testimonial.id} className={`bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all group relative overflow-hidden flex flex-col duration-300 ${testimonial.visible === false ? 'opacity-50 grayscale-[0.5]' : ''}`}>
             <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">

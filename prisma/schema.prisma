@@ -15,6 +15,7 @@ model User {
   googleId        String?  @unique
   twoFactorSecret String?
   is2FAEnabled    Boolean  @default(false)
+  currentChallenge String?
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

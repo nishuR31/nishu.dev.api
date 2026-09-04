@@ -145,72 +145,73 @@ export default function ExperiencesView() {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
-      <div className="flex items-center justify-between bg-[var(--card)] p-6 rounded-3xl border border-[var(--border)] shadow-sm">
-        <h2 className="text-3xl font-bold flex items-center gap-3">
-          <Briefcase className="w-8 h-8 text-purple-500" />
+    <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-[var(--card)] p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-sm">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-2 sm:gap-3">
+          <Briefcase className="w-6 h-6 sm:w-8 sm:h-8 text-purple-500" />
           Experiences
         </h2>
-        <div className="flex items-center"><button 
-          onClick={openNewForm}
-          className="bg-purple-500 text-white px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md"
-        >
-          <Plus className="w-5 h-5" /> Add Experience
-        </button>
-        <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-5 py-2.5 rounded-2xl flex items-center gap-2 hover:scale-105 transition-transform font-semibold shadow-md ml-3"><FileJson className="w-5 h-5" /> Edit JSON</button></div>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button onClick={openNewForm} className="bg-purple-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base">
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
+          </button>
+          <button onClick={() => setIsJsonEditorOpen(true)} className="bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base">
+            <FileJson className="w-4 h-4 sm:w-5 sm:h-5" /> JSON
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 sm:gap-6">
         {experiences.map((exp) => (
-          <div key={exp.id} className={`bg-[var(--card)] p-8 rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group ${exp.visible === false ? 'opacity-50 grayscale-[0.5]' : ''}`}>
+          <div key={exp.id} className={`bg-[var(--card)] p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:-translate-y-1 transition-all duration-300 relative overflow-hidden group ${exp.visible === false ? 'opacity-50 grayscale-[0.5]' : ''}`}>
             <div className="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-purple-500 to-pink-500 opacity-50 group-hover:opacity-100 transition-opacity" />
-            <div className="flex justify-between items-start mb-6">
-              <div className="flex gap-4 items-center">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-4 sm:mb-6">
+              <div className="flex gap-3 sm:gap-4 items-center min-w-0">
                 {exp.companyLogo ? (
-                  <img src={exp.companyLogo} alt={exp.company} className="w-12 h-12 rounded-xl object-contain bg-white/5 p-1 border border-[var(--border)]" />
+                  <img src={exp.companyLogo} alt={exp.company} className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-contain bg-white/5 p-1 border border-[var(--border)] shrink-0" />
                 ) : (
-                  <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
-                    <Building className="w-6 h-6 text-purple-500" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 shrink-0">
+                    <Building className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />
                   </div>
                 )}
-                <div>
-                  <h3 className="text-2xl font-bold text-[var(--foreground)] flex items-center gap-2">
-                    {exp.position}
-                    {exp.isCurrent && <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-purple-500/10 text-purple-500 border border-purple-500/20 whitespace-nowrap uppercase tracking-wider">Current</span>}
+                <div className="min-w-0">
+                  <h3 className="text-base sm:text-lg md:text-2xl font-bold text-[var(--foreground)] flex items-center gap-2 truncate">
+                    <span className="truncate">{exp.position}</span>
+                    {exp.isCurrent && <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-purple-500/10 text-purple-500 border border-purple-500/20 whitespace-nowrap uppercase tracking-wider shrink-0">Current</span>}
                   </h3>
-                  <a href={exp.companyUrl || "#"} target="_blank" rel="noreferrer" className="text-purple-500 font-bold flex items-center gap-1.5 mt-1 hover:underline">
+                  <a href={exp.companyUrl || "#"} target="_blank" rel="noreferrer" className="text-purple-500 font-bold flex items-center gap-1.5 mt-0.5 sm:mt-1 hover:underline text-sm sm:text-base truncate">
                     {exp.company}
                   </a>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => toggleVisibility(exp)} className={`p-2.5 rounded-xl transition-colors ${exp.visible !== false ? 'text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20' : 'text-slate-400 bg-slate-400/10 hover:bg-slate-400/20'}`} title="Toggle Visibility">
-                  {exp.visible !== false ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+              <div className="flex gap-1.5 sm:gap-2 shrink-0 self-end sm:self-start">
+                <button onClick={() => toggleVisibility(exp)} className={`p-2 sm:p-2.5 rounded-xl transition-colors ${exp.visible !== false ? 'text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20' : 'text-slate-400 bg-slate-400/10 hover:bg-slate-400/20'}`} title="Toggle Visibility">
+                  {exp.visible !== false ? <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : <EyeOff className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
                 </button>
-                <button onClick={() => handleEdit(exp)} className="p-2.5 bg-purple-500/10 rounded-xl hover:bg-purple-500/20 text-purple-500 transition-colors">
-                  <Edit2 className="w-4 h-4" />
+                <button onClick={() => handleEdit(exp)} className="p-2 sm:p-2.5 bg-purple-500/10 rounded-xl hover:bg-purple-500/20 text-purple-500 transition-colors">
+                  <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
-                <button onClick={() => handleDelete(exp.id)} className="p-2.5 bg-red-500/10 rounded-xl hover:bg-red-500/20 text-red-500 transition-colors">
-                  <Trash2 className="w-4 h-4" />
+                <button onClick={() => handleDelete(exp.id)} className="p-2 sm:p-2.5 bg-red-500/10 rounded-xl hover:bg-red-500/20 text-red-500 transition-colors">
+                  <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
             
-            <div className="flex flex-wrap gap-4 text-sm opacity-60 mb-6 font-semibold">
-              <span className="flex items-center gap-1.5 bg-[var(--background)] px-3 py-1.5 rounded-lg border border-[var(--border)]"><Calendar className="w-4 h-4" /> {exp.period}</span>
-              <span className="flex items-center gap-1.5 bg-[var(--background)] px-3 py-1.5 rounded-lg border border-[var(--border)]"><MapPin className="w-4 h-4" /> {exp.location}</span>
+            <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm opacity-60 mb-4 sm:mb-6 font-semibold">
+              <span className="flex items-center gap-1 sm:gap-1.5 bg-[var(--background)] px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-[var(--border)]"><Calendar className="w-3 h-3 sm:w-4 sm:h-4" /> {exp.period}</span>
+              <span className="flex items-center gap-1 sm:gap-1.5 bg-[var(--background)] px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg border border-[var(--border)]"><MapPin className="w-3 h-3 sm:w-4 sm:h-4" /> {exp.location}</span>
             </div>
             
-            <p className="text-sm opacity-80 mb-6 leading-relaxed">{exp.description}</p>
+            <p className="text-xs sm:text-sm opacity-80 mb-4 sm:mb-6 leading-relaxed line-clamp-3">{exp.description}</p>
             
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-[var(--border)]">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-[var(--border)]">
               <div>
-                <h4 className="text-xs uppercase tracking-widest opacity-50 font-bold mb-2">Technologies</h4>
-                <div className="text-xs font-mono opacity-80">{exp.technologies?.slice(0,3).join(", ")}{exp.technologies?.length > 3 && "..."}</div>
+                <h4 className="text-[10px] sm:text-xs uppercase tracking-widest opacity-50 font-bold mb-1 sm:mb-2">Technologies</h4>
+                <div className="text-[10px] sm:text-xs font-mono opacity-80">{exp.technologies?.slice(0,3).join(", ")}{exp.technologies?.length > 3 && "..."}</div>
               </div>
               <div>
-                <h4 className="text-xs uppercase tracking-widest opacity-50 font-bold mb-2">Responsibilities</h4>
-                <div className="text-xs opacity-80">{exp.responsibilities?.length || 0} Listed</div>
+                <h4 className="text-[10px] sm:text-xs uppercase tracking-widest opacity-50 font-bold mb-1 sm:mb-2">Responsibilities</h4>
+                <div className="text-[10px] sm:text-xs opacity-80">{exp.responsibilities?.length || 0} Listed</div>
               </div>
             </div>
           </div>

@@ -31,18 +31,20 @@ export default function JsonEditorModal({ isOpen, onClose, onSave, initialData, 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-[100] animate-in fade-in duration-200">
-      <div className="bg-[var(--card)] w-full max-w-4xl max-h-[90vh] flex flex-col rounded-[2rem] border border-[var(--border)] shadow-2xl">
-        <div className="p-6 border-b border-[var(--border)] flex items-center justify-between">
-          <h3 className="text-2xl font-bold flex items-center gap-2">
-            Raw JSON Editor: {title}
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-end sm:items-center justify-center sm:p-4 z-[100] animate-in fade-in duration-200">
+      <div className="bg-[var(--card)] w-full sm:max-w-4xl max-h-[95vh] sm:max-h-[90vh] flex flex-col rounded-t-[1.5rem] sm:rounded-[2rem] border border-[var(--border)] shadow-2xl">
+        <div className="p-4 sm:p-6 border-b border-[var(--border)] flex items-center justify-between">
+          <h3 className="text-lg sm:text-2xl font-bold flex items-center gap-2 truncate">
+            <span className="hidden sm:inline">Raw JSON Editor:</span>
+            <span className="sm:hidden">Edit JSON:</span>
+            {' '}{title}
           </h3>
-          <button onClick={onClose} className="p-2 hover:bg-[var(--background)] rounded-full transition-colors">
-            <X className="w-6 h-6" />
+          <button onClick={onClose} className="p-2 hover:bg-[var(--background)] rounded-full transition-colors shrink-0">
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
         
-        <div className="flex-1 p-6 overflow-hidden flex flex-col">
+        <div className="flex-1 p-3 sm:p-6 overflow-hidden flex flex-col min-h-0">
           {error && (
             <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 text-red-500">
               <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
@@ -61,7 +63,7 @@ export default function JsonEditorModal({ isOpen, onClose, onSave, initialData, 
           />
         </div>
 
-        <div className="p-6 border-t border-[var(--border)] flex justify-end gap-3 bg-[var(--card)] rounded-b-[2rem]">
+        <div className="p-3 sm:p-6 border-t border-[var(--border)] flex justify-end gap-2 sm:gap-3 bg-[var(--card)] rounded-b-[1.5rem] sm:rounded-b-[2rem]">
           <button 
             onClick={onClose}
             className="px-6 py-3 rounded-xl border border-[var(--border)] hover:bg-[var(--background)] transition-colors font-bold opacity-70"

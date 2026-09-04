@@ -53,8 +53,14 @@ export default fp(async (fastify: FastifyInstance) => {
 });
 
 declare module "fastify" {
-  export interface FastifyInstance {
-    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
-    authorizeDeveloper: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+  interface FastifyInstance {
+    authenticate: (
+      request: import("fastify").FastifyRequest,
+      reply: import("fastify").FastifyReply,
+    ) => Promise<void>;
+    authorizeDeveloper: (
+      request: import("fastify").FastifyRequest,
+      reply: import("fastify").FastifyReply,
+    ) => Promise<void>;
   }
 }

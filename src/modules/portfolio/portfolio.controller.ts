@@ -111,7 +111,7 @@ export class PortfolioController {
   }
 
   // --- Projects CRUD ---
-  
+
   static async bulkUpdateProjects(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -123,7 +123,7 @@ export class PortfolioController {
       await prisma.$transaction(async (tx) => {
         await tx.project.deleteMany({ where: { portfolioId: portfolio.id } });
         for (const item of parsedArray) {
-          await tx.project.create({ data: { ...item, portfolioId: portfolio.id } });
+          await tx.project.create({ data: { ...item, image: item.image ?? "", architecture: item.architecture ?? [], portfolioId: portfolio.id } });
         }
       });
       await PortfolioController.invalidateCache(req.server.redis);
@@ -140,7 +140,7 @@ export class PortfolioController {
       const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
       if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
 
-      const project = await prisma.project.create({ data: { ...parsedData, portfolioId: portfolio.id } });
+      const project = await prisma.project.create({ data: { ...parsedData, image: parsedData.image ?? "", architecture: parsedData.architecture ?? [], portfolioId: portfolio.id } });
       await PortfolioController.invalidateCache(req.server.redis);
       return reply.send({ success: true, message: "Project created", data: project });
     } catch (e) {
@@ -172,7 +172,7 @@ export class PortfolioController {
   }
 
   // --- Experiences CRUD ---
-  
+
   static async bulkUpdateExperiences(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -233,7 +233,7 @@ export class PortfolioController {
   }
 
   // --- Certificates CRUD ---
-  
+
   static async bulkUpdateCertificates(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -294,7 +294,7 @@ export class PortfolioController {
   }
 
   // --- Services CRUD ---
-  
+
   static async bulkUpdateServices(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -355,7 +355,7 @@ export class PortfolioController {
   }
 
   // --- Testimonials CRUD ---
-  
+
   static async bulkUpdateTestimonials(req: FastifyRequest, reply: FastifyReply) {
     try {
       const userPayload = req.user as { id: string };
@@ -428,6 +428,25 @@ export class PortfolioController {
       return reply.send({ success: true, message: "Education created", data: edu });
     } catch (e) {
       return reply.code(400).send({ success: false, message: "Failed to create education", errors: e });
+    }
+  }
+
+  static async bulkUpdateEducation(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as unknown[];
+      if (!Array.isArray(rawArray)) return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({ where: { userId: userPayload.id } });
+      if (!portfolio) return reply.code(404).send({ success: false, message: "Portfolio not found" });
+      const parsedArray = rawArray.map(item => EducationSchema.parse(item));
+      await prisma.$transaction(async tx => {
+        await tx.education.deleteMany({ where: { portfolioId: portfolio.id } });
+        await tx.education.createMany({ data: parsedArray.map(item => ({ ...item, portfolioId: portfolio.id })) });
+      });
+      await PortfolioController.invalidateCache(req.server.redis);
+      return reply.send({ success: true, message: "Education bulk updated" });
+    } catch (error) {
+      return reply.code(400).send({ success: false, message: "Failed to bulk update Education", errors: error });
     }
   }
 
@@ -598,8 +617,8 @@ export class PortfolioController {
                 position: exp.position,
                 company: exp.company,
                 period: exp.period,
-                location: exp.location,
-                description: exp.description,
+                location: exp.location ?? "",
+                description: exp.description ?? "",
                 responsibilities: exp.responsibilities,
                 technologies: exp.technologies,
               }
@@ -613,7 +632,7 @@ export class PortfolioController {
             await tx.certificate.create({
               data: {
                 portfolioId: p.id,
-                certId: cert.id,
+                certId: cert.id ?? "",
                 title: cert.title,
                 url: cert.url,
                 type: cert.type,
@@ -632,7 +651,7 @@ export class PortfolioController {
                 title: cv.title,
                 url: cv.url,
                 description: cv.description,
-                lastUpdated: cv.lastUpdated,
+                lastUpdated: cv.lastUpdated ?? "",
               }
             });
           }

@@ -69,18 +69,18 @@ export default function MediaView() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold flex items-center gap-2">
-          <ImageIcon className="w-7 h-7 text-[var(--primary)]" />
+    <div className="space-y-4 sm:space-y-6 pb-24 md:pb-0">
+      <div className="flex items-center justify-between bg-[var(--card)] p-4 sm:p-6 rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-sm">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gap-2">
+          <ImageIcon className="w-6 h-6 sm:w-7 sm:h-7 text-[var(--primary)]" />
           Media & Assets
         </h2>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
         
         {/* Upload Zone */}
-        <div className="bg-[var(--card)] p-8 rounded-3xl border border-[var(--border)] shadow-sm">
+        <div className="bg-[var(--card)] p-4 sm:p-8 rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-sm">
           <h3 className="text-xl font-bold mb-6">Upload to Supabase CDN</h3>
           
           <div 

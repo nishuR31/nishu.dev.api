@@ -114,12 +114,12 @@ export default function SettingsView() {
   }
 
   return (
-    <div className="space-y-12 animate-in fade-in duration-700 pb-20 md:pb-0">
+    <div className="space-y-8 sm:space-y-12 animate-in fade-in duration-700 pb-20 md:pb-0">
       
       {/* Header */}
-      <header className="space-y-2">
-        <h2 className="text-4xl font-bold tracking-tight">System Settings</h2>
-        <p className="text-lg text-[var(--foreground)] opacity-60">
+      <header className="space-y-1 sm:space-y-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">System Settings</h2>
+        <p className="text-sm sm:text-base md:text-lg text-[var(--foreground)] opacity-60">
           Manage global application parameters and maintenance operations.
         </p>
       </header>
@@ -206,10 +206,10 @@ export default function SettingsView() {
       <hr className="border-[var(--border)] opacity-50" />
 
       {/* Security & Authentication Section */}
-      <section className="space-y-6">
+      <section className="space-y-4 sm:space-y-6">
         <header>
-          <h2 className="text-3xl font-bold tracking-tight mb-2">Security & Profile</h2>
-          <p className="text-lg text-[var(--foreground)] opacity-60">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1 sm:mb-2">Security & Profile</h2>
+          <p className="text-sm sm:text-base md:text-lg text-[var(--foreground)] opacity-60">
             Manage your credentials, 2FA, and Passkeys.
           </p>
         </header>

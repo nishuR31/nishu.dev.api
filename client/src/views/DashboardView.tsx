@@ -97,123 +97,129 @@ export default function DashboardView() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 pb-20 md:pb-0">
-      <header className="space-y-2">
-        <h2 className="text-4xl font-bold tracking-tight">Welcome, {data?.developer?.shortName || "Developer"}</h2>
-        <p className="text-lg text-[var(--foreground)] opacity-60">
+    <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-700 pb-20 md:pb-0">
+      <header className="space-y-1 sm:space-y-2">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">Welcome, {data?.developer?.shortName || "Developer"}</h2>
+        <p className="text-sm sm:text-base md:text-lg text-[var(--foreground)] opacity-60">
           Here's an overview of your portfolio data and quick actions.
         </p>
       </header>
 
       {data ? (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[160px]">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 auto-rows-auto md:auto-rows-[160px]">
           
           {/* Main Stat Card - Spans 2 cols, 2 rows */}
-          <div className="md:col-span-2 md:row-span-2 p-8 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-transform duration-300 flex flex-col justify-between group relative overflow-hidden">
+          <div className="col-span-2 md:col-span-2 md:row-span-2 p-4 sm:p-6 md:p-8 bg-[var(--card)] rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_24px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.2)] hover:scale-[1.01] transition-transform duration-300 flex flex-col justify-between group relative overflow-hidden">
             <div className="absolute -right-12 -top-12 w-48 h-48 bg-[var(--primary)] opacity-10 rounded-full blur-3xl group-hover:bg-[var(--primary)] transition-all duration-700"></div>
             <div>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-2xl font-bold">Profile Details</h3>
-                <Activity className="w-8 h-8 text-[var(--primary)]" />
+              <div className="flex items-center justify-between mb-3 sm:mb-4">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold">Profile Details</h3>
+                <Activity className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--primary)]" />
               </div>
-              <p className="text-[var(--foreground)] opacity-80 text-lg mb-2">{data.developer.role}</p>
-              <p className="text-[var(--foreground)] opacity-60 mb-6">{data.developer.tagline}</p>
+              <p className="text-[var(--foreground)] opacity-80 text-sm sm:text-base md:text-lg mb-1 sm:mb-2 line-clamp-2">{data.developer.role}</p>
+              <p className="text-[var(--foreground)] opacity-60 text-xs sm:text-sm mb-4 sm:mb-6 line-clamp-2">{data.developer.tagline}</p>
             </div>
-            <div className="bg-[var(--background)] p-4 rounded-2xl border border-[var(--border)] group-hover:border-[var(--primary)]/30 transition-colors">
-              <code className="text-sm opacity-80 font-mono truncate block">
-                {data.developer.email} • {data.developer.location}
+            <div className="bg-[var(--background)] p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[var(--border)] group-hover:border-[var(--primary)]/30 transition-colors">
+              <code className="text-xs sm:text-sm opacity-80 font-mono truncate block">
+                {data.developer.email}
+              </code>
+              <code className="text-xs opacity-60 font-mono truncate block mt-0.5 sm:hidden">
+                {data.developer.location}
+              </code>
+              <code className="text-sm opacity-80 font-mono truncate hidden sm:block mt-0.5">
+                {data.developer.location}
               </code>
             </div>
           </div>
 
           {/* Bento Card 1: Projects */}
-          <Link to="/projects" className="block p-6 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:scale-[1.02] hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between group">
-            <div className="w-12 h-12 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500 mb-4 group-hover:scale-110 transition-transform">
-              <FolderGit2 className="w-6 h-6" />
+          <Link to="/projects" className="block p-4 sm:p-6 bg-[var(--card)] rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:scale-[1.02] hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between group">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-blue-500 mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+              <FolderGit2 className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <p className="text-[var(--foreground)] opacity-60 text-sm font-medium uppercase tracking-wider mb-1">Projects</p>
+              <p className="text-[var(--foreground)] opacity-60 text-xs sm:text-sm font-medium uppercase tracking-wider mb-0.5 sm:mb-1">Projects</p>
               <div className="flex items-end justify-between">
-                <h4 className="text-4xl font-bold">{data.projects?.length || 0}</h4>
-                <ChevronRight className="w-5 h-5 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 group-hover:text-blue-500 transition-all" />
+                <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold">{data.projects?.length || 0}</h4>
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 group-hover:text-blue-500 transition-all" />
               </div>
             </div>
           </Link>
 
           {/* Bento Card 2: Certificates */}
-          <Link to="/certificates" className="block p-6 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:scale-[1.02] hover:border-amber-500/30 transition-all duration-300 flex flex-col justify-between group">
-            <div className="w-12 h-12 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-500 mb-4 group-hover:scale-110 transition-transform">
-              <Award className="w-6 h-6" />
+          <Link to="/certificates" className="block p-4 sm:p-6 bg-[var(--card)] rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:scale-[1.02] hover:border-amber-500/30 transition-all duration-300 flex flex-col justify-between group">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-amber-500 mb-3 sm:mb-4 group-hover:scale-110 transition-transform">
+              <Award className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
-              <p className="text-[var(--foreground)] opacity-60 text-sm font-medium uppercase tracking-wider mb-1">Certificates</p>
+              <p className="text-[var(--foreground)] opacity-60 text-xs sm:text-sm font-medium uppercase tracking-wider mb-0.5 sm:mb-1">Certs</p>
               <div className="flex items-end justify-between">
-                <h4 className="text-4xl font-bold">{data.certificates?.length || 0}</h4>
-                <ChevronRight className="w-5 h-5 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 group-hover:text-amber-500 transition-all" />
+                <h4 className="text-2xl sm:text-3xl md:text-4xl font-bold">{data.certificates?.length || 0}</h4>
+                <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 group-hover:text-amber-500 transition-all" />
               </div>
             </div>
           </Link>
 
           {/* Bento Card 3: Experience */}
-          <Link to="/experiences" className="block md:col-span-2 p-6 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:scale-[1.01] hover:border-purple-500/30 transition-all duration-300 flex items-center justify-between group">
-            <div className="flex items-center gap-6">
-               <div className="w-16 h-16 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform shrink-0">
-                  <Briefcase className="w-8 h-8" />
+          <Link to="/experiences" className="block col-span-2 md:col-span-2 p-4 sm:p-6 bg-[var(--card)] rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover:scale-[1.01] hover:border-purple-500/30 transition-all duration-300 flex items-center justify-between group">
+            <div className="flex items-center gap-3 sm:gap-6">
+               <div className="w-12 h-12 sm:w-16 sm:h-16 bg-purple-500/10 rounded-xl sm:rounded-2xl flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform shrink-0">
+                  <Briefcase className="w-6 h-6 sm:w-8 sm:h-8" />
                </div>
                <div>
-                 <p className="text-[var(--foreground)] opacity-60 text-sm font-medium uppercase tracking-wider mb-1">Experience Tracks</p>
-                 <h4 className="text-3xl font-bold">{data.experiences?.length || 0} Roles</h4>
+                 <p className="text-[var(--foreground)] opacity-60 text-xs sm:text-sm font-medium uppercase tracking-wider mb-0.5 sm:mb-1">Experience</p>
+                 <h4 className="text-xl sm:text-2xl md:text-3xl font-bold">{data.experiences?.length || 0} Roles</h4>
                </div>
             </div>
-             <ChevronRight className="w-6 h-6 opacity-40 group-hover:opacity-100 group-hover:translate-x-2 group-hover:text-purple-500 transition-all" />
+             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 opacity-40 group-hover:opacity-100 group-hover:translate-x-2 group-hover:text-purple-500 transition-all" />
           </Link>
 
           {/* Section Visibility Card */}
-          <div className="md:col-span-4 p-10 bg-[var(--card)] rounded-3xl border border-[var(--border)] shadow-[0_4px_32px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.3)] relative overflow-hidden group">
+          <div className="col-span-2 md:col-span-4 p-4 sm:p-6 md:p-8 lg:p-10 bg-[var(--card)] rounded-2xl sm:rounded-3xl border border-[var(--border)] shadow-[0_4px_32px_rgba(0,0,0,0.06)] dark:shadow-[0_4px_32px_rgba(0,0,0,0.3)] relative overflow-hidden group">
             {/* Ambient Background */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
             
-            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
+            <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between mb-4 sm:mb-6 md:mb-8">
               <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-3 bg-emerald-500/10 text-emerald-500 rounded-2xl">
-                    <Eye className="w-6 h-6" />
+                <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                  <div className="p-2 sm:p-3 bg-emerald-500/10 text-emerald-500 rounded-xl sm:rounded-2xl">
+                    <Eye className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
-                  <h3 className="text-3xl font-bold tracking-tight">Visibility Control Center</h3>
+                  <h3 className="text-lg sm:text-2xl md:text-3xl font-bold tracking-tight">Visibility Control</h3>
                 </div>
-                <p className="text-base text-[var(--foreground)] opacity-60 ml-2">Dynamically toggle which sections are rendered on your live portfolio.</p>
+                <p className="text-xs sm:text-sm md:text-base text-[var(--foreground)] opacity-60 ml-1 sm:ml-2">Toggle sections on your live portfolio.</p>
               </div>
             </div>
 
-            <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="relative z-10 grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-5">
               {[
-                { id: 'showAbout', label: 'About Section', icon: '👤' },
+                { id: 'showAbout', label: 'About', icon: '👤' },
                 { id: 'showServices', label: 'Services', icon: '⚡' },
                 { id: 'showExperience', label: 'Experience', icon: '💼' },
                 { id: 'showEducation', label: 'Education', icon: '🎓' },
                 { id: 'showProjects', label: 'Projects', icon: '🚀' },
-                { id: 'showSkills', label: 'Skills Set', icon: '🎯' },
-                { id: 'showCertificates', label: 'Certificates', icon: '🏆' },
-                { id: 'showTestimonials', label: 'Testimonials', icon: '⭐' },
+                { id: 'showSkills', label: 'Skills', icon: '🎯' },
+                { id: 'showCertificates', label: 'Certs', icon: '🏆' },
+                { id: 'showTestimonials', label: 'Reviews', icon: '⭐' },
               ].map((section) => {
                 const isVisible = data[section.id] ?? true;
                 return (
-                  <div key={section.id} className={`flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${isVisible ? 'bg-[var(--background)] border-emerald-500/20 shadow-[0_4px_12px_rgba(16,185,129,0.05)]' : 'bg-[var(--background)] border-[var(--border)] opacity-60 hover:opacity-100'}`}>
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl">{section.icon}</span>
-                      <span className={`font-semibold text-sm ${isVisible ? 'text-emerald-500' : 'text-[var(--foreground)]'}`}>{section.label}</span>
+                  <div key={section.id} className={`flex items-center justify-between p-3 sm:p-4 md:p-5 rounded-xl sm:rounded-2xl border transition-all duration-300 ${isVisible ? 'bg-[var(--background)] border-emerald-500/20 shadow-[0_4px_12px_rgba(16,185,129,0.05)]' : 'bg-[var(--background)] border-[var(--border)] opacity-60 hover:opacity-100'}`}>
+                    <div className="flex items-center gap-1.5 sm:gap-2 md:gap-3 min-w-0">
+                      <span className="text-base sm:text-lg md:text-xl shrink-0">{section.icon}</span>
+                      <span className={`font-semibold text-xs sm:text-sm truncate ${isVisible ? 'text-emerald-500' : 'text-[var(--foreground)]'}`}>{section.label}</span>
                     </div>
                     <button
                       type="button"
                       disabled={updatingVisibility}
                       onClick={() => toggleVisibility(section.id, isVisible)}
-                      className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors duration-300 shadow-inner disabled:opacity-50 ${
+                      className={`relative inline-flex h-6 w-10 sm:h-7 sm:w-12 items-center rounded-full transition-colors duration-300 shadow-inner disabled:opacity-50 shrink-0 ml-1 ${
                         isVisible ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
                       }`}
                     >
                       <span
-                        className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
-                          isVisible ? 'translate-x-6' : 'translate-x-1'
+                        className={`inline-block h-4 w-4 sm:h-5 sm:w-5 transform rounded-full bg-white shadow-md transition-transform duration-300 ${
+                          isVisible ? 'translate-x-5 sm:translate-x-6' : 'translate-x-1'
                         }`}
                       />
                     </button>
@@ -259,7 +265,7 @@ export default function DashboardView() {
 
       {/* Toast Notification */}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
+        <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
           <div className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${toast.type === 'success' ? 'bg-green-500/10 border-green-500/20 text-green-500' : 'bg-red-500/10 border-red-500/20 text-red-500'} backdrop-blur-xl`}>
             {toast.type === 'success' ? <CheckCircle2 className="w-6 h-6" /> : <XCircle className="w-6 h-6" />}
             <span className="font-semibold">{toast.message}</span>

@@ -13,11 +13,11 @@ const rpID = RP_ID;
 const origin = FRONTEND_URL;
 
 export class AuthController {
-  
+
   static async register(req: FastifyRequest, reply: FastifyReply) {
     try {
       const data = RegisterSchema.parse(req.body);
-      
+
       // Enforce ONLY one user (the Developer)
       const existingUserCount = await prisma.user.count();
       if (existingUserCount > 0) {
@@ -43,7 +43,7 @@ export class AuthController {
   static async login(req: FastifyRequest, reply: FastifyReply) {
     try {
       const data = LoginSchema.parse(req.body);
-      
+
       const user = await prisma.user.findUnique({ where: { email: data.email } });
       if (!user || !user.passwordHash) {
         return sendUnauthorizedError(reply, "Invalid credentials.");
@@ -58,7 +58,7 @@ export class AuthController {
         if (!data.token2FA) {
           return sendUnauthorizedError(reply, "2FA token required.");
         }
-        const isValid2FA = authenticator.authenticator.verify({ token: data.token2FA, secret: user.twoFactorSecret! });
+        const isValid2FA = authenticator.verify({ token: data.token2FA, secret: user.twoFactorSecret! });
         if (!isValid2FA) {
           return sendUnauthorizedError(reply, "Invalid 2FA token.");
         }
@@ -82,8 +82,8 @@ export class AuthController {
 
   static async setup2FA(req: FastifyRequest, reply: FastifyReply) {
     const userPayload = req.user as { id: string; email: string };
-    const secret = authenticator.authenticator.generateSecret();
-    const otpauth = authenticator.authenticator.keyuri(userPayload.email, rpName, secret);
+    const secret = authenticator.generateSecret();
+    const otpauth = authenticator.keyuri(userPayload.email, rpName, secret);
     const qrCodeUrl = await qrcode.toDataURL(otpauth);
 
     await prisma.user.update({
@@ -116,9 +116,9 @@ export class AuthController {
         userID: new Uint8Array(Buffer.from(user.id)),
         userName: user.email,
         excludeCredentials: user.passkeys.map(key => ({
-          id: key.credentialID,
+          id: key.credentialID.toString("base64url"),
           type: 'public-key',
-          transports: key.transports as any,
+          transports: key.transports ? key.transports.split(",") as any : undefined,
         })),
         authenticatorSelection: {
           residentKey: 'required',
@@ -166,10 +166,10 @@ export class AuthController {
         await prisma.passkey.create({
           data: {
             userId: user.id,
-            credentialID: credential.id,
+            credentialID: Buffer.from(credential.id, "base64url"),
             credentialPublicKey: Buffer.from(credential.publicKey),
             counter: BigInt(credential.counter),
-            transports: credential.transports || [],
+            transports: credential.transports?.join(",") || null,
           }
         });
 
@@ -179,7 +179,7 @@ export class AuthController {
           data: { currentChallenge: null }
         });
 
-        return sendSuccess(reply, "Passkey registered successfully", 200);
+        return sendSuccess(reply, "Passkey registered successfully", 200, null);
       }
       return sendError(reply, "Passkey not verified", 400);
     } catch (error: any) {
