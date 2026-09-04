@@ -11,7 +11,11 @@ export const BACKEND_URL: string = process.env.BACKEND_URL || "http://localhost:
 // Try to safely parse the BACKEND_URL to derive domain defaults
 let derivedDomain = "localhost";
 try {
-  derivedDomain = new URL(BACKEND_URL).hostname;
+  let safeUrl = BACKEND_URL;
+  if (!safeUrl.startsWith("http://") && !safeUrl.startsWith("https://")) {
+    safeUrl = "https://" + safeUrl;
+  }
+  derivedDomain = new URL(safeUrl).hostname;
 } catch (e) {
   console.warn("Invalid BACKEND_URL provided, defaulting derived domains to localhost");
 }

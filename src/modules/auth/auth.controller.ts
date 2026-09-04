@@ -93,6 +93,15 @@ export class AuthController {
     return sendSuccess(reply, "2FA Setup Initialized", 200, { qrCodeUrl, secret });
   }
 
+  static async disable2FA(req: FastifyRequest, reply: FastifyReply) {
+    const userPayload = req.user as { id: string };
+    await prisma.user.update({
+      where: { id: userPayload.id },
+      data: { is2FAEnabled: false, twoFactorSecret: null }
+    });
+    return sendSuccess(reply, "2FA Disabled successfully", 200, null);
+  }
+
   static async logout(req: FastifyRequest, reply: FastifyReply) {
     reply.clearCookie("access_token", { path: "/" });
     return sendSuccess(reply, "Logged out successfully", 200, null);

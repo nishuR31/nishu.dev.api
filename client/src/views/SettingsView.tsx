@@ -86,9 +86,14 @@ export default function SettingsView() {
 
   const handleEnable2FA = async () => {
     if (totpEnabled) {
-      // In a real app, you would have a disable endpoint. For now, just hide the UI.
-      setTotpEnabled(false);
-      setQrCodeUrl("");
+      try {
+        await axios.post('/api/auth/2fa/disable');
+        setTotpEnabled(false);
+        setQrCodeUrl("");
+        showToast("2FA disabled successfully.", 'success');
+      } catch (error) {
+        showToast("Failed to disable 2FA.", 'error');
+      }
       return;
     }
     
