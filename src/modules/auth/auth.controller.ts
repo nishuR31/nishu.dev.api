@@ -67,7 +67,7 @@ export class AuthController {
       const token = await reply.jwtSign({ id: user.id, role: user.role, email: user.email });
 
       reply.setCookie("access_token", token, {
-        domain: COOKIE_DOMAIN,
+          domain: COOKIE_DOMAIN === "localhost" ? undefined : COOKIE_DOMAIN,
         path: "/",
           secure: NODE_ENV === "production",
           httpOnly: true,
@@ -265,7 +265,7 @@ export class AuthController {
         const token = await reply.jwtSign({ id: user.id, role: user.role, email: user.email });
 
         reply.setCookie("access_token", token, {
-          domain: COOKIE_DOMAIN,
+            domain: COOKIE_DOMAIN === "localhost" ? undefined : COOKIE_DOMAIN,
           path: "/",
           secure: NODE_ENV === "production",
           httpOnly: true,

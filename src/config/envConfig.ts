@@ -9,7 +9,7 @@ export const NODE_ENV: Environment =
 export const COOKIE_DOMAIN: string = process.env.COOKIE_DOMAIN || "localhost";
 export const RP_ID: string = process.env.RP_ID || "localhost";
 export const FRONTEND_URL: string = process.env.FRONTEND_URL || "http://localhost:3000";
-export const CORS_ORIGIN: string = process.env.CORS_ORIGIN || "http://localhost:3000,https://nishudevportfolio.vercel.app";
+export const CORS_ORIGIN: string = process.env.CORS_ORIGIN || "http://localhost:3000,http://localhost:5173,https://nishudevportfolio.vercel.app";
 
 // Database & Cache
 export const REDIS: string = process.env.REDIS || "";
