@@ -30,6 +30,14 @@ if (REDIS) {
   app.register(fastifyRedis, { url: REDIS });
 }
 
+app.addHook("onRequest", async (request, reply) => {
+  // Allow API routes to be public (auth middleware will protect specific routes)
+  if (request.url.startsWith("/api/")) {
+    request.log.info({ url: request.url, cookies: request.cookies }, 'Incoming API Request');
+    return;
+  }
+});
+
 // Global Maintenance Mode Middleware
 app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) => {
   // Allow developer auth paths, settings paths, and CRM static assets
