@@ -4,6 +4,75 @@ import { PortfolioDataSchema, ProjectSchema, ExperienceSchema, CertificateSchema
 import { StorageProvider } from "../../providers/storage.provider";
 import config from "../../data/index";
 
+async function fetchSocialStats(social: any) {
+  const stats: any = {};
+  
+  // Helper to extract just the username if a full URL was provided
+  const extractHandle = (input: string) => {
+    if (!input) return "";
+    try {
+      if (input.startsWith('http')) {
+        const url = new URL(input);
+        // split path and filter out empty strings, then take the first part
+        const parts = url.pathname.split('/').filter(Boolean);
+        return parts.length > 0 ? parts[0] : input;
+      }
+    } catch(e) {}
+    return input.replace(/^@/, '');
+  };
+
+  const githubHandle = extractHandle(social?.github);
+  if (githubHandle) {
+    try {
+      const res = await fetch(`https://api.github.com/users/${githubHandle}`, {
+        headers: { "User-Agent": "nishu.dev.api" }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        stats.github = {
+          followers: data.followers,
+          public_repos: data.public_repos
+        };
+      }
+    } catch (e) {
+      console.error("Failed to fetch github stats", e);
+    }
+  }
+
+  const leetcodeHandle = extractHandle(social?.leetcode);
+  if (leetcodeHandle) {
+    try {
+      const res = await fetch('https://leetcode.com/graphql', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `query getUserProfile($username: String!) { 
+            matchedUser(username: $username) { 
+              submitStats { acSubmissionNum { difficulty count } } 
+              profile { ranking }
+            } 
+          }`,
+          variables: { username: leetcodeHandle }
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.data?.matchedUser) {
+          const allAc = data.data.matchedUser.submitStats?.acSubmissionNum?.find((x: any) => x.difficulty === 'All');
+          stats.leetcode = {
+            solved: allAc?.count || 0,
+            ranking: data.data.matchedUser.profile?.ranking || 0
+          };
+        }
+      }
+    } catch (e) {
+      console.error("Failed to fetch leetcode stats", e);
+    }
+  }
+
+  return stats;
+}
+
 export class PortfolioController {
 
   static async getPortfolio(req: FastifyRequest, reply: FastifyReply) {
@@ -36,6 +105,9 @@ export class PortfolioController {
       if (!data) {
         return reply.code(404).send({ success: false, statusCode: 404, message: "Portfolio data not found." });
       }
+
+      // Fetch dynamic social stats before formatting
+      const socialStats = await fetchSocialStats(data.social);
 
       // Restructure data to match old static JSON structure
       const formatted = {
@@ -70,6 +142,7 @@ export class PortfolioController {
         showCertificates: data.showCertificates,
         showServices: data.showServices,
         showTestimonials: data.showTestimonials,
+        socialStats,
       };
 
       if (redis) {
