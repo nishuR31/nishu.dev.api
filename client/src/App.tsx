@@ -87,7 +87,7 @@ function AppContent() {
         <header className="glass-header px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
           <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
             <h1 className="text-lg sm:text-xl font-bold text-[var(--primary)] flex items-center gap-2 shrink-0">
-              <LayoutDashboard className="w-5 h-5 sm:w-6 sm:h-6" />
+              <img src="/logo-84.avif" alt="Logo" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-white/10 shadow-sm" />
               <span className="hidden xs:inline">
                 {crmName ? `${crmName} CRM` : "CRM"}
               </span>

@@ -141,8 +141,8 @@ export default function LoginView() {
       <div className="w-full max-w-sm">
         {/* Header Section */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center mb-5 shadow-sm">
-            <Fingerprint className="w-6 h-6 text-zinc-300" />
+          <div className="w-14 h-14 bg-zinc-900 border border-zinc-800 rounded-xl flex items-center justify-center mb-5 shadow-sm overflow-hidden">
+            <img src="/logo-84.avif" alt="Logo" className="w-full h-full object-cover" />
           </div>
           <h2 className="text-2xl font-semibold text-white tracking-tight">
             {isLoginMode ? "Welcome back" : "Create an account"}
