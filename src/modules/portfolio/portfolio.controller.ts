@@ -10,6 +10,7 @@ import {
   EducationSchema,
   SkillCategorySchema,
   SocialSchema,
+  CVSchema,
 } from "./portfolio.schema";
 import { StorageProvider } from "../../providers/storage.provider";
 import config from "../../data/index";
@@ -1264,6 +1265,42 @@ export class PortfolioController {
       return reply
         .code(400)
         .send({ success: false, message: "Failed to bulk update Skills", errors: e });
+    }
+  }
+
+  static async bulkUpdateCVs(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const rawArray = req.body as any[];
+      if (!Array.isArray(rawArray))
+        return reply.code(400).send({ success: false, message: "Expected an array" });
+      const portfolio = await prisma.portfolioData.findUnique({
+        where: { userId: userPayload.id },
+      });
+      if (!portfolio)
+        return reply.code(404).send({ success: false, message: "Portfolio not found" });
+
+      const parsedArray = rawArray.map((item) => CVSchema.parse(item));
+
+      await prisma.$transaction(async (tx) => {
+        await tx.cV.deleteMany({ where: { portfolioId: portfolio.id } });
+        await tx.cV.createMany({
+          data: parsedArray.map((cv) => ({
+            cvId: cv.cvId,
+            title: cv.title,
+            url: cv.url,
+            description: cv.description,
+            lastUpdated: cv.lastUpdated,
+            portfolioId: portfolio.id,
+          })),
+        });
+      });
+      await PortfolioController.invalidateCache(req);
+      return reply.send({ success: true, message: "CVs bulk updated" });
+    } catch (e) {
+      return reply
+        .code(400)
+        .send({ success: false, message: "Failed to bulk update CVs", errors: e });
     }
   }
 }

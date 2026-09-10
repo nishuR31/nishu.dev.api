@@ -128,3 +128,12 @@ export const SocialSchema = z.object({
   leetcodeSolved: z.number().int().optional().nullable(),
   leetcodeRanking: z.number().int().optional().nullable(),
 });
+
+export const CVSchema = z.object({
+  id: z.string().optional(),
+  cvId: z.string(),
+  title: z.string(),
+  url: z.string(),
+  description: z.string(),
+  lastUpdated: z.string(),
+});

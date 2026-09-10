@@ -17,6 +17,7 @@ import {
   X,
   User,
   Target,
+  FileText,
 } from "lucide-react";
 import { AuthProvider, ProtectedRoute } from "./lib/AuthContext";
 import LoginView from "./views/LoginView";
@@ -31,12 +32,14 @@ import TestimonialsView from "./views/TestimonialsView";
 import EducationView from "./views/EducationView";
 import ProfileView from "./views/ProfileView";
 import SkillsView from "./views/SkillsView";
+import CVsView from "./views/CVsView";
 
 const NAV_LINKS = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard, color: "blue" },
   { to: "/projects", label: "Projects", icon: FolderGit2, color: "blue" },
   { to: "/experiences", label: "Experience", icon: Briefcase, color: "purple" },
   { to: "/education", label: "Education", icon: GraduationCap, color: "emerald" },
+  { to: "/cvs", label: "CVs", icon: FileText, color: "blue" },
   { to: "/certificates", label: "Certs", icon: Award, color: "amber" },
   { to: "/services", label: "Services", icon: Layers, color: "indigo" },
   { to: "/skills", label: "Skills", icon: Target, color: "indigo" },
@@ -204,6 +207,14 @@ function AppContent() {
             element={
               <ProtectedRoute>
                 <EducationView />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cvs"
+            element={
+              <ProtectedRoute>
+                <CVsView />
               </ProtectedRoute>
             }
           />

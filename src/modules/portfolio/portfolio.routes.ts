@@ -132,6 +132,13 @@ export default async function portfolioRoutes(fastify: FastifyInstance) {
     PortfolioController.bulkUpdateSkills,
   );
 
+  // CVs
+  fastify.post(
+    "/cvs/bulk",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.bulkUpdateCVs,
+  );
+
   // Testimonials
   fastify.post(
     "/testimonials",
