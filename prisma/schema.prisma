@@ -1,0 +1,270 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String   @id @default(uuid())
+  email           String   @unique
+  passwordHash    String?
+  role            String   @default("developer") // Restricted to "developer"
+  googleId        String?  @unique
+  twoFactorSecret String?
+  is2FAEnabled    Boolean  @default(false)
+  currentChallenge String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  passkeys        Passkey[]
+  portfolioData   PortfolioData?
+}
+
+model Passkey {
+  id             String @id @default(uuid())
+  credentialID   Bytes  @unique
+  credentialPublicKey Bytes
+  counter        BigInt
+  transports     String?
+  user           User   @relation(fields: [userId], references: [id])
+  userId         String
+  createdAt      DateTime @default(now())
+}
+
+model PortfolioData {
+  id           String @id @default(uuid())
+  name         String
+  shortName    String
+  role         String
+  tagline      String
+  bio          String
+  location     String
+  email        String
+  about        String[]
+  recentTracks Boolean @default(true)
+  keywords     String  @default("portfolio,developer")
+  maintenanceMode Boolean @default(false)
+  siteName     String  @default("nishudevportfolio")
+
+  showAbout        Boolean @default(true)
+  showSkills       Boolean @default(true)
+  showExperience   Boolean @default(true)
+  showProjects     Boolean @default(true)
+  showEducation    Boolean @default(true)
+  showCertificates Boolean @default(true)
+  showServices     Boolean @default(true)
+  showTestimonials Boolean @default(true)
+
+  userId       String @unique
+  user         User   @relation(fields: [userId], references: [id])
+
+  social       Social?
+  navItems     NavItem[]
+  projects     Project[]
+  skills       SkillCategory[]
+  experiences  Experience[]
+  certificates Certificate[]
+  cvs          CV[]
+  
+  services     Service[]
+  testimonials Testimonial[]
+  education    Education[]
+  messages     ContactMessage[]
+  snapshot     PortfolioSnapshot?
+}
+
+model Social {
+  id        String @id @default(uuid())
+  email     String
+  github    String
+  linkedin  String
+  discord   String
+  twitter   String
+  leetcode  String
+  hackerone String
+
+  githubFollowers Int @default(0)
+  githubRepos     Int @default(0)
+  leetcodeSolved  Int @default(0)
+  leetcodeRanking Int @default(0)
+  statsUpdatedAt  DateTime @default(now())
+
+  portfolioId String @unique
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model NavItem {
+  id          String @id @default(uuid())
+  href        String
+  label       String
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  slug         String?  @unique
+  title        String
+  description  String
+  image        String
+  technologies String[]
+  github       String?
+  demo         String?
+  problem      String?
+  solution     String?
+  role         String?
+  timeline     String?
+  highlights   String[]
+  categories   String[]
+  featured     Boolean  @default(false)
+  
+  status       String?  @default("Completed")
+  architecture String[]
+  company      String?
+  stars        Int?     @default(0)
+  visible      Boolean  @default(true)
+  
+  portfolioId  String
+  portfolio    PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model SkillCategory {
+  id          String  @id @default(uuid())
+  title       String
+  iconKey     String
+  description String
+  bgClass     String
+  iconClass   String
+  
+  skills      Skill[]
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Skill {
+  id              String  @id @default(uuid())
+  name            String
+  level           String
+  hot             Boolean @default(false)
+  yearsOfExperience Int?  @default(1)
+  
+  skillCategoryId String
+  skillCategory   SkillCategory @relation(fields: [skillCategoryId], references: [id])
+}
+
+model Experience {
+  id               String @id @default(uuid())
+  position         String
+  company          String
+  companyUrl       String?
+  companyLogo      String?
+  period           String
+  isCurrent        Boolean @default(false)
+  location         String
+  description      String
+  responsibilities String[]
+  technologies     String[]
+  visible          Boolean @default(true)
+
+  portfolioId      String
+  portfolio        PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Certificate {
+  id             String @id @default(uuid())
+  certId         String // The id from original data like 'cert-1'
+  title          String
+  url            String
+  type           String
+  category       String @default("Other")
+  
+  issueDate      DateTime?
+  expirationDate DateTime?
+  issuer         String?
+  visible        Boolean @default(true)
+
+  portfolioId    String
+  portfolio      PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model CV {
+  id           String @id @default(uuid())
+  cvId         String // cv-1
+  title        String
+  url          String
+  description  String
+  lastUpdated  String
+
+  portfolioId  String
+  portfolio    PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+
+
+model Service {
+  id          String @id @default(uuid())
+  title       String
+  description String
+  icon        String?
+  pricing     String?
+  visible     Boolean @default(true)
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Testimonial {
+  id            String @id @default(uuid())
+  authorName    String
+  authorRole    String
+  authorCompany String?
+  content       String
+  avatarUrl     String?
+  visible       Boolean @default(true)
+
+  portfolioId   String
+  portfolio     PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model Education {
+  id          String @id @default(uuid())
+  institution String
+  degree      String
+  field       String
+  startDate   String?
+  endDate     String?
+  grade       String?
+  visible     Boolean @default(true)
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model ContactMessage {
+  id          String   @id @default(uuid())
+  name        String
+  email       String
+  subject     String?
+  message     String
+  status      String   @default("Unread")
+  createdAt   DateTime @default(now())
+
+  portfolioId String
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model PortfolioSnapshot {
+  id          String   @id @default(uuid())
+  version     Int      @default(1)
+  data        Json
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  portfolioId String   @unique
+  portfolio   PortfolioData @relation(fields: [portfolioId], references: [id])
+}

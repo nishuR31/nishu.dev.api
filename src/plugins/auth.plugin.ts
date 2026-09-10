@@ -1,0 +1,81 @@
+import fp from "fastify-plugin";
+import fastifyJwt from "@fastify/jwt";
+import fastifyCookie from "@fastify/cookie";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import prisma from "../providers/db.provider";
+import { COOKIE_SECRET, JWT_SECRET } from "../config/envConfig";
+import { sendError, sendUnauthorizedError } from "../utils/common/response";
+
+export default fp(async (fastify: FastifyInstance) => {
+  fastify.register(fastifyCookie, {
+    secret: COOKIE_SECRET,
+    parseOptions: {},
+  });
+
+  fastify.register(fastifyJwt, {
+    secret: JWT_SECRET,
+    cookie: {
+      cookieName: "access_token",
+      signed: false,
+    },
+  });
+
+  // Decorate fastify instance with authentication middleware
+  fastify.decorate(
+    "authenticate",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        if (request.cookies.access_token) {
+          await request.jwtVerify({ onlyCookie: true });
+        } else {
+          await request.jwtVerify();
+        }
+      } catch (err) {
+        request.log.error(err);
+        sendUnauthorizedError(reply, "Unauthorized: Invalid or missing token.");
+      }
+    },
+  );
+
+  // Decorate fastify instance with developer role authorization
+  fastify.decorate(
+    "authorizeDeveloper",
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+        if (request.cookies.access_token) {
+          await request.jwtVerify({ onlyCookie: true });
+        } else {
+          await request.jwtVerify();
+        }
+
+        const payload = request.user as { id: string; role: string };
+
+        if (payload.role !== "developer") {
+          return sendError(reply, "Forbidden: Required role not found.", 403);
+        }
+
+        // Ensure user still exists
+        const user = await prisma.user.findUnique({ where: { id: payload.id } });
+        if (!user || user.role !== "developer") {
+          return sendError(reply, "Forbidden: Access revoked.", 403);
+        }
+      } catch (err) {
+        request.log.error(err);
+        sendUnauthorizedError(reply, "Unauthorized: Invalid or missing token.");
+      }
+    },
+  );
+});
+
+declare module "fastify" {
+  interface FastifyInstance {
+    authenticate: (
+      request: import("fastify").FastifyRequest,
+      reply: import("fastify").FastifyReply,
+    ) => Promise<void>;
+    authorizeDeveloper: (
+      request: import("fastify").FastifyRequest,
+      reply: import("fastify").FastifyReply,
+    ) => Promise<void>;
+  }
+}

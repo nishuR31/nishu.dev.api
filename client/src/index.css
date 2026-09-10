@@ -1,0 +1,237 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --font-sans: "Inter", sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+}
+
+:root {
+  --background: #fdfdfd;
+  --foreground: #333333;
+  --primary: #1a1a1a;
+  --card: #ffffff;
+  --border: #e5e5e5;
+  --input: #e5e5e5;
+  --card-alpha: rgba(255, 255, 255, 0.55);
+  --header-alpha: rgba(253, 253, 253, 0.8);
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #e0e0e0;
+  --primary: #ffffff;
+  --card: #0f0f13;
+  --border: #1f1f2e;
+  --input: #1f1f2e;
+  --card-alpha: rgba(15, 15, 19, 0.55);
+  --header-alpha: rgba(9, 9, 11, 0.8);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  overflow-x: hidden;
+  min-height: 100dvh;
+  font-family: "Inter", sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Outfit", sans-serif;
+  letter-spacing: -0.02em;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}
+
+.scroll-touch {
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 640px) {
+  h1,
+  h2,
+  h3,
+  h4 {
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+}
+
+/* ── Smooth Transitions ── */
+button,
+a,
+.card,
+[data-hover] {
+  transition-property:
+    color, background-color, border-color, text-decoration-color, fill, stroke,
+    box-shadow, transform, opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+/* ── Glassmorphism utilities ── */
+.glass-panel {
+  background-color: var(--card-alpha);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+}
+
+.glass-panel-strong {
+  background-color: var(--card-alpha);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.glass-premium {
+  background-color: var(--card-alpha);
+  -webkit-backdrop-filter: saturate(200%) blur(12px);
+  backdrop-filter: saturate(200%) blur(12px);
+  border: 1px solid rgba(168, 85, 247, 0.15);
+  box-shadow:
+    0 4px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.glass-header {
+  background-color: var(--header-alpha);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+/* ── Hover Lift ── */
+.hover-lift {
+  transition: all 300ms ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* ── Gradient Heading ── */
+.gradient-heading {
+  background: linear-gradient(135deg, var(--foreground) 30%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ── Floating Gravity ── */
+.floating-gravity {
+  animation: float-gravity 7s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes float-gravity {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  25% {
+    transform: translateY(-6px) translateX(2px);
+  }
+  50% {
+    transform: translateY(-10px) translateX(0);
+  }
+  75% {
+    transform: translateY(-4px) translateX(-2px);
+  }
+}
+
+/* ── Shiny Button Shimmer ── */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(168, 85, 247, 0.25) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+.btn-shimmer:hover::after {
+  transform: translateX(100%);
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6366f1;
+}
+
+/* ── Base transitions ── */
+a,
+button {
+  transition:
+    transform 180ms ease,
+    opacity 180ms ease,
+    background-color 220ms ease;
+}
+
+/* ── Fixed body glow overlay ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(99, 102, 241, 0.05), transparent 30%),
+    radial-gradient(circle at 85% 70%, rgba(14, 165, 233, 0.04), transparent 32%);
+}
