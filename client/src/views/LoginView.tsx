@@ -157,7 +157,7 @@ export default function LoginView() {
         {/* Error / Success Messages */}
         {error && (
           <div
-            className={`mb-6 p-3 rounded-lg flex items-center gap-3 border text-sm ${error.includes("successful") ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500" : "bg-red-500/10 border-red-500/20 text-red-500"}`}
+            className={`mb-6 p-3 rounded-lg flex items-center gap-3 border text-sm ${error.includes("successful") ? "bg-[var(--foreground)]/5 border-[var(--foreground)]/20 text-[var(--foreground)]" : "bg-[var(--destructive)]/10 border-[var(--destructive)]/20 text-[var(--destructive)]"}`}
           >
             <Lock className="w-4 h-4 shrink-0" />
             <p>{error}</p>

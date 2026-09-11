@@ -90,7 +90,7 @@ export default function MediaView() {
           <h3 className="text-xl font-bold mb-6">Upload to Supabase CDN</h3>
 
           <div
-            className={`border-2 border-dashed rounded-2xl p-12 flex flex-col items-center justify-center text-center transition-all ${file ? "border-[var(--primary)] bg-blue-500/5" : "border-slate-700 hover:border-slate-500 hover:bg-slate-800/50"}`}
+            className={`border-2 border-dashed rounded-2xl p-12 flex flex-col items-center justify-center text-center transition-all ${file ? "border-[var(--primary)] bg-[var(--foreground)]/5" : "border-[var(--border)] hover:border-[var(--foreground)]/30 hover:bg-[var(--muted)]"}`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
@@ -105,28 +105,28 @@ export default function MediaView() {
 
             {file ? (
               <div className="space-y-4">
-                <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-[var(--foreground)]/20 rounded-2xl flex items-center justify-center mx-auto">
                   <FileType className="w-8 h-8 text-[var(--primary)]" />
                 </div>
                 <div>
-                  <p className="font-medium text-white truncate max-w-[200px]">
+                  <p className="font-medium text-[var(--background)] truncate max-w-[200px]">
                     {file.name}
                   </p>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-[var(--muted-foreground)]">
                     {(file.size / 1024 / 1024).toFixed(2)} MB
                   </p>
                 </div>
               </div>
             ) : (
               <div className="space-y-4 cursor-pointer">
-                <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto">
-                  <UploadCloud className="w-8 h-8 text-slate-400" />
+                <div className="w-16 h-16 bg-[var(--card)] rounded-full flex items-center justify-center mx-auto">
+                  <UploadCloud className="w-8 h-8 text-[var(--muted-foreground)]" />
                 </div>
                 <div>
                   <p className="font-medium text-white">
                     Click or drag file to this area
                   </p>
-                  <p className="text-sm text-slate-400 mt-1">
+                  <p className="text-sm text-[var(--muted-foreground)] mt-1">
                     Supports JPG, PNG, WEBP, AVIF, PDF
                   </p>
                 </div>
@@ -135,7 +135,7 @@ export default function MediaView() {
           </div>
 
           {error && (
-            <div className="mt-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
+            <div className="mt-4 p-4 bg-[var(--destructive)]/10 border border-[var(--destructive)]/20 rounded-xl text-[var(--destructive)] text-sm">
               {error}
             </div>
           )}
@@ -144,7 +144,7 @@ export default function MediaView() {
             <button
               onClick={handleUpload}
               disabled={!file || uploading}
-              className="px-6 py-3 rounded-xl bg-[var(--primary)] hover:bg-blue-600 text-white font-semibold transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-blue-500/20"
+              className="px-6 py-3 rounded-xl bg-[var(--primary)] hover:opacity-90 text-[var(--background)] font-semibold transition-all disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-[var(--foreground)]/10"
             >
               {uploading ? (
                 <>
@@ -163,18 +163,18 @@ export default function MediaView() {
         <div className="glass-panel p-8 rounded-3xl  shadow-sm flex flex-col items-center justify-center text-center">
           {uploadedUrl ? (
             <div className="space-y-6 w-full animate-in zoom-in-95 duration-500">
-              <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle2 className="w-10 h-10 text-green-500" />
+              <div className="w-20 h-20 bg-[var(--success)]/20 rounded-full flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-10 h-10 text-[var(--success)]" />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white">Upload Successful!</h3>
-                <p className="text-slate-400 text-sm mt-1">
+                <p className="text-[var(--muted-foreground)] text-sm mt-1">
                   Your asset is now served globally via Supabase CDN.
                 </p>
               </div>
 
               {uploadedUrl.match(/\.(jpeg|jpg|gif|png|avif|webp)$/i) ? (
-                <div className="w-full h-48 rounded-2xl overflow-hidden  bg-slate-900 relative group">
+                <div className="w-full h-48 rounded-2xl overflow-hidden  bg-[var(--background)] relative group">
                   <img
                     src={uploadedUrl}
                     alt="Uploaded preview"
@@ -182,7 +182,7 @@ export default function MediaView() {
                   />
                 </div>
               ) : (
-                <div className="w-full p-6 rounded-2xl  bg-slate-900 flex items-center justify-center gap-3">
+                <div className="w-full p-6 rounded-2xl  bg-[var(--background)] flex items-center justify-center gap-3">
                   <FileType className="w-8 h-8 text-[var(--primary)]" />
                   <span className="font-medium">Document Uploaded</span>
                 </div>
@@ -193,15 +193,15 @@ export default function MediaView() {
                   type="text"
                   readOnly
                   value={uploadedUrl}
-                  className="w-full bg-slate-900  rounded-xl py-3 px-4 pr-12 text-sm text-slate-300 focus:outline-none"
+                  className="w-full bg-[var(--background)]  rounded-xl py-3 px-4 pr-12 text-sm text-[var(--foreground)] opacity-80 focus:outline-none"
                 />
                 <button
                   onClick={copyToClipboard}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-slate-800 rounded-lg hover:bg-slate-700 text-white transition-colors flex items-center justify-center"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-[var(--card)] rounded-lg hover:bg-[var(--muted)] text-[var(--background)] transition-colors flex items-center justify-center"
                   title="Copy URL"
                 >
                   {copied ? (
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    <CheckCircle2 className="w-4 h-4 text-[var(--success)]" />
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
@@ -209,7 +209,7 @@ export default function MediaView() {
               </div>
             </div>
           ) : (
-            <div className="text-slate-500 max-w-sm">
+            <div className="text-[var(--muted-foreground)] max-w-sm">
               <ImageIcon className="w-16 h-16 mx-auto mb-4 opacity-20" />
               <p>
                 Uploaded files will appear here. Use the copied URL for your projects and

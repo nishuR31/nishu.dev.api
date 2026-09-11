@@ -132,8 +132,8 @@ export default function ServicesView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Services...
           </p>
         </div>
@@ -145,13 +145,13 @@ export default function ServicesView() {
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl  shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <Briefcase className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-indigo-500" />
+          <Briefcase className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-[var(--foreground)]" />
           Services
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={openNewForm}
-            className="btn-shimmer bg-indigo-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
+            className="btn-shimmer bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
           </button>
@@ -171,17 +171,17 @@ export default function ServicesView() {
             className={`glass-panel p-6 rounded-3xl  shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover-lift group relative overflow-hidden flex flex-col duration-300 ${service.visible === false ? "opacity-50 grayscale-[0.5]" : ""}`}
           >
             <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
-              <Briefcase className="w-24 h-24 text-indigo-500" />
+              <Briefcase className="w-24 h-24 text-[var(--foreground)]" />
             </div>
             <div className="flex-1 relative z-10">
               <h3 className="text-xl font-bold text-[var(--foreground)] mb-3 line-clamp-2">
                 {service.title}
               </h3>
-              <p className="text-sm text-slate-400 mb-4 line-clamp-3">
+              <p className="text-sm text-[var(--muted-foreground)] mb-4 line-clamp-3">
                 {service.description}
               </p>
               {service.pricing && (
-                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-green-500/10 text-green-500 border border-green-500/20 shadow-sm">
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-[var(--success)]/10 text-[var(--success)] border border-[var(--success)]/20 shadow-sm">
                   {service.pricing}
                 </span>
               )}
@@ -191,7 +191,7 @@ export default function ServicesView() {
               <div className="flex gap-2">
                 <button
                   onClick={() => toggleVisibility(service)}
-                  className={`p-2.5 rounded-xl transition-colors shadow-sm ${service.visible !== false ? "text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 border" : "text-slate-400 bg-slate-400/10 hover:bg-slate-400/20 border-[var(--border)] border"}`}
+                  className={`p-2.5 rounded-xl transition-colors shadow-sm ${service.visible !== false ? "text-[var(--foreground)] bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 border-[var(--foreground)]/15 border" : "text-[var(--muted-foreground)] bg-[var(--muted)] hover:bg-[var(--foreground)]/10 border-[var(--border)] border"}`}
                   title="Toggle Visibility"
                 >
                   {service.visible !== false ? (
@@ -202,13 +202,13 @@ export default function ServicesView() {
                 </button>
                 <button
                   onClick={() => handleEdit(service)}
-                  className="p-2.5 bg-[var(--background)]  hover:border-indigo-500/50 rounded-xl text-slate-400 hover:text-indigo-500 transition-colors shadow-sm"
+                  className="p-2.5 bg-[var(--background)]  hover:border-[var(--foreground)]/30 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors shadow-sm"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(service.id)}
-                  className="p-2.5 bg-[var(--background)]  hover:border-red-500/50 rounded-xl text-slate-400 hover:text-red-500 transition-colors shadow-sm"
+                  className="p-2.5 bg-[var(--background)]  hover:border-[var(--destructive)]/30 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-colors shadow-sm"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -276,7 +276,7 @@ export default function ServicesView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-3 rounded-xl bg-indigo-500 text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
+                  className="px-8 py-3 rounded-xl bg-[var(--foreground)] text-[var(--background)] hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

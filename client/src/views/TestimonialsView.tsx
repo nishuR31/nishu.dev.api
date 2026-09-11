@@ -148,8 +148,8 @@ export default function TestimonialsView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Testimonials...
           </p>
         </div>
@@ -161,13 +161,13 @@ export default function TestimonialsView() {
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl  shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <MessageSquareQuote className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-pink-500" />
+          <MessageSquareQuote className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-[var(--foreground)]" />
           Testimonials
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={openNewForm}
-            className="btn-shimmer bg-pink-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
+            className="btn-shimmer bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
           </button>
@@ -187,7 +187,7 @@ export default function TestimonialsView() {
             className={`glass-panel p-6 rounded-3xl  shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover-lift group relative overflow-hidden flex flex-col duration-300 ${testimonial.visible === false ? "opacity-50 grayscale-[0.5]" : ""}`}
           >
             <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
-              <MessageSquareQuote className="w-24 h-24 text-pink-500" />
+              <MessageSquareQuote className="w-24 h-24 text-[var(--foreground)]" />
             </div>
             <div className="flex-1 relative z-10 flex flex-col">
               <div className="flex items-center gap-4 mb-4">
@@ -195,10 +195,10 @@ export default function TestimonialsView() {
                   <img
                     src={testimonial.avatarUrl}
                     alt={testimonial.authorName}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-pink-500/20"
+                    className="w-12 h-12 rounded-full object-cover border-2 border-[var(--border)]"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-pink-500/10 border-2 border-pink-500/20 flex items-center justify-center text-pink-500 font-bold">
+                  <div className="w-12 h-12 rounded-full bg-[var(--foreground)]/5 border-2 border-[var(--border)] flex items-center justify-center text-[var(--foreground)] font-bold">
                     {testimonial.authorName.charAt(0)}
                   </div>
                 )}
@@ -206,7 +206,7 @@ export default function TestimonialsView() {
                   <h3 className="text-lg font-bold text-[var(--foreground)] leading-tight">
                     {testimonial.authorName}
                   </h3>
-                  <p className="text-sm text-slate-400">
+                  <p className="text-sm text-[var(--muted-foreground)]">
                     {testimonial.authorRole}{" "}
                     {testimonial.authorCompany && (
                       <span className="opacity-70">@ {testimonial.authorCompany}</span>
@@ -215,8 +215,8 @@ export default function TestimonialsView() {
                 </div>
               </div>
               <div className="relative">
-                <MessageSquareQuote className="w-6 h-6 text-pink-500/20 absolute -top-2 -left-2" />
-                <p className="text-sm text-slate-300 italic pl-6 pt-2 mb-4 line-clamp-4 relative z-10">
+                <MessageSquareQuote className="w-6 h-6 text-[var(--foreground)]/20 absolute -top-2 -left-2" />
+                <p className="text-sm text-[var(--foreground)] opacity-80 italic pl-6 pt-2 mb-4 line-clamp-4 relative z-10">
                   "{testimonial.content}"
                 </p>
               </div>
@@ -226,7 +226,7 @@ export default function TestimonialsView() {
               <div className="flex gap-2">
                 <button
                   onClick={() => toggleVisibility(testimonial)}
-                  className={`p-2.5 rounded-xl transition-colors shadow-sm ${testimonial.visible !== false ? "text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 border" : "text-slate-400 bg-slate-400/10 hover:bg-slate-400/20 border-[var(--border)] border"}`}
+                  className={`p-2.5 rounded-xl transition-colors shadow-sm ${testimonial.visible !== false ? "text-[var(--foreground)] bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 border-[var(--foreground)]/15 border" : "text-[var(--muted-foreground)] bg-[var(--muted)] hover:bg-[var(--foreground)]/10 border-[var(--border)] border"}`}
                   title="Toggle Visibility"
                 >
                   {testimonial.visible !== false ? (
@@ -237,13 +237,13 @@ export default function TestimonialsView() {
                 </button>
                 <button
                   onClick={() => handleEdit(testimonial)}
-                  className="p-2.5 bg-[var(--background)]  hover:border-pink-500/50 rounded-xl text-slate-400 hover:text-pink-500 transition-colors shadow-sm"
+                  className="p-2.5 bg-[var(--background)]  hover:border-[var(--foreground)]/30 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors shadow-sm"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(testimonial.id)}
-                  className="p-2.5 bg-[var(--background)]  hover:border-red-500/50 rounded-xl text-slate-400 hover:text-red-500 transition-colors shadow-sm"
+                  className="p-2.5 bg-[var(--background)]  hover:border-[var(--destructive)]/30 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-colors shadow-sm"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -338,7 +338,7 @@ export default function TestimonialsView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-3 rounded-xl bg-pink-500 text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
+                  className="px-8 py-3 rounded-xl bg-[var(--foreground)] text-[var(--background)] hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

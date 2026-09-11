@@ -132,8 +132,8 @@ export default function CVsView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading CVs...
           </p>
         </div>
@@ -145,13 +145,13 @@ export default function CVsView() {
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <FileText className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-emerald-500" />
+          <FileText className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-[var(--foreground)]" />
           Resumes (CVs)
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={openNewForm}
-            className="btn-shimmer bg-emerald-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
+            className="btn-shimmer bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
           </button>
@@ -178,27 +178,27 @@ export default function CVsView() {
               <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity bg-[var(--background)] p-1 rounded-xl shadow-sm border border-black/5 dark:border-white/5">
                 <button
                   onClick={() => handleEdit(cv)}
-                  className="p-2 text-blue-500 hover:bg-blue-500/10 rounded-lg transition-colors"
+                  className="p-2 text-[var(--foreground)] hover:bg-[var(--foreground)]/5 rounded-lg transition-colors"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(cv.id)}
-                  className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                  className="p-2 text-[var(--destructive)] hover:bg-[var(--destructive)]/10 rounded-lg transition-colors"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
             </div>
             
-            <p className="text-sm font-medium text-emerald-500 mb-3">{cv.cvId}</p>
+            <p className="text-sm font-medium text-[var(--foreground)] mb-3">{cv.cvId}</p>
             <p className="text-xs sm:text-sm text-muted-foreground line-clamp-3 mb-4">
               {cv.description}
             </p>
             
             <div className="mt-auto pt-4 border-t border-black/5 dark:border-white/5 flex justify-between items-center text-xs sm:text-sm text-muted-foreground/70">
                <span>Last updated: {cv.lastUpdated}</span>
-               <a href={cv.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">Link</a>
+               <a href={cv.url} target="_blank" rel="noopener noreferrer" className="text-[var(--foreground)] hover:underline">Link</a>
             </div>
           </div>
         ))}
@@ -279,7 +279,7 @@ export default function CVsView() {
                 type="submit"
                 form="cv-form"
                 disabled={isSubmitting}
-                className="btn-shimmer bg-emerald-500 text-white px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-emerald-600 transition-colors shadow-md disabled:opacity-70"
+                className="btn-shimmer bg-[var(--foreground)] text-[var(--background)] px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:opacity-90 transition-colors shadow-md disabled:opacity-70"
               >
                 {isSubmitting ? (
                   <Loader2 className="w-5 h-5 animate-spin" />

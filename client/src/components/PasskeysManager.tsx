@@ -101,14 +101,14 @@ export default function PasskeysManager({
               className="flex items-center justify-between p-4 bg-[var(--background)] border border-[var(--border)] rounded-xl"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center">
-                  <Key className="w-5 h-5 text-indigo-500" />
+                <div className="w-10 h-10 rounded-full bg-[var(--foreground)]/5 flex items-center justify-center">
+                  <Key className="w-5 h-5 text-[var(--foreground)]" />
                 </div>
                 <div>
                   <p className="font-medium text-[var(--foreground)] text-sm">
                     Passkey Device
                   </p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-[var(--muted-foreground)]">
                     Added on {new Date(pk.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -116,7 +116,7 @@ export default function PasskeysManager({
               <button
                 onClick={() => handleDelete(pk.id)}
                 disabled={loading}
-                className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                className="p-2 text-[var(--muted-foreground)] hover:text-[var(--destructive)] hover:bg-[var(--destructive)]/10 rounded-lg transition-colors"
                 title="Remove Passkey"
               >
                 <Trash2 className="w-4 h-4" />
@@ -126,14 +126,14 @@ export default function PasskeysManager({
         </div>
       ) : (
         <div className="p-4 bg-[var(--background)] border border-[var(--border)] rounded-xl text-center">
-          <p className="text-sm text-slate-500">No passkeys added yet.</p>
+          <p className="text-sm text-[var(--muted-foreground)]">No passkeys added yet.</p>
         </div>
       )}
 
       <button
         onClick={handleAddPasskey}
         disabled={loading}
-        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-all shadow-sm shadow-indigo-500/20"
+        className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-[var(--foreground)] hover:bg-[var(--foreground)]/90 text-white rounded-lg text-sm font-medium transition-all shadow-sm shadow-indigo-500/20"
       >
         <Plus className="w-4 h-4" />
         Add New Passkey

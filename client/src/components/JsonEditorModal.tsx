@@ -54,7 +54,7 @@ export default function JsonEditorModal({
 
         <div className="flex-1 p-3 sm:p-6 overflow-hidden flex flex-col min-h-0">
           {error && (
-            <div className="mb-4 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3 text-red-500">
+            <div className="mb-4 p-4 bg-[var(--destructive)]/10 border border-[var(--destructive)]/20 rounded-xl flex items-start gap-3 text-[var(--destructive)]">
               <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-bold">JSON Error</h4>
@@ -81,7 +81,7 @@ export default function JsonEditorModal({
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="px-8 py-3 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-colors font-bold flex items-center gap-2 shadow-lg disabled:opacity-50"
+            className="px-8 py-3 rounded-xl bg-[var(--foreground)] text-[var(--background)] hover:opacity-90 transition-colors font-bold flex items-center gap-2 shadow-lg disabled:opacity-50"
           >
             {isSaving ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

@@ -236,7 +236,7 @@ export default function ProjectsView() {
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
           <div className="h-12 w-12 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Projects...
           </p>
         </div>
@@ -249,12 +249,12 @@ export default function ProjectsView() {
       {/* Header — stacks on mobile */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <FolderGit2 className="text-blue-500 w-6 h-6 sm:w-8 sm:h-8" /> Projects
+          <FolderGit2 className="text-[var(--foreground)] w-6 h-6 sm:w-8 sm:h-8" /> Projects
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={() => openForm()}
-            className="btn-shimmer bg-blue-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform shadow-md font-semibold text-sm sm:text-base"
+            className="btn-shimmer bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform shadow-md font-semibold text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
           </button>
@@ -291,18 +291,18 @@ export default function ProjectsView() {
                 <h3 className="text-base sm:text-xl font-bold line-clamp-1 flex items-center gap-2">
                   {p.title}
                   {p.status === "In Progress" && (
-                    <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-amber-500/10 text-amber-500 border border-amber-500/20 whitespace-nowrap">
+                    <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-[var(--foreground)]/5 text-[var(--foreground)] border border-[var(--foreground)]/20 whitespace-nowrap">
                       In Progress
                     </span>
                   )}
                 </h3>
                 {p.featured && (
-                  <span className="bg-amber-500/10 text-amber-600 text-xs px-2 py-1 rounded-lg font-bold border border-amber-500/20 shrink-0">
+                  <span className="bg-[var(--foreground)]/5 text-[var(--foreground)] text-xs px-2 py-1 rounded-lg font-bold border border-[var(--foreground)]/20 shrink-0">
                     Featured
                   </span>
                 )}
               </div>
-              <p className="text-xs sm:text-sm opacity-60 mt-1.5 sm:mt-2 line-clamp-2">
+              <p className="text-xs sm:text-sm text-[var(--muted-foreground)] mt-1.5 sm:mt-2 line-clamp-2">
                 {p.description}
               </p>
             </div>
@@ -315,7 +315,7 @@ export default function ProjectsView() {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => toggleVisibility(p)}
-                  className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-colors ${p.visible !== false ? "text-emerald-500 hover:bg-emerald-500/10" : "text-slate-400 hover:bg-slate-400/10"}`}
+                  className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl transition-colors ${p.visible !== false ? "text-[var(--foreground)] hover:bg-[var(--foreground)]/10" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]"}`}
                   title="Toggle Visibility"
                 >
                   {p.visible !== false ? (
@@ -326,13 +326,13 @@ export default function ProjectsView() {
                 </button>
                 <button
                   onClick={() => openForm(p)}
-                  className="p-1.5 sm:p-2 text-blue-500 hover:bg-blue-500/10 rounded-lg sm:rounded-xl transition-colors"
+                  className="p-1.5 sm:p-2 text-[var(--foreground)] hover:bg-[var(--foreground)]/5 rounded-lg sm:rounded-xl transition-colors"
                 >
                   <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(p.id)}
-                  className="p-1.5 sm:p-2 text-red-500 hover:bg-red-500/10 rounded-lg sm:rounded-xl transition-colors"
+                  className="p-1.5 sm:p-2 text-[var(--destructive)] hover:bg-[var(--destructive)]/10 rounded-lg sm:rounded-xl transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
@@ -377,7 +377,7 @@ export default function ProjectsView() {
                     <input
                       required
                       {...register("title")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -387,7 +387,7 @@ export default function ProjectsView() {
                     <textarea
                       required
                       {...register("description")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all h-20 sm:h-24 resize-none text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all h-20 sm:h-24 resize-none text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -396,7 +396,7 @@ export default function ProjectsView() {
                     </label>
                     <input
                       {...register("image")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -406,7 +406,7 @@ export default function ProjectsView() {
                     <input
                       {...register("technologies")}
                       placeholder="React, Node.js..."
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -417,7 +417,7 @@ export default function ProjectsView() {
                       <input
                         type="url"
                         {...register("github")}
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                     <div>
@@ -427,7 +427,7 @@ export default function ProjectsView() {
                       <input
                         type="url"
                         {...register("demo")}
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                   </div>
@@ -439,7 +439,7 @@ export default function ProjectsView() {
                       <input
                         {...register("slug")}
                         placeholder="e.g. gh-control"
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                     <div>
@@ -448,7 +448,7 @@ export default function ProjectsView() {
                       </label>
                       <select
                         {...register("status")}
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       >
                         <option value="Completed">Completed</option>
                         <option value="In Progress">In Progress</option>
@@ -463,7 +463,7 @@ export default function ProjectsView() {
                     <input
                       {...register("architecture")}
                       placeholder="Microservices, Redis..."
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
                   </div>
                 </div>
@@ -475,7 +475,7 @@ export default function ProjectsView() {
                     </label>
                     <textarea
                       {...register("problem")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all h-16 sm:h-20 resize-none text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all h-16 sm:h-20 resize-none text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -484,7 +484,7 @@ export default function ProjectsView() {
                     </label>
                     <textarea
                       {...register("solution")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all h-16 sm:h-20 resize-none text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all h-16 sm:h-20 resize-none text-sm sm:text-base"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -494,7 +494,7 @@ export default function ProjectsView() {
                       </label>
                       <input
                         {...register("role")}
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                     <div>
@@ -504,7 +504,7 @@ export default function ProjectsView() {
                       <input
                         {...register("timeline")}
                         placeholder="e.g. 2 Months"
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                   </div>
@@ -514,7 +514,7 @@ export default function ProjectsView() {
                     </label>
                     <input
                       {...register("highlights")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div>
@@ -523,7 +523,7 @@ export default function ProjectsView() {
                     </label>
                     <input
                       {...register("categories")}
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -534,7 +534,7 @@ export default function ProjectsView() {
                       <input
                         {...register("company")}
                         placeholder="e.g. Acme Corp"
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                     <div>
@@ -544,7 +544,7 @@ export default function ProjectsView() {
                       <input
                         type="number"
                         {...register("stars")}
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-blue-500 transition-all text-sm sm:text-base"
+                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                       />
                     </div>
                   </div>
@@ -556,7 +556,7 @@ export default function ProjectsView() {
                         <button
                           type="button"
                           onClick={() => field.onChange(!field.value)}
-                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${field.value ? "bg-amber-500" : "bg-slate-300 dark:bg-slate-700"}`}
+                          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${field.value ? "bg-[var(--foreground)]" : "bg-[var(--border)]"}`}
                         >
                           <span
                             className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${field.value ? "translate-x-6" : "translate-x-1"}`}
@@ -582,7 +582,7 @@ export default function ProjectsView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 sm:px-8 py-2.5 sm:py-3 bg-blue-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base"
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 bg-[var(--foreground)] text-[var(--background)] font-bold rounded-xl flex items-center justify-center gap-2 hover:scale-105 transition-transform shadow-lg disabled:opacity-50 disabled:hover:scale-100 text-sm sm:text-base"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />

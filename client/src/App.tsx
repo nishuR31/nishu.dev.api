@@ -20,6 +20,7 @@ import {
   FileText,
 } from "lucide-react";
 import { AuthProvider, ProtectedRoute } from "./lib/AuthContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 import LoginView from "./views/LoginView";
 import DashboardView from "./views/DashboardView";
 import SettingsView from "./views/SettingsView";
@@ -35,18 +36,18 @@ import SkillsView from "./views/SkillsView";
 import CVsView from "./views/CVsView";
 
 const NAV_LINKS = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard, color: "blue" },
-  { to: "/projects", label: "Projects", icon: FolderGit2, color: "blue" },
-  { to: "/experiences", label: "Experience", icon: Briefcase, color: "purple" },
-  { to: "/education", label: "Education", icon: GraduationCap, color: "emerald" },
-  { to: "/cvs", label: "CVs", icon: FileText, color: "blue" },
-  { to: "/certificates", label: "Certs", icon: Award, color: "amber" },
-  { to: "/services", label: "Services", icon: Layers, color: "indigo" },
-  { to: "/skills", label: "Skills", icon: Target, color: "indigo" },
-  { to: "/testimonials", label: "Reviews", icon: MessageSquare, color: "pink" },
-  { to: "/media", label: "Media", icon: ImageIcon, color: "teal" },
-  { to: "/settings", label: "Settings", icon: Settings, color: "slate" },
-  { to: "/profile", label: "Profile", icon: User, color: "indigo" },
+  { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/projects", label: "Projects", icon: FolderGit2 },
+  { to: "/experiences", label: "Experience", icon: Briefcase },
+  { to: "/education", label: "Education", icon: GraduationCap },
+  { to: "/cvs", label: "CVs", icon: FileText },
+  { to: "/certificates", label: "Certs", icon: Award },
+  { to: "/services", label: "Services", icon: Layers },
+  { to: "/skills", label: "Skills", icon: Target },
+  { to: "/testimonials", label: "Reviews", icon: MessageSquare },
+  { to: "/media", label: "Media", icon: ImageIcon },
+  { to: "/settings", label: "Settings", icon: Settings },
+  { to: "/profile", label: "Profile", icon: User },
 ];
 
 function AppContent() {
@@ -89,8 +90,8 @@ function AppContent() {
       {!isLoginPage && (
         <header className="glass-header px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
           <div className="flex items-center gap-3 sm:gap-4 flex-1 min-w-0">
-            <h1 className="text-lg sm:text-xl font-bold text-[var(--primary)] flex items-center gap-2 shrink-0">
-              <img src="/logo-84.avif" alt="Logo" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-white/10 shadow-sm" />
+            <h1 className="text-lg sm:text-xl font-bold text-[var(--foreground)] flex items-center gap-2 shrink-0">
+              <img src="/logo-84.avif" alt="Logo" className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[var(--border)] shadow-sm" />
               <span className="hidden xs:inline">
                 {crmName ? `${crmName} CRM` : "CRM"}
               </span>
@@ -103,8 +104,8 @@ function AppContent() {
                   to={link.to}
                   className={`text-sm font-semibold transition-colors flex items-center gap-1 whitespace-nowrap ${
                     location.pathname === link.to
-                      ? "text-[var(--primary)]"
-                      : "hover:text-[var(--primary)]"
+                      ? "text-[var(--foreground)]"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                   }`}
                 >
                   <link.icon className="w-4 h-4" />
@@ -116,18 +117,18 @@ function AppContent() {
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="p-2 rounded-full hover:bg-[var(--background)] border border-[var(--border)] transition-colors"
+              className="p-2 rounded-full hover:bg-[var(--muted)] border border-[var(--border)] transition-colors"
             >
               {darkMode ? (
-                <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
+                <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--foreground)]" />
               ) : (
-                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700" />
+                <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--foreground)]" />
               )}
             </button>
             {/* Mobile hamburger for secondary nav */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-full hover:bg-[var(--background)] border border-[var(--border)] transition-colors"
+              className="md:hidden p-2 rounded-full hover:bg-[var(--muted)] border border-[var(--border)] transition-colors"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -154,8 +155,8 @@ function AppContent() {
                     to={link.to}
                     className={`flex flex-col items-center justify-center gap-1.5 p-3 rounded-2xl transition-all duration-200 ${
                       isActive
-                        ? `bg-${link.color}-500/15 text-${link.color}-500`
-                        : "text-[var(--foreground)]/60 hover:bg-[var(--background)]"
+                        ? "bg-[var(--foreground)]/10 text-[var(--foreground)]"
+                        : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]"
                     }`}
                   >
                     <link.icon className="w-5 h-5" />
@@ -175,106 +176,108 @@ function AppContent() {
             : "container mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 max-w-7xl mb-20 md:mb-0"
         }
       >
-        <Routes>
-          <Route path="/login" element={<LoginView />} />
+        <ErrorBoundary>
+          <Routes>
+            <Route path="/login" element={<LoginView />} />
 
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <DashboardView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/projects"
-            element={
-              <ProtectedRoute>
-                <ProjectsView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/experiences"
-            element={
-              <ProtectedRoute>
-                <ExperiencesView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/education"
-            element={
-              <ProtectedRoute>
-                <EducationView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/cvs"
-            element={
-              <ProtectedRoute>
-                <CVsView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/certificates"
-            element={
-              <ProtectedRoute>
-                <CertificatesView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/services"
-            element={
-              <ProtectedRoute>
-                <ServicesView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/skills"
-            element={
-              <ProtectedRoute>
-                <SkillsView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/testimonials"
-            element={
-              <ProtectedRoute>
-                <TestimonialsView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/media"
-            element={
-              <ProtectedRoute>
-                <MediaView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/settings"
-            element={
-              <ProtectedRoute>
-                <SettingsView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <ProfileView />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <DashboardView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/projects"
+              element={
+                <ProtectedRoute>
+                  <ProjectsView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/experiences"
+              element={
+                <ProtectedRoute>
+                  <ExperiencesView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/education"
+              element={
+                <ProtectedRoute>
+                  <EducationView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cvs"
+              element={
+                <ProtectedRoute>
+                  <CVsView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/certificates"
+              element={
+                <ProtectedRoute>
+                  <CertificatesView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/services"
+              element={
+                <ProtectedRoute>
+                  <ServicesView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/skills"
+              element={
+                <ProtectedRoute>
+                  <SkillsView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/testimonials"
+              element={
+                <ProtectedRoute>
+                  <TestimonialsView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/media"
+              element={
+                <ProtectedRoute>
+                  <MediaView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <SettingsView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfileView />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </ErrorBoundary>
       </main>
 
       {/* Mobile Bottom Tab Bar – compact with only 5 primary tabs */}
@@ -282,11 +285,11 @@ function AppContent() {
         <nav className="md:hidden fixed bottom-0 left-0 right-0 glass-header border-t border-[var(--border)] z-50 shadow-[0_-4px_24px_rgba(0,0,0,0.15)]">
           <div className="flex items-center justify-around px-1 py-2 pb-safe">
             {[
-              { to: "/", label: "Home", icon: LayoutDashboard, color: "blue" },
-              { to: "/projects", label: "Projects", icon: FolderGit2, color: "blue" },
-              { to: "/experiences", label: "Exp", icon: Briefcase, color: "purple" },
-              { to: "/certificates", label: "Certs", icon: Award, color: "amber" },
-              { to: "/profile", label: "Profile", icon: User, color: "indigo" },
+              { to: "/", label: "Home", icon: LayoutDashboard },
+              { to: "/projects", label: "Projects", icon: FolderGit2 },
+              { to: "/experiences", label: "Exp", icon: Briefcase },
+              { to: "/certificates", label: "Certs", icon: Award },
+              { to: "/profile", label: "Profile", icon: User },
             ].map((link) => {
               const isActive = location.pathname === link.to;
               return (
@@ -295,8 +298,8 @@ function AppContent() {
                   to={link.to}
                   className={`flex flex-col items-center justify-center gap-0.5 px-2 py-1.5 rounded-xl transition-all duration-200 min-w-0 ${
                     isActive
-                      ? `text-${link.color}-500`
-                      : "text-slate-500 hover:text-[var(--foreground)]"
+                      ? "text-[var(--foreground)]"
+                      : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
                   }`}
                 >
                   <link.icon
@@ -306,7 +309,7 @@ function AppContent() {
                     {link.label}
                   </span>
                   {isActive && (
-                    <div className={`w-1 h-1 rounded-full bg-${link.color}-500 mt-0.5`} />
+                    <div className="w-1 h-1 rounded-full bg-[var(--foreground)] mt-0.5" />
                   )}
                 </Link>
               );

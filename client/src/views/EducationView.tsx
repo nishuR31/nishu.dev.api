@@ -161,8 +161,8 @@ export default function EducationView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Education...
           </p>
         </div>
@@ -174,13 +174,13 @@ export default function EducationView() {
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl  shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <GraduationCap className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-emerald-500" />
+          <GraduationCap className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-[var(--foreground)]" />
           Education
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={openNewForm}
-            className="btn-shimmer bg-emerald-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
+            className="btn-shimmer bg-[var(--foreground)] text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
           </button>
@@ -200,17 +200,17 @@ export default function EducationView() {
             className={`glass-panel p-6 rounded-3xl  shadow-[0_4px_12px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] hover-lift group relative overflow-hidden flex flex-col duration-300 ${edu.visible === false ? "opacity-50 grayscale-[0.5]" : ""}`}
           >
             <div className="absolute top-0 right-0 p-4 opacity-10 transition-opacity group-hover:opacity-20">
-              <GraduationCap className="w-24 h-24 text-emerald-500" />
+              <GraduationCap className="w-24 h-24 text-[var(--foreground)]" />
             </div>
             <div className="flex-1 relative z-10">
               <h3 className="text-xl font-bold text-[var(--foreground)] mb-1 line-clamp-2">
                 {edu.institution}
               </h3>
-              <p className="text-sm font-medium text-emerald-500 mb-3">
+              <p className="text-sm font-medium text-[var(--foreground)] mb-3">
                 {edu.degree} in {edu.field}
               </p>
 
-              <div className="flex flex-col gap-2 mt-4 text-xs font-semibold text-slate-400">
+              <div className="flex flex-col gap-2 mt-4 text-xs font-semibold text-[var(--muted-foreground)]">
                 {(edu.startDate || edu.endDate) && (
                   <span className="flex items-center gap-1.5">
                     <Calendar className="w-3.5 h-3.5" />
@@ -230,7 +230,7 @@ export default function EducationView() {
               <div className="flex gap-2">
                 <button
                   onClick={() => toggleVisibility(edu)}
-                  className={`p-2.5 rounded-xl transition-colors shadow-sm ${edu.visible !== false ? "text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20 border-emerald-500/20 border" : "text-slate-400 bg-slate-400/10 hover:bg-slate-400/20 border-[var(--border)] border"}`}
+                  className={`p-2.5 rounded-xl transition-colors shadow-sm ${edu.visible !== false ? "text-[var(--foreground)] bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 border-[var(--foreground)]/15 border" : "text-[var(--muted-foreground)] bg-[var(--muted)] hover:bg-[var(--foreground)]/10 border-[var(--border)] border"}`}
                   title="Toggle Visibility"
                 >
                   {edu.visible !== false ? (
@@ -241,13 +241,13 @@ export default function EducationView() {
                 </button>
                 <button
                   onClick={() => handleEdit(edu)}
-                  className="p-2.5 bg-[var(--background)]  hover:border-emerald-500/50 rounded-xl text-slate-400 hover:text-emerald-500 transition-colors shadow-sm"
+                  className="p-2.5 bg-[var(--background)]  hover:border-[var(--foreground)]/50 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors shadow-sm"
                 >
                   <Edit2 className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(edu.id)}
-                  className="p-2.5 bg-[var(--background)]  hover:border-red-500/50 rounded-xl text-slate-400 hover:text-red-500 transition-colors shadow-sm"
+                  className="p-2.5 bg-[var(--background)]  hover:border-[var(--destructive)]/30 rounded-xl text-[var(--muted-foreground)] hover:text-[var(--destructive)] transition-colors shadow-sm"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
@@ -354,7 +354,7 @@ export default function EducationView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-3 rounded-xl bg-emerald-500 text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
+                  className="px-8 py-3 rounded-xl bg-[var(--foreground)] text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

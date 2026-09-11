@@ -159,20 +159,20 @@ export default function ProfileView() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-in fade-in duration-700 pb-20 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-[var(--foreground)] flex items-center gap-2">
-            <User className="w-6 h-6 text-[var(--primary)]" />
+            <User className="w-6 h-6" />
             Admin Profile
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-sm text-[var(--muted-foreground)] mt-1">
             Manage your account security, two-factor authentication, and passkeys.
           </p>
         </div>
         <button
           onClick={handleLogout}
-          className="flex items-center gap-2 px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20 rounded-lg text-sm font-medium transition-all"
+          className="flex items-center gap-2 px-4 py-2 badge-destructive rounded-lg text-sm font-medium transition-all hover:opacity-80"
         >
           <LogOut className="w-4 h-4" />
           Logout
@@ -183,8 +183,8 @@ export default function ProfileView() {
         <div
           className={`p-4 rounded-xl border flex items-center gap-3 text-sm ${
             message.type === "success"
-              ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-500"
-              : "bg-red-500/10 border-red-500/20 text-red-500"
+              ? "badge-success"
+              : "badge-destructive"
           }`}
         >
           {message.type === "success" ? (
@@ -198,16 +198,16 @@ export default function ProfileView() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Profile Info */}
-        <div className="glass-panel  rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-2">
+        <div className="glass-panel rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-2">
           <div className="flex items-center gap-3 mb-6">
-            <div className="floating-gravity w-10 h-10 rounded-full bg-[var(--primary)]/10 flex items-center justify-center">
-              <User className="w-5 h-5 text-[var(--primary)]" />
+            <div className="floating-gravity w-10 h-10 rounded-full bg-[var(--foreground)]/5 flex items-center justify-center">
+              <User className="w-5 h-5 text-[var(--foreground)]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-[var(--foreground)]">
                 Developer Identity
               </h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--muted-foreground)]">
                 Manage your public portfolio details
               </p>
             </div>
@@ -216,69 +216,69 @@ export default function ProfileView() {
           <form onSubmit={handleProfileSubmit} className="space-y-4 flex-1">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-bold opacity-80">Full Name</label>
+                <label className="text-sm font-bold text-[var(--muted-foreground)]">Full Name</label>
                 <input
                   name="name"
                   value={profileData.name}
                   onChange={handleProfileChange}
-                  className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-bold opacity-80">Short Name</label>
+                <label className="text-sm font-bold text-[var(--muted-foreground)]">Short Name</label>
                 <input
                   name="shortName"
                   value={profileData.shortName}
                   onChange={handleProfileChange}
-                  className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-sm font-bold opacity-80">Role</label>
+                <label className="text-sm font-bold text-[var(--muted-foreground)]">Role</label>
                 <input
                   name="role"
                   value={profileData.role}
                   onChange={handleProfileChange}
-                  className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-sm font-bold opacity-80">Location</label>
+                <label className="text-sm font-bold text-[var(--muted-foreground)]">Location</label>
                 <input
                   name="location"
                   value={profileData.location}
                   onChange={handleProfileChange}
-                  className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-bold opacity-80">Tagline</label>
+              <label className="text-sm font-bold text-[var(--muted-foreground)]">Tagline</label>
               <input
                 name="tagline"
                 value={profileData.tagline}
                 onChange={handleProfileChange}
-                className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-bold opacity-80">Bio (Short)</label>
+              <label className="text-sm font-bold text-[var(--muted-foreground)]">Bio (Short)</label>
               <textarea
                 name="bio"
                 value={profileData.bio}
                 onChange={handleProfileChange}
                 rows={3}
-                className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-sm font-bold opacity-80">About (Paragraphs)</label>
+              <label className="text-sm font-bold text-[var(--muted-foreground)]">About (Paragraphs)</label>
               <textarea
                 value={profileData.about.join("\n\n")}
                 onChange={(e) =>
@@ -288,7 +288,7 @@ export default function ProfileView() {
                   })
                 }
                 rows={6}
-                className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
                 placeholder="Separate paragraphs with double newlines"
               />
             </div>
@@ -297,8 +297,9 @@ export default function ProfileView() {
               <button
                 type="submit"
                 disabled={isSavingProfile}
-                className="px-8 py-3 rounded-xl bg-indigo-500 text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50"
+                className="px-8 py-3 rounded-xl bg-[var(--foreground)] text-[var(--background)] hover:scale-105 transition-transform font-bold flex items-center gap-2 shadow-lg disabled:opacity-50"
               >
+                <Save className="w-4 h-4" />
                 {isSavingProfile ? "Saving..." : "Save Profile"}
               </button>
             </div>
@@ -306,16 +307,16 @@ export default function ProfileView() {
         </div>
 
         {/* Social Links */}
-        <div className="glass-panel  rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-1">
+        <div className="glass-panel rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-1">
           <div className="flex items-center gap-3 mb-6">
-            <div className="floating-gravity w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-              <Globe className="w-5 h-5 text-blue-500" />
+            <div className="floating-gravity w-10 h-10 rounded-full bg-[var(--foreground)]/5 flex items-center justify-center">
+              <Globe className="w-5 h-5 text-[var(--foreground)]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-[var(--foreground)]">
                 Social Links
               </h2>
-              <p className="text-xs text-slate-500">Manage your social profiles</p>
+              <p className="text-xs text-[var(--muted-foreground)]">Manage your social profiles</p>
             </div>
           </div>
 
@@ -334,12 +335,12 @@ export default function ProfileView() {
                 "hackerone",
               ].map((key) => (
                 <div key={key} className="space-y-1.5">
-                  <label className="text-sm font-bold opacity-80 capitalize">{key}</label>
+                  <label className="text-sm font-bold text-[var(--muted-foreground)] capitalize">{key}</label>
                   <input
                     name={key}
                     value={(socialData as any)[key] || ""}
                     onChange={handleSocialChange}
-                    className="w-full bg-[var(--background)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all font-medium"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--foreground)]/20 transition-all font-medium"
                     placeholder={`Enter ${key} ${key === "email" ? "address" : "url/username"}`}
                   />
                 </div>
@@ -350,8 +351,9 @@ export default function ProfileView() {
               <button
                 type="submit"
                 disabled={isSavingSocial}
-                className="px-6 py-2.5 rounded-xl bg-indigo-500 text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 text-sm"
+                className="px-6 py-2.5 rounded-xl bg-[var(--foreground)] text-[var(--background)] hover:scale-105 transition-transform font-bold flex items-center gap-2 shadow-lg disabled:opacity-50 text-sm"
               >
+                <Save className="w-4 h-4" />
                 {isSavingSocial ? "Saving..." : "Save Social Links"}
               </button>
             </div>
@@ -359,37 +361,37 @@ export default function ProfileView() {
         </div>
 
         {/* Security / 2FA */}
-        <div className="glass-panel  rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-1">
+        <div className="glass-panel rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-1">
           <div className="flex items-center gap-3 mb-6">
-            <div className="floating-gravity w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center">
-              <Shield className="w-5 h-5 text-amber-500" />
+            <div className="floating-gravity w-10 h-10 rounded-full bg-[var(--foreground)]/5 flex items-center justify-center">
+              <Shield className="w-5 h-5 text-[var(--foreground)]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-[var(--foreground)]">
                 Security Center
               </h2>
-              <p className="text-xs text-slate-500">2FA & Recovery</p>
+              <p className="text-xs text-[var(--muted-foreground)]">2FA & Recovery</p>
             </div>
           </div>
 
           <div className="space-y-4 flex-1">
             {is2FAEnabled ? (
               <div className="flex flex-col h-full justify-between items-start gap-4">
-                <div className="flex items-center gap-2 text-emerald-500 bg-emerald-500/10 px-3 py-1.5 rounded-lg text-sm font-medium">
+                <div className="flex items-center gap-2 badge-success px-3 py-1.5 rounded-lg text-sm font-medium">
                   <CheckCircle2 className="w-4 h-4" />
                   2FA is currently enabled
                 </div>
                 <button
                   onClick={handleDisable2FA}
                   disabled={loading}
-                  className="px-4 py-2 bg-[var(--background)]  hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-500 rounded-lg text-sm font-medium transition-all"
+                  className="px-4 py-2 bg-[var(--background)] border border-[var(--border)] hover:border-[var(--destructive)]/30 hover:text-[var(--destructive)] rounded-lg text-sm font-medium transition-all"
                 >
                   Disable 2FA
                 </button>
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                <p className="text-sm text-slate-400">
+                <p className="text-sm text-[var(--muted-foreground)]">
                   Secure your account with TOTP two-factor authentication (e.g. Google
                   Authenticator, Authy).
                 </p>
@@ -397,14 +399,14 @@ export default function ProfileView() {
                   <button
                     onClick={handleSetup2FA}
                     disabled={loading}
-                    className="self-start flex items-center gap-2 px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-all shadow-md"
+                    className="self-start flex items-center gap-2 px-4 py-2 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium transition-all shadow-md hover:opacity-90"
                   >
                     <KeyRound className="w-4 h-4" />
                     Setup 2FA
                   </button>
                 ) : (
-                  <div className="p-4 bg-[var(--background)]  rounded-xl flex flex-col items-center gap-4">
-                    <p className="text-xs text-center text-slate-400">
+                  <div className="p-4 bg-[var(--background)] border border-[var(--border)] rounded-xl flex flex-col items-center gap-4">
+                    <p className="text-xs text-center text-[var(--muted-foreground)]">
                       Scan this QR code with your authenticator app
                     </p>
                     <div className="bg-white p-2 rounded-xl">
@@ -419,7 +421,7 @@ export default function ProfileView() {
                           "success",
                         );
                       }}
-                      className="w-full py-2 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg text-sm font-medium transition-all shadow-md"
+                      className="w-full py-2 bg-[var(--foreground)] text-[var(--background)] rounded-lg text-sm font-medium transition-all shadow-md hover:opacity-90"
                     >
                       I have scanned the code
                     </button>
@@ -431,14 +433,14 @@ export default function ProfileView() {
         </div>
 
         {/* Passkeys */}
-        <div className="glass-panel  rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-2">
+        <div className="glass-panel rounded-2xl p-6 shadow-sm flex flex-col h-full lg:col-span-2">
           <div className="flex items-center gap-3 mb-6">
-            <div className="floating-gravity w-10 h-10 rounded-full bg-indigo-500/10 flex items-center justify-center">
-              <Fingerprint className="w-5 h-5 text-indigo-500" />
+            <div className="floating-gravity w-10 h-10 rounded-full bg-[var(--foreground)]/5 flex items-center justify-center">
+              <Fingerprint className="w-5 h-5 text-[var(--foreground)]" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-[var(--foreground)]">Passkeys</h2>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-[var(--muted-foreground)]">
                 Passwordless login using biometrics or security keys
               </p>
             </div>

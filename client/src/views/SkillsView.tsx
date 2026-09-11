@@ -39,8 +39,8 @@ export default function SkillsView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Skills...
           </p>
         </div>
@@ -52,7 +52,7 @@ export default function SkillsView() {
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <Target className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-indigo-500" />
+          <Target className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-[var(--foreground)]" />
           Skills & Categories
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
@@ -81,7 +81,7 @@ export default function SkillsView() {
                 <h3 className="text-xl font-bold text-[var(--foreground)]">
                   {cat.title}
                 </h3>
-                <p className="text-sm text-slate-400">{cat.description}</p>
+                <p className="text-sm text-[var(--muted-foreground)]">{cat.description}</p>
               </div>
             </div>
 
@@ -96,7 +96,7 @@ export default function SkillsView() {
                     <span className="text-xs opacity-50">{s.level}</span>
                     {s.hot && (
                       <span
-                        className="w-2 h-2 rounded-full bg-red-500"
+                        className="w-2 h-2 rounded-full bg-[var(--destructive)]"
                         title="Hot Skill"
                       ></span>
                     )}

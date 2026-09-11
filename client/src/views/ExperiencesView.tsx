@@ -193,8 +193,8 @@ export default function ExperiencesView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--foreground)] text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Experiences...
           </p>
         </div>
@@ -206,13 +206,13 @@ export default function ExperiencesView() {
     <div className="space-y-4 sm:space-y-6 animate-in fade-in duration-700 pb-24 md:pb-0">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 glass-premium p-4 sm:p-6 rounded-2xl sm:rounded-3xl shadow-sm">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-bold flex items-center gradient-heading gap-2 sm:gap-3">
-          <Briefcase className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-purple-500" />
+          <Briefcase className="floating-gravity w-6 h-6 sm:w-8 sm:h-8 text-[var(--foreground)]" />
           Experiences
         </h2>
         <div className="flex items-center gap-2 sm:gap-3">
           <button
             onClick={openNewForm}
-            className="btn-shimmer bg-purple-500 text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
+            className="btn-shimmer bg-[var(--foreground)] text-[var(--background)] px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl sm:rounded-2xl flex items-center gap-1.5 sm:gap-2 hover:scale-105 transition-transform font-semibold shadow-md text-sm sm:text-base"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5" /> Add
           </button>
@@ -241,15 +241,15 @@ export default function ExperiencesView() {
                     className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-contain bg-white/5 p-1  shrink-0"
                   />
                 ) : (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20 shrink-0">
-                    <Building className="w-5 h-5 sm:w-6 sm:h-6 text-purple-500" />
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-[var(--foreground)]/5 flex items-center justify-center border border-[var(--border)] shrink-0">
+                    <Building className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--foreground)]" />
                   </div>
                 )}
                 <div className="min-w-0">
                   <h3 className="text-base sm:text-lg md:text-2xl font-bold text-[var(--foreground)] flex items-center gap-2 truncate">
                     <span className="truncate">{exp.position}</span>
                     {exp.isCurrent && (
-                      <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-purple-500/10 text-purple-500 border border-purple-500/20 whitespace-nowrap uppercase tracking-wider shrink-0">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-sm bg-[var(--foreground)]/5 text-[var(--foreground)] border border-[var(--border)] whitespace-nowrap uppercase tracking-wider shrink-0">
                         Current
                       </span>
                     )}
@@ -258,7 +258,7 @@ export default function ExperiencesView() {
                     href={exp.companyUrl || "#"}
                     target="_blank"
                     rel="noreferrer"
-                    className="text-purple-500 font-bold flex items-center gradient-heading gap-1.5 mt-0.5 sm:mt-1 hover:underline text-sm sm:text-base truncate"
+                    className="text-[var(--foreground)] font-bold flex items-center gradient-heading gap-1.5 mt-0.5 sm:mt-1 hover:underline text-sm sm:text-base truncate"
                   >
                     {exp.company}
                   </a>
@@ -267,7 +267,7 @@ export default function ExperiencesView() {
               <div className="flex gap-1.5 sm:gap-2 shrink-0 self-end sm:self-start">
                 <button
                   onClick={() => toggleVisibility(exp)}
-                  className={`p-2 sm:p-2.5 rounded-xl transition-colors ${exp.visible !== false ? "text-emerald-500 bg-emerald-500/10 hover:bg-emerald-500/20" : "text-slate-400 bg-slate-400/10 hover:bg-slate-400/20"}`}
+                  className={`p-2 sm:p-2.5 rounded-xl transition-colors ${exp.visible !== false ? "text-[var(--foreground)] bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/20" : "text-[var(--muted-foreground)] bg-[var(--muted)] hover:bg-[var(--foreground)]/10"}`}
                   title="Toggle Visibility"
                 >
                   {exp.visible !== false ? (
@@ -278,20 +278,20 @@ export default function ExperiencesView() {
                 </button>
                 <button
                   onClick={() => handleEdit(exp)}
-                  className="p-2 sm:p-2.5 bg-purple-500/10 rounded-xl hover:bg-purple-500/20 text-purple-500 transition-colors"
+                  className="p-2 sm:p-2.5 bg-[var(--foreground)]/5 rounded-xl hover:bg-[var(--foreground)]/20 text-[var(--foreground)] transition-colors"
                 >
                   <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
                 <button
                   onClick={() => handleDelete(exp.id)}
-                  className="p-2 sm:p-2.5 bg-red-500/10 rounded-xl hover:bg-red-500/20 text-red-500 transition-colors"
+                  className="p-2 sm:p-2.5 bg-[var(--destructive)]/10 rounded-xl hover:bg-[var(--destructive)]/20 text-[var(--destructive)] transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm opacity-60 mb-4 sm:mb-6 font-semibold">
+            <div className="flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-[var(--muted-foreground)] mb-4 sm:mb-6 font-semibold">
               <span className="flex items-center gap-1 sm:gap-1.5 bg-[var(--background)] px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg ">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4" /> {exp.period}
               </span>
@@ -452,7 +452,7 @@ export default function ExperiencesView() {
                   type="checkbox"
                   id="isCurrent"
                   {...register("isCurrent")}
-                  className="w-5 h-5 rounded border-[var(--border)] text-purple-500 focus:ring-purple-500 bg-[var(--background)]"
+                  className="w-5 h-5 rounded border-[var(--border)] text-[var(--foreground)] focus:ring-purple-500 bg-[var(--background)]"
                 />
                 <label
                   htmlFor="isCurrent"
@@ -473,7 +473,7 @@ export default function ExperiencesView() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-8 py-3 rounded-xl bg-purple-500 text-white hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
+                  className="px-8 py-3 rounded-xl bg-[var(--foreground)] text-[var(--background)] hover:scale-105 transition-transform font-bold flex items-center gradient-heading gap-2 shadow-lg disabled:opacity-50 disabled:hover:scale-100"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-5 h-5 animate-spin" />

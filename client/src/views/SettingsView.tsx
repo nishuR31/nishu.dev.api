@@ -123,8 +123,8 @@ export default function SettingsView() {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="h-12 w-12 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-4"></div>
-          <p className="text-[var(--foreground)] opacity-60 font-medium tracking-wide">
+          <div className="h-12 w-12 border-4 border-[var(--foreground)] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-[var(--muted-foreground)] font-medium tracking-wide">
             Loading Settings...
           </p>
         </div>
@@ -139,7 +139,7 @@ export default function SettingsView() {
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">
           System Settings
         </h2>
-        <p className="text-sm sm:text-base md:text-lg text-[var(--foreground)] opacity-60">
+        <p className="text-sm sm:text-base md:text-lg text-[var(--muted-foreground)]">
           Manage global application parameters and maintenance operations.
         </p>
       </header>
@@ -147,14 +147,14 @@ export default function SettingsView() {
       {/* General Settings */}
       <form onSubmit={handleSettingsSubmit(onSettingsSave)}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[200px]">
-          {/* Basic Info */}
-          <div className="p-8 glass-panel rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between relative overflow-hidden group">
+          {/* Maintenance Mode */}
+          <div className="p-8 glass-panel rounded-3xl hover-lift flex flex-col justify-between relative overflow-hidden group">
             <div
-              className={`absolute -right-12 -top-12 w-48 h-48 rounded-full blur-3xl transition-colors duration-700 ${maintenanceMode ? "bg-red-500/20" : "bg-slate-500/10"}`}
+              className={`absolute -right-12 -top-12 w-48 h-48 rounded-full blur-3xl transition-colors duration-700 ${maintenanceMode ? "bg-[var(--destructive)] opacity-[0.08]" : "bg-[var(--foreground)] opacity-[0.03]"}`}
             ></div>
             <div className="flex items-center justify-between relative z-10">
               <div
-                className={`p-4 rounded-2xl ${maintenanceMode ? "bg-red-500/10 text-red-500" : "bg-[var(--foreground)]/5 text-[var(--foreground)]/60"} transition-colors`}
+                className={`p-4 rounded-2xl transition-colors ${maintenanceMode ? "bg-[var(--destructive)]/10 text-[var(--destructive)]" : "bg-[var(--foreground)]/5 text-[var(--muted-foreground)]"}`}
               >
                 <ShieldAlert className="w-8 h-8" />
               </div>
@@ -175,7 +175,7 @@ export default function SettingsView() {
                     disabled={savingSettings}
                     className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-300 ${
                       savingSettings ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                    } ${field.value ? "bg-red-500" : "bg-slate-300 dark:bg-slate-700"}`}
+                    } ${field.value ? "bg-[var(--destructive)]" : "bg-[var(--border)]"}`}
                   >
                     <span
                       className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ${
@@ -188,7 +188,7 @@ export default function SettingsView() {
             </div>
             <div className="relative z-10">
               <h3 className="text-2xl font-bold mb-1">Maintenance Mode</h3>
-              <p className="text-[var(--foreground)] opacity-60 text-sm">
+              <p className="text-[var(--muted-foreground)] text-sm">
                 {maintenanceMode
                   ? "Active: Public API access is currently blocked."
                   : "Inactive: Site is live and accessible to the public."}
@@ -196,24 +196,24 @@ export default function SettingsView() {
             </div>
           </div>
 
-          {/* Account Details */}
-          <div className="p-8 glass-panel rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
-            <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-700"></div>
+          {/* Site Configuration */}
+          <div className="p-8 glass-panel rounded-3xl hover-lift flex flex-col justify-between group relative overflow-hidden">
+            <div className="absolute -right-12 -bottom-12 w-48 h-48 bg-[var(--foreground)] opacity-[0.03] rounded-full blur-3xl group-hover:opacity-[0.06] transition-colors duration-700"></div>
             <div className="flex items-center gap-4 mb-4 relative z-10">
-              <div className="p-4 rounded-2xl bg-blue-500/10 text-blue-500">
+              <div className="p-4 rounded-2xl bg-[var(--foreground)]/5 text-[var(--foreground)]">
                 <Globe className="w-8 h-8" />
               </div>
               <h3 className="text-2xl font-bold">Site Configuration</h3>
             </div>
 
             <div className="relative z-10">
-              <label className="block text-sm font-semibold opacity-80 mb-2 uppercase tracking-wider">
+              <label className="block text-sm font-semibold text-[var(--muted-foreground)] mb-2 uppercase tracking-wider">
                 Site Name
               </label>
               <input
                 type="text"
                 {...regSettings("siteName")}
-                className="w-full bg-[var(--background)]  p-4 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all shadow-sm font-medium"
+                className="w-full bg-[var(--background)] border border-[var(--border)] p-4 rounded-2xl focus:ring-2 focus:ring-[var(--foreground)]/30 focus:border-[var(--foreground)]/30 outline-none transition-all shadow-sm font-medium"
                 placeholder="e.g. nishu.dev"
               />
             </div>
@@ -244,22 +244,22 @@ export default function SettingsView() {
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight mb-1 sm:mb-2">
             Security & Integration
           </h2>
-          <p className="text-sm sm:text-base md:text-lg text-[var(--foreground)] opacity-60">
+          <p className="text-sm sm:text-base md:text-lg text-[var(--muted-foreground)]">
             Manage your credentials, 2FA, Passkeys, and external API Stats.
           </p>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Password Security */}
-          <div className="p-8 glass-panel rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group">
-            <div className="absolute -right-12 -top-12 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-all duration-700"></div>
+          {/* Social Stats Sync */}
+          <div className="p-8 glass-panel rounded-3xl hover-lift relative overflow-hidden group">
+            <div className="absolute -right-12 -top-12 w-48 h-48 bg-[var(--foreground)] opacity-[0.03] rounded-full blur-3xl group-hover:opacity-[0.06] transition-all duration-700"></div>
             <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className="p-4 rounded-2xl bg-emerald-500/10 text-emerald-500">
+              <div className="p-4 rounded-2xl bg-[var(--foreground)]/5 text-[var(--foreground)]">
                 <Globe className="w-6 h-6" />
               </div>
               <div>
                 <h3 className="text-xl font-bold">Social Stats Sync</h3>
-                <p className="text-xs opacity-60 mt-1">
+                <p className="text-xs text-[var(--muted-foreground)] mt-1">
                   Force update GitHub & LeetCode data
                 </p>
               </div>
@@ -283,7 +283,7 @@ export default function SettingsView() {
                     );
                   }
                 }}
-                className="w-full mt-2 py-3 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-semibold rounded-xl transition-colors"
+                className="w-full mt-2 py-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)] font-semibold rounded-xl transition-colors"
               >
                 Force Sync External Stats
               </button>
@@ -310,10 +310,10 @@ export default function SettingsView() {
             </div>
           </div>
 
-          {/* Data Controls */}
-          <div className="p-8 glass-panel rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden">
+          {/* Change Password */}
+          <div className="p-8 glass-panel rounded-3xl hover-lift relative overflow-hidden">
             <div className="flex items-center gap-4 mb-6 relative z-10">
-              <div className="p-4 rounded-2xl bg-amber-500/10 text-amber-500">
+              <div className="p-4 rounded-2xl bg-[var(--foreground)]/5 text-[var(--foreground)]">
                 <KeyRound className="w-6 h-6" />
               </div>
               <h3 className="text-xl font-bold">Change Password</h3>
@@ -324,36 +324,36 @@ export default function SettingsView() {
               onSubmit={handlePasswordSubmit(onPasswordSave)}
             >
               <div>
-                <label className="block text-sm font-medium opacity-80 mb-1.5 ml-1">
+                <label className="block text-sm font-medium text-[var(--muted-foreground)] mb-1.5 ml-1">
                   Current Password
                 </label>
                 <input
                   type="password"
                   {...regPassword("currentPassword")}
-                  className="w-full bg-[var(--background)]  px-4 py-3 rounded-xl focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all text-sm"
+                  className="w-full bg-[var(--background)] border border-[var(--border)] px-4 py-3 rounded-xl focus:ring-1 focus:ring-[var(--foreground)]/30 outline-none transition-all text-sm"
                   placeholder="••••••••"
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium opacity-80 mb-1.5 ml-1">
+                  <label className="block text-sm font-medium text-[var(--muted-foreground)] mb-1.5 ml-1">
                     New Password
                   </label>
                   <input
                     type="password"
                     {...regPassword("newPassword")}
-                    className="w-full bg-[var(--background)]  px-4 py-3 rounded-xl focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all text-sm"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] px-4 py-3 rounded-xl focus:ring-1 focus:ring-[var(--foreground)]/30 outline-none transition-all text-sm"
                     placeholder="••••••••"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium opacity-80 mb-1.5 ml-1">
+                  <label className="block text-sm font-medium text-[var(--muted-foreground)] mb-1.5 ml-1">
                     Confirm New
                   </label>
                   <input
                     type="password"
                     {...regPassword("confirmPassword")}
-                    className="w-full bg-[var(--background)]  px-4 py-3 rounded-xl focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all text-sm"
+                    className="w-full bg-[var(--background)] border border-[var(--border)] px-4 py-3 rounded-xl focus:ring-1 focus:ring-[var(--foreground)]/30 outline-none transition-all text-sm"
                     placeholder="••••••••"
                   />
                 </div>
@@ -361,7 +361,7 @@ export default function SettingsView() {
               <button
                 type="submit"
                 disabled={savingPassword}
-                className="w-full mt-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 font-semibold rounded-xl transition-colors disabled:opacity-50"
+                className="w-full mt-4 py-3 bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 text-[var(--foreground)] font-semibold rounded-xl transition-colors disabled:opacity-50"
               >
                 {savingPassword ? "Updating..." : "Update Password"}
               </button>
@@ -370,28 +370,28 @@ export default function SettingsView() {
 
           <div className="space-y-8">
             {/* TOTP Section */}
-            <div className="p-8 glass-panel rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col justify-between group">
+            <div className="p-8 glass-panel rounded-3xl hover-lift flex flex-col justify-between group">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-4">
                   <div
-                    className={`p-4 rounded-2xl ${totpEnabled ? "bg-emerald-500/10 text-emerald-500" : "bg-slate-500/10 text-slate-500"} transition-colors`}
+                    className={`p-4 rounded-2xl transition-colors ${totpEnabled ? "bg-[var(--success)]/10 text-[var(--success)]" : "bg-[var(--foreground)]/5 text-[var(--muted-foreground)]"}`}
                   >
                     <ShieldCheck className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="text-xl font-bold">Two-Factor Auth</h3>
-                    <p className="text-sm opacity-60">Use an authenticator app</p>
+                    <p className="text-sm text-[var(--muted-foreground)]">Use an authenticator app</p>
                   </div>
                 </div>
                 <button
                   onClick={handleEnable2FA}
                   disabled={isGeneratingTotp}
                   className={`relative inline-flex h-8 w-16 items-center rounded-full transition-colors duration-300 ${
-                    totpEnabled ? "bg-emerald-500" : "bg-slate-300 dark:bg-slate-700"
+                    totpEnabled ? "bg-[var(--foreground)]" : "bg-[var(--border)]"
                   }`}
                 >
                   <span
-                    className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 ${
+                    className={`inline-block h-6 w-6 transform rounded-full bg-[var(--background)] transition-transform duration-300 ${
                       totpEnabled ? "translate-x-9" : "translate-x-1"
                     }`}
                   />
@@ -399,21 +399,21 @@ export default function SettingsView() {
               </div>
 
               {qrCodeUrl && (
-                <div className="mt-6 p-6 border border-emerald-500/20 bg-emerald-500/5 rounded-2xl flex flex-col items-center text-center animate-in slide-in-from-top-4 duration-500">
+                <div className="mt-6 p-6 border border-[var(--border)] bg-[var(--muted)] rounded-2xl flex flex-col items-center text-center animate-in slide-in-from-top-4 duration-500">
                   <div className="p-3 bg-white rounded-xl shadow-sm mb-4">
                     <img src={qrCodeUrl} alt="TOTP QR Code" className="w-40 h-40" />
                   </div>
-                  <h4 className="font-semibold text-emerald-600 dark:text-emerald-400">
+                  <h4 className="font-semibold text-[var(--foreground)]">
                     Scan this QR Code
                   </h4>
-                  <p className="text-sm opacity-80 mt-1 max-w-[250px]">
+                  <p className="text-sm text-[var(--muted-foreground)] mt-1 max-w-[250px]">
                     Scan this code with Google Authenticator or Authy to complete setup.
                   </p>
-                  <div className="mt-4 p-3 bg-white/50 dark:bg-black/20 rounded-lg w-full">
-                    <p className="text-xs uppercase tracking-wider font-semibold opacity-50 mb-1">
+                  <div className="mt-4 p-3 bg-[var(--background)] rounded-lg w-full border border-[var(--border)]">
+                    <p className="text-xs uppercase tracking-wider font-semibold text-[var(--muted-foreground)] mb-1">
                       Manual Secret
                     </p>
-                    <code className="text-sm tracking-widest font-mono text-emerald-600 dark:text-emerald-400 select-all">
+                    <code className="text-sm tracking-widest font-mono text-[var(--foreground)] select-all">
                       {totpSecret}
                     </code>
                   </div>
@@ -422,14 +422,14 @@ export default function SettingsView() {
             </div>
 
             {/* Passkey Section */}
-            <div className="p-8 glass-panel rounded-3xl shadow-[0_4px_24px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.08)] transition-all duration-300">
+            <div className="p-8 glass-panel rounded-3xl hover-lift">
               <div className="flex items-center gap-4 mb-4">
-                <div className="p-4 rounded-2xl bg-purple-500/10 text-purple-500">
+                <div className="p-4 rounded-2xl bg-[var(--foreground)]/5 text-[var(--foreground)]">
                   <Fingerprint className="w-6 h-6" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold">Passkeys</h3>
-                  <p className="text-sm opacity-60">Biometric & hardware auth</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">Biometric & hardware auth</p>
                 </div>
               </div>
 
@@ -445,7 +445,7 @@ export default function SettingsView() {
       {toast && (
         <div className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-300">
           <div
-            className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border ${toast.type === "success" ? "bg-green-500/10 border-green-500/20 text-green-500" : "bg-red-500/10 border-red-500/20 text-red-500"} backdrop-blur-xl`}
+            className={`flex items-center gap-3 px-6 py-4 rounded-2xl shadow-2xl border backdrop-blur-xl ${toast.type === "success" ? "badge-success" : "badge-destructive"}`}
           >
             {toast.type === "success" ? (
               <CheckCircle2 className="w-6 h-6" />
