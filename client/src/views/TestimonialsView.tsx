@@ -49,11 +49,14 @@ export default function TestimonialsView() {
 
   useEffect(() => {
     fetchTestimonials();
+    const handleRefresh = () => fetchTestimonials();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchTestimonials = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setTestimonials(response.data.data.testimonials || []);
     } catch (error) {
       console.error("Failed to fetch testimonials", error);

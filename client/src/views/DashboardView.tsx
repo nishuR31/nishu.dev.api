@@ -38,7 +38,7 @@ export default function DashboardView() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setData(response.data.data);
     } catch (error) {
       console.error("Failed to fetch portfolio data", error);
@@ -50,6 +50,9 @@ export default function DashboardView() {
 
   useEffect(() => {
     fetchData();
+    const handleRefresh = () => fetchData();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const handleSeedDatabase = async () => {

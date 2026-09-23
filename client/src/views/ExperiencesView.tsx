@@ -62,11 +62,14 @@ export default function ExperiencesView() {
 
   useEffect(() => {
     fetchExperiences();
+    const handleRefresh = () => fetchExperiences();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchExperiences = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setExperiences(response.data.data.experiences || []);
     } catch (error) {
       console.error("Failed to fetch experiences", error);

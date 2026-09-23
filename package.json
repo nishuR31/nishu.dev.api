@@ -39,6 +39,7 @@
     "dotenv": "^17.3.1",
     "fastify": "^5.10.0",
     "fastify-plugin": "^6.0.0",
+    "fastify-socket.io": "^5.1.0",
     "lucide-react": "^1.39.0",
     "otplib": "12.0.1",
     "prisma": "5.22.0",
@@ -48,6 +49,8 @@
     "react-hook-form": "^7.54.1",
     "react-router-dom": "^7.18.3",
     "sharp": "^0.35.4",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
     "status-map": "^1.0.7",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.5.4"

@@ -57,11 +57,14 @@ export default function CertificatesView() {
 
   useEffect(() => {
     fetchCertificates();
+    const handleRefresh = () => fetchCertificates();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchCertificates = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setCertificates(response.data.data.certificates || []);
     } catch (error) {
       console.error("Failed to fetch certificates", error);

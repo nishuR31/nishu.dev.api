@@ -52,11 +52,14 @@ export default function EducationView() {
 
   useEffect(() => {
     fetchEducation();
+    const handleRefresh = () => fetchEducation();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchEducation = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setEducation(response.data.data.education || []);
     } catch (error) {
       console.error("Failed to fetch education", error);

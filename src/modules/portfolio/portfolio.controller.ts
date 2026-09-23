@@ -212,17 +212,30 @@ export class PortfolioController {
       const CACHE_KEY = "portfolio_data";
 
       const processResponse = (data: any) => {
-        if (data && data.maintenanceMode) {
-          // Strip out sensitive portfolio sections if in maintenance mode
+        let processedData = data;
+        if (processedData && processedData.maintenanceMode) {
           return {
             maintenanceMode: true,
-            siteName: data.siteName,
-            name: data.name,
-            developer: data.developer,
-            social: data.social,
+            siteName: processedData.siteName,
+            name: processedData.name,
+            developer: processedData.developer,
+            social: processedData.social,
           };
         }
-        return data;
+        
+        if (processedData) {
+          processedData = {
+            ...processedData,
+            projects: processedData.projects?.filter((i: any) => i.visible !== false) || [],
+            experiences: processedData.experiences?.filter((i: any) => i.visible !== false) || [],
+            certificates: processedData.certificates?.filter((i: any) => i.visible !== false) || [],
+            services: processedData.services?.filter((i: any) => i.visible !== false) || [],
+            testimonials: processedData.testimonials?.filter((i: any) => i.visible !== false) || [],
+            education: processedData.education?.filter((i: any) => i.visible !== false) || [],
+            featuredProjects: processedData.projects?.filter((p: any) => p.featured && p.visible !== false).map((p: any) => p.title) || [],
+          };
+        }
+        return processedData;
       };
 
       if (redis) {
@@ -270,6 +283,40 @@ export class PortfolioController {
           success: false,
           statusCode: 500,
           message: "Error fetching portfolio data.",
+          errors: error,
+        });
+    }
+  }
+
+  static async getAdminPortfolio(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const snapshot = await prisma.portfolioSnapshot.findFirst({
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!snapshot || !snapshot.data) {
+        return reply
+          .code(404)
+          .send({
+            success: false,
+            statusCode: 404,
+            message: "Portfolio snapshot not found. Please publish first.",
+          });
+      }
+
+      return reply.send({
+        success: true,
+        statusCode: 200,
+        message: "Admin Portfolio fetched successfully",
+        data: snapshot.data,
+      });
+    } catch (error) {
+      return reply
+        .code(500)
+        .send({
+          success: false,
+          statusCode: 500,
+          message: "Error fetching admin portfolio data.",
           errors: error,
         });
     }
@@ -393,6 +440,15 @@ export class PortfolioController {
         });
         if (portfolio) {
           await PortfolioController.autoSyncSnapshot(portfolio.id, redis);
+          
+          // Emit socket event to notify connected clients to refresh data
+          const io = (req.server as any).io;
+          if (io) {
+            io.emit("dataRefresh", {
+              timestamp: new Date().toISOString(),
+              message: "Portfolio data updated",
+            });
+          }
         }
       }
     } catch (e) {

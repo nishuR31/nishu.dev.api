@@ -41,11 +41,14 @@ export default function ServicesView() {
 
   useEffect(() => {
     fetchServices();
+    const handleRefresh = () => fetchServices();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchServices = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setServices(response.data.data.services || []);
     } catch (error) {
       console.error("Failed to fetch services", error);

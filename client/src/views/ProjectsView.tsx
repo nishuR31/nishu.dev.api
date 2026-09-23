@@ -76,11 +76,14 @@ export default function ProjectsView() {
 
   useEffect(() => {
     fetchProjects();
+    const handleRefresh = () => fetchProjects();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchProjects = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setProjects(response.data.data.projects || []);
     } catch (error) {
       console.error("Failed to fetch projects", error);

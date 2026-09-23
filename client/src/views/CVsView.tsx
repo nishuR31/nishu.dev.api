@@ -47,11 +47,14 @@ export default function CVsView() {
 
   useEffect(() => {
     fetchCvs();
+    const handleRefresh = () => fetchCvs();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchCvs = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setCvs(response.data.data.cvs || []);
     } catch (error) {
       console.error("Failed to fetch CVs", error);

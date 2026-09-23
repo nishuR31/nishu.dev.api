@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { io } from "socket.io-client";
 import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import {
   Moon,
@@ -64,10 +65,30 @@ function AppContent() {
     }
   }, [darkMode]);
 
+  // Connect to Socket.io for real-time updates
+  useEffect(() => {
+    // Assuming backend is on the same origin (or configure appropriate URL)
+    const socket = io();
+
+    socket.on("connect", () => {
+      console.log("Connected to real-time sync:", socket.id);
+    });
+
+    socket.on("dataRefresh", (data) => {
+      console.log("Real-time data refresh event received:", data);
+      // Dispatch a custom event so child views can listen and refetch
+      window.dispatchEvent(new CustomEvent("portfolio-data-refresh"));
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
   // Fetch portfolio data for dynamic CRM name
   useEffect(() => {
     axios
-      .get("/api/portfolio")
+      .get("/api/portfolio/admin")
       .then((res) => {
         const data = res.data?.data;
         if (data?.developer?.shortName) {

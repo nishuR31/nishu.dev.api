@@ -4,6 +4,13 @@ import { PortfolioController } from "./portfolio.controller";
 export default async function portfolioRoutes(fastify: FastifyInstance) {
   // Public Route
   fastify.get("/", PortfolioController.getPortfolio);
+  
+  // Admin Route
+  fastify.get(
+    "/admin",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.getAdminPortfolio
+  );
 
   // Profile & Social
   fastify.post(

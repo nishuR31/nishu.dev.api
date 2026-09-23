@@ -22,6 +22,7 @@ import fastifyStatic from "@fastify/static";
 import fastifyRedis from "@fastify/redis";
 import fastifyMultipart from "@fastify/multipart";
 import path from "path";
+import fastifySocketIo from "fastify-socket.io";
 
 app.register(authPlugin);
 app.register(fastifyMultipart);
@@ -29,6 +30,22 @@ app.register(fastifyMultipart);
 if (REDIS) {
   app.register(fastifyRedis, { url: REDIS });
 }
+
+app.register(fastifySocketIo, {
+  cors: {
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  },
+});
+
+app.ready().then(() => {
+  app.io.on("connection", (socket: any) => {
+    console.log("Socket connected:", socket.id);
+    socket.on("disconnect", () => {
+      console.log("Socket disconnected:", socket.id);
+    });
+  });
+});
 
 app.addHook("onRequest", async (request, reply) => {
   // Allow API routes to be public (auth middleware will protect specific routes)

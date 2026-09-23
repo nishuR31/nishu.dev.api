@@ -10,11 +10,14 @@ export default function SkillsView() {
 
   useEffect(() => {
     fetchSkills();
+    const handleRefresh = () => fetchSkills();
+    window.addEventListener("portfolio-data-refresh", handleRefresh);
+    return () => window.removeEventListener("portfolio-data-refresh", handleRefresh);
   }, []);
 
   const fetchSkills = async () => {
     try {
-      const response = await axios.get("/api/portfolio");
+      const response = await axios.get("/api/portfolio/admin");
       setSkillsCategories(response.data.data.skills || []);
     } catch (error) {
       console.error("Failed to fetch skills", error);
