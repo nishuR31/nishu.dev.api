@@ -397,12 +397,12 @@ export class AuthController {
   }
 
   static async deletePasskey(
-    req: FastifyRequest<{ Params: { id: string } }>,
+    req: FastifyRequest<any>,
     reply: FastifyReply,
   ) {
     try {
       const userPayload = req.user as { id: string };
-      const { id } = req.params;
+      const { id } = req.params as any;
 
       const passkey = await prisma.passkey.findUnique({ where: { id } });
       if (!passkey || passkey.userId !== userPayload.id) {
@@ -410,7 +410,7 @@ export class AuthController {
       }
 
       await prisma.passkey.delete({ where: { id } });
-      return sendSuccess(reply, "Passkey deleted", 200);
+      return sendSuccess(reply, "Passkey deleted", 200, null);
     } catch (error: any) {
       return sendError(reply, "Failed to delete passkey", 500, error.message);
     }

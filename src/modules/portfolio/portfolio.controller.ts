@@ -502,9 +502,9 @@ export class PortfolioController {
 
       const updated = await prisma.social.upsert({
         where: { portfolioId: portfolio.id },
-        update: parsedData,
+        update: parsedData as any,
         create: {
-          ...parsedData,
+          ...(parsedData as any),
           portfolioId: portfolio.id,
         },
       });

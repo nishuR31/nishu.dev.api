@@ -1,9 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import config, { Config } from "../data";
+import config from "../data";
 import { sendSuccess } from "../utils/common/response";
 
 export const portfolio = async (req: FastifyRequest, res: FastifyReply) => {
-  const result: Config = config;
+  const result = config;
   sendSuccess(res, "Portfolio fetched successfully", 200, result);
 };
 

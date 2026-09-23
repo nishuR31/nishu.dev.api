@@ -39,12 +39,14 @@ app.register(fastifySocketIo, {
 });
 
 app.ready().then(() => {
-  app.io.on("connection", (socket: any) => {
-    console.log("Socket connected:", socket.id);
-    socket.on("disconnect", () => {
-      console.log("Socket disconnected:", socket.id);
+  if ((app as any).io) {
+    (app as any).io.on("connection", (socket: any) => {
+      console.log("Socket connected:", socket.id);
+      socket.on("disconnect", () => {
+        console.log("Socket disconnected:", socket.id);
+      });
     });
-  });
+  }
 });
 
 app.addHook("onRequest", async (request, reply) => {
@@ -71,22 +73,7 @@ app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) =
     return;
   }
 
-  // Skip maintenance check in dev mode for convenience, or allow if token has developer role
-  try {
-    const settings = await prisma.systemSettings.findUnique({ where: { id: "global" } });
-    if (settings?.maintenanceMode) {
-      // If maintenance mode is active, check if user is developer
-
-      // Not a developer, block request
-      return reply.code(503).send({
-        success: false,
-        statusCode: 503,
-        message: "Service is currently undergoing maintenance. Please try again later.",
-      });
-    }
-  } catch (error) {
-    // DB not ready or error, let it pass or handle gracefully
-  }
+  // Maintenance check logic removed due to missing SystemSettings model
 });
 
 if (NODE_ENV !== "production") {

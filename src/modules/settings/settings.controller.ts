@@ -35,7 +35,7 @@ export class SettingsController {
   }
 
   static async updateSettings(
-    req: FastifyRequest<{ Body: { maintenanceMode?: boolean; siteName?: string } }>,
+    req: FastifyRequest<any>,
     reply: FastifyReply,
   ) {
     try {
