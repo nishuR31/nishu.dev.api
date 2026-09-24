@@ -13,7 +13,6 @@ import {
   CVSchema,
 } from "./portfolio.schema";
 import { StorageProvider } from "../../providers/storage.provider";
-import config from "../../data/index";
 
 async function fetchSocialStats(social: any) {
   const stats: any = {};
@@ -28,7 +27,7 @@ async function fetchSocialStats(social: any) {
         const parts = url.pathname.split("/").filter(Boolean);
         return parts.length > 0 ? parts[0] : input;
       }
-    } catch (e) {}
+    } catch (e) { }
     return input.replace(/^@/, "");
   };
 
@@ -222,7 +221,7 @@ export class PortfolioController {
             social: processedData.social,
           };
         }
-        
+
         if (processedData) {
           processedData = {
             ...processedData,
@@ -440,7 +439,7 @@ export class PortfolioController {
         });
         if (portfolio) {
           await PortfolioController.autoSyncSnapshot(portfolio.id, redis);
-          
+
           // Emit socket event to notify connected clients to refresh data
           const io = (req.server as any).io;
           if (io) {
@@ -1089,184 +1088,7 @@ export class PortfolioController {
   }
 
   // --- Database Seed ---
-  static async seedDatabase(req: FastifyRequest, reply: FastifyReply) {
-    try {
-      const userPayload = req.user as { id: string };
 
-      // Check if data already exists
-      const existing = await prisma.portfolioData.findUnique({
-        where: { userId: userPayload.id },
-      });
-      if (existing) {
-        return reply
-          .code(400)
-          .send({ success: false, message: "Portfolio already seeded" });
-      }
-
-      // Start transaction
-      const portfolio = await prisma.$transaction(
-        async (tx) => {
-          // Create base portfolio
-          const p = await tx.portfolioData.create({
-            data: {
-              userId: userPayload.id,
-              name: config.developer.name,
-              shortName: config.developer.shortName,
-              role: config.developer.role,
-              tagline: config.developer.tagline,
-              bio: config.developer.bio,
-              location: config.developer.location,
-              email: config.developer.email,
-              about: config.developer.about,
-              recentTracks: config.recentTracks,
-            },
-          });
-
-          // Add Social
-          await tx.social.create({
-            data: {
-              portfolioId: p.id,
-              email: config.social.email,
-              github: config.social.github,
-              linkedin: config.social.linkedin,
-              discord: config.social.discord,
-              twitter: config.social.twitter,
-              leetcode: config.social.leetcode,
-              hackerone: config.social.hackerone,
-            },
-          });
-
-          // Add NavItems
-          if (config.NAV_ITEMS) {
-            for (const item of config.NAV_ITEMS) {
-              await tx.navItem.create({
-                data: {
-                  portfolioId: p.id,
-                  href: item.href,
-                  label: item.label,
-                },
-              });
-            }
-          }
-
-          // Add Projects
-          if (config.projects) {
-            for (const proj of config.projects) {
-              await tx.project.create({
-                data: {
-                  portfolioId: p.id,
-                  title: proj.title,
-                  description: proj.description,
-                  image: proj.image,
-                  technologies: proj.technologies,
-                  github: proj.github,
-                  demo: proj.demo,
-                  problem: proj.problem,
-                  solution: proj.solution,
-                  role: proj.role,
-                  timeline: proj.timeline,
-                  highlights: proj.highlights,
-                  categories: proj.categories,
-                  featured: config.featuredProjects.includes(proj.title),
-                },
-              });
-            }
-          }
-
-          // Add Skills
-          if (config.skills) {
-            for (const skillCat of config.skills) {
-              const cat = await tx.skillCategory.create({
-                data: {
-                  portfolioId: p.id,
-                  title: skillCat.title,
-                  iconKey: skillCat.iconKey,
-                  description: skillCat.description,
-                  bgClass: skillCat.bgClass,
-                  iconClass: skillCat.iconClass,
-                },
-              });
-
-              for (const skill of skillCat.skills) {
-                await tx.skill.create({
-                  data: {
-                    skillCategoryId: cat.id,
-                    name: skill.name,
-                    level: skill.level,
-                    hot: skill.hot || false,
-                  },
-                });
-              }
-            }
-          }
-
-          // Add Experiences
-          if (config.experiences) {
-            for (const exp of config.experiences) {
-              await tx.experience.create({
-                data: {
-                  portfolioId: p.id,
-                  position: exp.position,
-                  company: exp.company,
-                  period: exp.period,
-                  location: exp.location ?? "",
-                  description: exp.description ?? "",
-                  responsibilities: exp.responsibilities,
-                  technologies: exp.technologies,
-                },
-              });
-            }
-          }
-
-          // Add Certificates
-          if (config.certificates) {
-            for (const cert of config.certificates) {
-              await tx.certificate.create({
-                data: {
-                  portfolioId: p.id,
-                  certId: cert.id ?? "",
-                  title: cert.title,
-                  url: cert.url,
-                  type: cert.type,
-                },
-              });
-            }
-          }
-
-          // Add CVs
-          if (config.cvs) {
-            for (const cv of config.cvs) {
-              await tx.cV.create({
-                data: {
-                  portfolioId: p.id,
-                  cvId: cv.id,
-                  title: cv.title,
-                  url: cv.url,
-                  description: cv.description,
-                  lastUpdated: cv.lastUpdated ?? "",
-                },
-              });
-            }
-          }
-
-          return p;
-        },
-        { timeout: 30000, maxWait: 10000 },
-      );
-
-      await PortfolioController.invalidateCache(req);
-      return reply.send({
-        success: true,
-        message: "Database seeded successfully",
-        data: portfolio,
-      });
-    } catch (e: any) {
-      console.error(e);
-      return reply
-        .code(500)
-        .send({ success: false, message: "Failed to seed database", errors: e.message });
-    }
-  }
 
   // --- Skills CRUD ---
 

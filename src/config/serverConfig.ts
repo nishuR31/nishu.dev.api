@@ -3,8 +3,6 @@ import cors from "@fastify/cors";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { sendSuccess } from "../utils/common/response";
-import { health, ping, portfolio } from "../controllers/authController";
-import PublicRoutes from "../routes/public/publicRoutes";
 import { NODE_ENV, CORS_ORIGIN, REDIS } from "./envConfig";
 
 let app = fastify({ logger: true, exposeHeadRoutes: true });
@@ -16,8 +14,9 @@ app.register(cors, { origin: allowedOrigins, credentials: true });
 import authPlugin from "../plugins/auth.plugin";
 import authRoutes from "../modules/auth/auth.routes";
 import portfolioRoutes from "../modules/portfolio/portfolio.routes";
+import serverRoutes from "../modules/server/server.routes"
 import settingsRoutes from "../modules/settings/settings.routes";
-import prisma from "../providers/db.provider";
+import llmRoutes from "../modules/llm/llm.routes";
 import fastifyStatic from "@fastify/static";
 import fastifyRedis from "@fastify/redis";
 import fastifyMultipart from "@fastify/multipart";
@@ -68,7 +67,8 @@ app.addHook("preHandler", async (request: FastifyRequest, reply: FastifyReply) =
     request.url.startsWith("/api/settings") ||
     request.url.startsWith("/admin") ||
     request.url.startsWith("/assets") ||
-    request.url.startsWith("/api/portfolio")
+    request.url.startsWith("/api/portfolio") ||
+    request.url.startsWith("/api/llm")
   ) {
     return;
   }
@@ -105,18 +105,13 @@ app.get("/admin", (req: FastifyRequest, reply: FastifyReply) => {
   reply.redirect("/admin/");
 });
 
-app.register(PublicRoutes);
 app.register(authRoutes, { prefix: "/api/auth" });
 app.register(portfolioRoutes, { prefix: "/api/portfolio" });
 app.register(settingsRoutes, { prefix: "/api/settings" });
+app.register(llmRoutes, { prefix: "/api/llm" });
 
-app.get("/", (req: FastifyRequest, res: FastifyReply) => {
-  return sendSuccess(res, "Server Fired Up", 200, {
-    Uptime: process.uptime(),
-    Date: new Date().toLocaleString(),
-    Documentation: "/docs",
-  });
-});
+app.register(serverRoutes);
+
 
 export default app;
 export type { app };

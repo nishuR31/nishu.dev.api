@@ -20,6 +20,7 @@ try {
   console.warn("Invalid BACKEND_URL provided, defaulting derived domains to localhost");
 }
 
+export const GOOGLE_API_KEY: string = process.env.GOOGLE_API_KEY || "";
 export const COOKIE_DOMAIN: string = process.env.COOKIE_DOMAIN || derivedDomain;
 export const RP_ID: string = process.env.RP_ID || derivedDomain;
 export const FRONTEND_URL: string = process.env.FRONTEND_URL || "http://localhost:3000";

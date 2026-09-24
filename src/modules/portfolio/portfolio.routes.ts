@@ -4,7 +4,7 @@ import { PortfolioController } from "./portfolio.controller";
 export default async function portfolioRoutes(fastify: FastifyInstance) {
   // Public Route
   fastify.get("/", PortfolioController.getPortfolio);
-  
+
   // Admin Route
   fastify.get(
     "/admin",
@@ -28,11 +28,7 @@ export default async function portfolioRoutes(fastify: FastifyInstance) {
     { preValidation: [fastify.authorizeDeveloper] },
     PortfolioController.updateSocial,
   );
-  fastify.post(
-    "/seed",
-    { preValidation: [fastify.authorizeDeveloper] },
-    PortfolioController.seedDatabase,
-  );
+
   fastify.post(
     "/social/sync-stats",
     { preValidation: [fastify.authorizeDeveloper] },
