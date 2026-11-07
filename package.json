@@ -18,9 +18,6 @@
     "seed:force": "FORCE_SEED=true bun run prisma/seed.ts",
     "vectorize": "bun run src/modules/llm/index.ts --reindex"
   },
-  "prisma": {
-    "seed": "bun run prisma/seed.ts"
-  },
   "keywords": [],
   "author": "nishur31",
   "license": "ISC",

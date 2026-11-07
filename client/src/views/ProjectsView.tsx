@@ -403,7 +403,7 @@ export default function ProjectsView() {
                   </div>
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold mb-1 sm:mb-1.5 opacity-80">
-                      Laptop and mobile image URLs
+                      Project image URLs
                     </label>
                     <textarea
                       {...register("images")}
@@ -411,6 +411,10 @@ export default function ProjectsView() {
                       rows={2}
                       className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl  bg-[var(--background)] outline-none focus:border-[var(--foreground)]/30 focus:ring-1 focus:ring-[var(--foreground)]/30 transition-all text-sm sm:text-base"
                     />
+                    <p className="mt-1 text-[11px] leading-4 text-[var(--muted-foreground)]">
+                      First line: laptop/desktop. Second line: mobile. You can also
+                      separate URLs with a comma. Maximum 2 URLs.
+                    </p>
                   </div>
                   <div>
                     <label className="block text-xs sm:text-sm font-semibold mb-1 sm:mb-1.5 opacity-80">

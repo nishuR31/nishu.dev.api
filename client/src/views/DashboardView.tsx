@@ -98,7 +98,7 @@ export default function DashboardView() {
     };
 
     try {
-      await axios.post("/api/portfolio/profile", payload);
+      await axios.put("/api/portfolio/profile", payload);
       setData((prev: any) => ({ ...prev, [field]: !currentValue }));
       showToast("Visibility updated", "success");
     } catch (error) {
