@@ -19,9 +19,7 @@ import prisma from "../../providers/db.provider";
 dotenv.config();
 
 if (!process.env.GOOGLE_API_KEY) {
-  console.error("Error: GOOGLE_API_KEY is not set in your .env file!");
-  console.error("Get a free API key here: https://aistudio.google.com/app/apikey");
-  process.exit(1);
+  console.warn("Warning: GOOGLE_API_KEY is not set in your .env file. LLM capabilities may be limited.");
 }
 
 Settings.chunkSize = 8192;

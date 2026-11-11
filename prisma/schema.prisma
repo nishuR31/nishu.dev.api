@@ -219,16 +219,65 @@ model Service {
 }
 
 model Testimonial {
-  id            String @id @default(uuid())
-  authorName    String
-  authorRole    String
-  authorCompany String?
-  content       String
-  avatarUrl     String?
-  visible       Boolean @default(true)
+  id                            String    @id @default(uuid())
+  authorName                    String
+  authorRole                    String
+  authorCompany                 String?
+  content                       String
+  avatarUrl                     String?
+  visible                       Boolean   @default(true)
+  email                         String?
+  emailNormalized               String?
+  relationship                  String?   @default("Collaborator")
+  rating                        Int       @default(5)
+  status                        String    @default("PENDING") // PENDING | APPROVED | REJECTED | FLAGGED
+  emailVerifiedAt               DateTime?
+  genuineExperienceConfirmedAt  DateTime?
+  publicDisplayConsentAt        DateTime?
+  consentPolicyVersion          String?   @default("v1.0")
+  source                        String    @default("PUBLIC_LINK") // PUBLIC_LINK | INVITATION | ADMIN
+  invitationId                  String?
+  moderationNote                String?
+  riskScore                     Int?      @default(0)
+  reviewedByAdminId             String?
+  reviewedAt                    DateTime?
+  publishedAt                   DateTime?
+  createdAt                     DateTime  @default(now())
+  updatedAt                     DateTime  @default(now()) @updatedAt
 
-  portfolioId   String
-  portfolio     PortfolioData @relation(fields: [portfolioId], references: [id])
+  portfolioId                   String
+  portfolio                     PortfolioData @relation(fields: [portfolioId], references: [id])
+}
+
+model TestimonialInvitation {
+  id               String    @id @default(uuid())
+  tokenHash        String    @unique
+  emailNormalized  String?
+  expiresAt        DateTime
+  consumedAt       DateTime?
+  revokedAt        DateTime?
+  createdByAdminId String?
+  createdAt        DateTime  @default(now())
+}
+
+model TestimonialVerificationChallenge {
+  id           String    @id @default(uuid())
+  email        String
+  emailDigest  String
+  codeHash     String
+  expiresAt    DateTime
+  consumedAt   DateTime?
+  attemptCount Int       @default(0)
+  createdAt    DateTime  @default(now())
+}
+
+model TestimonialSettings {
+  id                   String   @id @default(uuid())
+  collectionEnabled    Boolean  @default(true)
+  emailVerificationReq Boolean  @default(true)
+  autoPublish          Boolean  @default(false)
+  duplicateDetection   Boolean  @default(true)
+  updatedAt            DateTime @updatedAt
 }
 
 model Education {

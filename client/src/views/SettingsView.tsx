@@ -231,16 +231,35 @@ export default function SettingsView() {
               <h3 className="text-2xl font-bold">Site Configuration</h3>
             </div>
 
-            <div className="relative z-10">
-              <label className="block text-sm font-semibold text-[var(--muted-foreground)] mb-2 uppercase tracking-wider">
-                Site Name
-              </label>
-              <input
-                type="text"
-                {...regSettings("siteName")}
-                className="w-full bg-[var(--background)] border border-[var(--border)] p-4 rounded-2xl focus:ring-2 focus:ring-[var(--foreground)]/30 focus:border-[var(--foreground)]/30 outline-none transition-all shadow-sm font-medium"
-                placeholder="e.g. nishu.dev"
-              />
+            <div className="relative z-10 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-[var(--muted-foreground)] mb-2 uppercase tracking-wider">
+                  Site Name
+                </label>
+                <input
+                  type="text"
+                  {...regSettings("siteName")}
+                  className="w-full bg-[var(--background)] border border-[var(--border)] p-4 rounded-2xl focus:ring-2 focus:ring-[var(--foreground)]/30 focus:border-[var(--foreground)]/30 outline-none transition-all shadow-sm font-medium"
+                  placeholder="e.g. nishu.dev"
+                />
+              </div>
+
+              <div className="flex items-center justify-between p-4 bg-[var(--foreground)]/5 border border-[var(--border)] rounded-2xl">
+                <div>
+                  <span className="text-xs font-semibold text-[var(--muted-foreground)] uppercase tracking-wider block">
+                    System & Engine Version
+                  </span>
+                  <span className="text-lg font-mono font-bold text-[var(--foreground)]">
+                    v1.0.0
+                  </span>
+                  <p className="text-xs text-[var(--muted-foreground)] mt-0.5">
+                    Synchronized across package.json, robots.txt, and settings
+                  </p>
+                </div>
+                <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-xs font-semibold rounded-full border border-emerald-500/20">
+                  Synced (v1.0.0)
+                </span>
+              </div>
             </div>
           </div>
         </div>

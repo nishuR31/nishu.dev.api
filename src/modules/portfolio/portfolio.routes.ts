@@ -142,7 +142,50 @@ export default async function portfolioRoutes(fastify: FastifyInstance) {
     PortfolioController.bulkUpdateCVs,
   );
 
-  // Testimonials
+  // Testimonials Public Workflow
+  fastify.get("/testimonials/config", PortfolioController.getPublicTestimonialConfig);
+  fastify.post("/testimonials/verification", PortfolioController.startEmailVerification);
+  fastify.post("/testimonials/verification/confirm", PortfolioController.confirmEmailVerification);
+  fastify.post("/testimonials/submit", PortfolioController.submitPublicTestimonial);
+
+  // Testimonials Admin & Moderation
+  fastify.get(
+    "/testimonials/admin",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.getAdminTestimonials,
+  );
+  fastify.patch(
+    "/testimonials/:id/moderation",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.moderateTestimonial,
+  );
+  fastify.post(
+    "/testimonials/invitations",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.createInvitation,
+  );
+  fastify.get(
+    "/testimonials/invitations",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.listInvitations,
+  );
+  fastify.post(
+    "/testimonials/invitations/:id/revoke",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.revokeInvitation,
+  );
+  fastify.get(
+    "/testimonials/settings",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.getTestimonialSettings,
+  );
+  fastify.patch(
+    "/testimonials/settings",
+    { preValidation: [fastify.authorizeDeveloper] },
+    PortfolioController.updateTestimonialSettings,
+  );
+
+  // Testimonials CRUD (Legacy/Direct)
   fastify.post(
     "/testimonials",
     { preValidation: [fastify.authorizeDeveloper] },

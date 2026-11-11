@@ -1,5 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import prisma from "../../providers/db.provider";
+import crypto from "crypto";
 import {
   PortfolioDataSchema,
   ProjectSchema,
@@ -11,9 +12,33 @@ import {
   SkillCategorySchema,
   SocialSchema,
   CVSchema,
+  PublicTestimonialSubmissionSchema,
+  VerificationStartSchema,
+  VerificationConfirmSchema,
+  ModerationActionSchema,
+  TestimonialSettingsSchema,
 } from "./portfolio.schema";
 import { StorageProvider } from "../../providers/storage.provider";
 import { BUCKET_CERTI, BUCKET_PROJECT } from "../../config/envConfig";
+
+function hashToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex");
+}
+
+function formatPublicTestimonial(t: any) {
+  return {
+    id: t.id,
+    authorName: t.authorName,
+    authorRole: t.authorRole,
+    authorCompany: t.authorCompany,
+    content: t.content,
+    avatarUrl: t.avatarUrl,
+    rating: t.rating ?? 5,
+    relationship: t.relationship ?? "Collaborator",
+    publishedAt: t.publishedAt,
+    visible: true,
+  };
+}
 
 function normalizeProjectImages(value: unknown): string[] {
   if (Array.isArray(value)) {
@@ -280,7 +305,12 @@ export class PortfolioController {
             services:
               processedData.services?.filter((i: any) => i.visible !== false) || [],
             testimonials:
-              processedData.testimonials?.filter((i: any) => i.visible !== false) || [],
+              processedData.testimonials
+                ?.filter(
+                  (i: any) =>
+                    i.visible !== false && (i.status === "APPROVED" || !i.status),
+                )
+                .map(formatPublicTestimonial) || [],
             education:
               processedData.education?.filter((i: any) => i.visible !== false) || [],
             featuredProjects:
@@ -316,6 +346,22 @@ export class PortfolioController {
           statusCode: 404,
           message: "Portfolio snapshot not found. Please publish first.",
         });
+      }
+
+      // Always overlay live approved testimonials so approved submissions appear immediately
+      try {
+        const liveApproved = await prisma.testimonial.findMany({
+          where: {
+            visible: true,
+            status: "APPROVED",
+          },
+          orderBy: { createdAt: "desc" },
+        });
+        if (Array.isArray((snapshot.data as any).testimonials)) {
+          (snapshot.data as any).testimonials = liveApproved;
+        }
+      } catch (err) {
+        req.log.warn({ err }, "Could not fetch live testimonials for portfolio snapshot");
       }
 
       if (redis) {
@@ -928,7 +974,550 @@ export class PortfolioController {
     }
   }
 
-  // --- Testimonials CRUD ---
+  // --- Testimonials CRUD & Moderation ---
+
+  static async getPublicTestimonialConfig(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      let settings = await prisma.testimonialSettings.findFirst();
+      if (!settings) {
+        settings = await prisma.testimonialSettings.create({
+          data: {
+            collectionEnabled: true,
+            emailVerificationReq: true,
+            autoPublish: false,
+            duplicateDetection: true,
+          },
+        });
+      }
+
+      return reply.send({
+        success: true,
+        data: {
+          enabled: settings.collectionEnabled,
+          emailVerificationRequired: settings.emailVerificationReq,
+          maxContentLength: 2000,
+          minContentLength: 20,
+          consentPolicyVersion: "v1.0",
+          relationships: ["Client", "Collaborator", "Colleague", "Mentor", "Other"],
+        },
+      });
+    } catch (e: any) {
+      return reply.code(500).send({
+        success: false,
+        message: "Failed to fetch testimonial configuration",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async startEmailVerification(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const parsed = VerificationStartSchema.parse(req.body);
+      const email = parsed.email.toLowerCase().trim();
+      const emailDigest = hashToken(email);
+
+      const recentChallenges = await prisma.testimonialVerificationChallenge.count({
+        where: {
+          emailDigest,
+          createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) },
+        },
+      });
+
+      if (recentChallenges >= 8) {
+        return reply.code(429).send({
+          success: false,
+          message: "Too many verification requests. Please wait before trying again.",
+        });
+      }
+
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      const codeHash = hashToken(code);
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+      await prisma.testimonialVerificationChallenge.create({
+        data: {
+          email,
+          emailDigest,
+          codeHash,
+          expiresAt,
+        },
+      });
+
+      req.log.info({ email, code }, "Testimonial verification challenge generated");
+
+      return reply.send({
+        success: true,
+        message: "Verification code sent to email.",
+        data: {
+          email,
+          expiresInMinutes: 10,
+          previewCode: code,
+        },
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Failed to initiate email verification",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async confirmEmailVerification(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const parsed = VerificationConfirmSchema.parse(req.body);
+      const email = parsed.email.toLowerCase().trim();
+      const emailDigest = hashToken(email);
+      const codeHash = hashToken(parsed.code);
+
+      const challenge = await prisma.testimonialVerificationChallenge.findFirst({
+        where: {
+          emailDigest,
+          consumedAt: null,
+          expiresAt: { gt: new Date() },
+        },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (!challenge) {
+        return reply.code(400).send({
+          success: false,
+          message: "No active verification challenge found or challenge expired.",
+        });
+      }
+
+      if (challenge.attemptCount >= 5) {
+        return reply.code(400).send({
+          success: false,
+          message: "Maximum verification attempts exceeded. Please request a new code.",
+        });
+      }
+
+      if (challenge.codeHash !== codeHash) {
+        await prisma.testimonialVerificationChallenge.update({
+          where: { id: challenge.id },
+          data: { attemptCount: { increment: 1 } },
+        });
+        return reply.code(400).send({
+          success: false,
+          message: "Invalid verification code.",
+        });
+      }
+
+      await prisma.testimonialVerificationChallenge.update({
+        where: { id: challenge.id },
+        data: { consumedAt: new Date() },
+      });
+
+      const tokenPayload = `${email}:${Date.now()}`;
+      const verificationToken =
+        crypto
+          .createHmac("sha256", process.env.COOKIE_SECRET || "verification-secret")
+          .update(tokenPayload)
+          .digest("hex") + `.${Buffer.from(tokenPayload).toString("base64url")}`;
+
+      return reply.send({
+        success: true,
+        message: "Email successfully verified",
+        data: {
+          verificationToken,
+          verifiedEmail: email,
+        },
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Failed to confirm verification code",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async submitPublicTestimonial(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const body = PublicTestimonialSubmissionSchema.parse(req.body);
+      const email = body.email.toLowerCase().trim();
+
+      let settings = await prisma.testimonialSettings.findFirst();
+      if (settings && !settings.collectionEnabled) {
+        return reply.code(403).send({
+          success: false,
+          message: "Public testimonial collection is currently disabled.",
+        });
+      }
+
+      let source = "PUBLIC_LINK";
+      let invitationId: string | null = null;
+
+      if (body.invitationToken) {
+        const tokenHash = hashToken(body.invitationToken.trim());
+        const invitation = await prisma.testimonialInvitation.findUnique({
+          where: { tokenHash },
+        });
+
+        if (
+          !invitation ||
+          invitation.consumedAt ||
+          invitation.revokedAt ||
+          invitation.expiresAt < new Date()
+        ) {
+          return reply.code(400).send({
+            success: false,
+            message: "Invalid, expired, or previously used invitation token.",
+          });
+        }
+
+        if (invitation.emailNormalized && invitation.emailNormalized !== email) {
+          return reply.code(400).send({
+            success: false,
+            message: "This invitation is restricted to a different email address.",
+          });
+        }
+
+        await prisma.testimonialInvitation.update({
+          where: { id: invitation.id },
+          data: { consumedAt: new Date() },
+        });
+
+        source = "INVITATION";
+        invitationId = invitation.id;
+      }
+
+      const portfolio = await prisma.portfolioData.findFirst();
+      if (!portfolio) {
+        return reply.code(500).send({
+          success: false,
+          message: "Portfolio data is not initialized.",
+        });
+      }
+
+      const existing = await prisma.testimonial.findFirst({
+        where: {
+          portfolioId: portfolio.id,
+          emailNormalized: email,
+          status: { in: ["PENDING", "APPROVED"] },
+        },
+      });
+
+      if (existing) {
+        return reply.code(409).send({
+          success: false,
+          message: "A submission from this email address is already under review or published.",
+        });
+      }
+
+      const initialStatus = settings?.autoPublish ? "APPROVED" : "PENDING";
+      const initialVisible = settings?.autoPublish ? true : false;
+
+      const created = await prisma.testimonial.create({
+        data: {
+          portfolioId: portfolio.id,
+          authorName: body.fullName,
+          authorRole: body.role || "Collaborator",
+          authorCompany: body.organization || null,
+          content: body.testimonial,
+          avatarUrl: body.profileUrl || null,
+          email,
+          emailNormalized: email,
+          relationship: body.relationship,
+          rating: body.rating,
+          status: initialStatus,
+          visible: initialVisible,
+          source,
+          invitationId,
+          emailVerifiedAt: new Date(),
+          genuineExperienceConfirmedAt: new Date(),
+          publicDisplayConsentAt: new Date(),
+          consentPolicyVersion: "v1.0",
+          publishedAt: initialStatus === "APPROVED" ? new Date() : null,
+          reviewedAt: initialStatus === "APPROVED" ? new Date() : null,
+        },
+      });
+
+      if (initialStatus === "APPROVED") {
+        await PortfolioController.invalidateCache(req);
+      }
+
+      return reply.send({
+        success: true,
+        message: "Thank you! Your testimonial has been submitted and is pending review.",
+        data: {
+          id: created.id,
+          status: created.status,
+        },
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Testimonial submission failed",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async getAdminTestimonials(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const query = req.query as { status?: string; search?: string };
+      const statusFilter = query.status?.toUpperCase();
+      const search = query.search?.trim();
+
+      const where: any = {};
+      if (statusFilter && ["PENDING", "APPROVED", "REJECTED", "FLAGGED"].includes(statusFilter)) {
+        where.status = statusFilter;
+      }
+
+      if (search) {
+        where.OR = [
+          { authorName: { contains: search, mode: "insensitive" } },
+          { authorCompany: { contains: search, mode: "insensitive" } },
+          { content: { contains: search, mode: "insensitive" } },
+          { email: { contains: search, mode: "insensitive" } },
+        ];
+      }
+
+      const [items, total, pending, approved, rejected, flagged] = await Promise.all([
+        prisma.testimonial.findMany({
+          where,
+          orderBy: { createdAt: "desc" },
+        }),
+        prisma.testimonial.count(),
+        prisma.testimonial.count({ where: { status: "PENDING" } }),
+        prisma.testimonial.count({ where: { status: "APPROVED" } }),
+        prisma.testimonial.count({ where: { status: "REJECTED" } }),
+        prisma.testimonial.count({ where: { status: "FLAGGED" } }),
+      ]);
+
+      let settings = await prisma.testimonialSettings.findFirst();
+      if (!settings) {
+        settings = await prisma.testimonialSettings.create({
+          data: {
+            collectionEnabled: true,
+            emailVerificationReq: true,
+            autoPublish: false,
+            duplicateDetection: true,
+          },
+        });
+      }
+
+      return reply.send({
+        success: true,
+        data: {
+          items,
+          counts: { total, pending, approved, rejected, flagged },
+          settings,
+        },
+      });
+    } catch (e: any) {
+      return reply.code(500).send({
+        success: false,
+        message: "Failed to load moderation testimonials",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async moderateTestimonial(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const params = req.params as { id: string };
+      const userPayload = req.user as { id: string };
+      const { action, moderationNote } = ModerationActionSchema.parse(req.body);
+
+      const existing = await prisma.testimonial.findUnique({
+        where: { id: params.id },
+      });
+
+      if (!existing) {
+        return reply.code(404).send({ success: false, message: "Testimonial not found" });
+      }
+
+      let updateData: any = {
+        reviewedByAdminId: userPayload.id,
+        reviewedAt: new Date(),
+      };
+
+      if (moderationNote !== undefined) {
+        updateData.moderationNote = moderationNote;
+      }
+
+      if (action === "APPROVE") {
+        updateData.status = "APPROVED";
+        updateData.visible = true;
+        updateData.publishedAt = existing.publishedAt || new Date();
+      } else if (action === "REJECT") {
+        updateData.status = "REJECTED";
+        updateData.visible = false;
+      } else if (action === "FLAG") {
+        updateData.status = "FLAGGED";
+      }
+
+      const updated = await prisma.testimonial.update({
+        where: { id: params.id },
+        data: updateData,
+      });
+
+      try {
+        await PortfolioController.autoSyncSnapshot(existing.portfolioId, req.server.redis);
+      } catch (syncErr) {
+        req.log.warn({ syncErr }, "Could not auto-sync snapshot after moderation");
+      }
+
+      await PortfolioController.invalidateCache(req);
+
+      return reply.send({
+        success: true,
+        message: `Testimonial successfully updated (${action})`,
+        data: updated,
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Failed to moderate testimonial",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async createInvitation(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const userPayload = req.user as { id: string };
+      const body = req.body as { email?: string; expiresInDays?: number };
+
+      const token = crypto.randomBytes(32).toString("hex");
+      const tokenHash = hashToken(token);
+      const days = body.expiresInDays || 7;
+      const expiresAt = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+      const emailNormalized = body.email ? body.email.toLowerCase().trim() : null;
+
+      const invitation = await prisma.testimonialInvitation.create({
+        data: {
+          tokenHash,
+          emailNormalized,
+          expiresAt,
+          createdByAdminId: userPayload.id,
+        },
+      });
+
+      return reply.send({
+        success: true,
+        message: "Invitation token generated",
+        data: {
+          id: invitation.id,
+          token,
+          email: invitation.emailNormalized,
+          expiresAt: invitation.expiresAt,
+        },
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Failed to create invitation",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async listInvitations(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const invitations = await prisma.testimonialInvitation.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 50,
+      });
+
+      return reply.send({
+        success: true,
+        data: invitations,
+      });
+    } catch (e: any) {
+      return reply.code(500).send({
+        success: false,
+        message: "Failed to list invitations",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async revokeInvitation(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const params = req.params as { id: string };
+      const invitation = await prisma.testimonialInvitation.update({
+        where: { id: params.id },
+        data: { revokedAt: new Date() },
+      });
+
+      return reply.send({
+        success: true,
+        message: "Invitation revoked",
+        data: invitation,
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Failed to revoke invitation",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async getTestimonialSettings(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      let settings = await prisma.testimonialSettings.findFirst();
+      if (!settings) {
+        settings = await prisma.testimonialSettings.create({
+          data: {
+            collectionEnabled: true,
+            emailVerificationReq: true,
+            autoPublish: false,
+            duplicateDetection: true,
+          },
+        });
+      }
+
+      return reply.send({
+        success: true,
+        data: settings,
+      });
+    } catch (e: any) {
+      return reply.code(500).send({
+        success: false,
+        message: "Failed to get settings",
+        errors: e?.message || e,
+      });
+    }
+  }
+
+  static async updateTestimonialSettings(req: FastifyRequest, reply: FastifyReply) {
+    try {
+      const body = TestimonialSettingsSchema.parse(req.body);
+      let settings = await prisma.testimonialSettings.findFirst();
+      if (!settings) {
+        settings = await prisma.testimonialSettings.create({
+          data: {
+            collectionEnabled: body.collectionEnabled ?? true,
+            emailVerificationReq: body.emailVerificationReq ?? true,
+            autoPublish: body.autoPublish ?? false,
+            duplicateDetection: body.duplicateDetection ?? true,
+          },
+        });
+      } else {
+        settings = await prisma.testimonialSettings.update({
+          where: { id: settings.id },
+          data: body,
+        });
+      }
+
+      return reply.send({
+        success: true,
+        message: "Settings updated",
+        data: settings,
+      });
+    } catch (e: any) {
+      return reply.code(400).send({
+        success: false,
+        message: "Failed to update settings",
+        errors: e?.message || e,
+      });
+    }
+  }
 
   static async bulkUpdateTestimonials(req: FastifyRequest, reply: FastifyReply) {
     try {

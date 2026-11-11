@@ -79,12 +79,57 @@ export const ServiceSchema = z.object({
 });
 
 export const TestimonialSchema = z.object({
-  authorName: z.string(),
-  authorRole: z.string(),
-  authorCompany: z.string().optional().nullable(),
-  content: z.string(),
-  avatarUrl: z.string().optional().nullable(),
+  authorName: z.string().min(2).max(100),
+  authorRole: z.string().max(100).optional().default("Collaborator"),
+  authorCompany: z.string().max(100).optional().nullable(),
+  content: z.string().min(10).max(2500),
+  avatarUrl: z.string().url().optional().nullable().or(z.literal("")),
   visible: z.boolean().default(true).optional(),
+  rating: z.number().int().min(1).max(5).default(5).optional(),
+  relationship: z.string().max(50).default("Collaborator").optional(),
+  email: z.string().email().optional().nullable(),
+  status: z.enum(["PENDING", "APPROVED", "REJECTED", "FLAGGED"]).default("APPROVED").optional(),
+  moderationNote: z.string().max(1000).optional().nullable(),
+});
+
+export const PublicTestimonialSubmissionSchema = z.object({
+  fullName: z.string().trim().min(2, "Name must be at least 2 characters").max(100),
+  email: z.string().trim().email("Invalid email address"),
+  role: z.string().trim().max(100).optional().nullable(),
+  organization: z.string().trim().max(100).optional().nullable(),
+  relationship: z.enum(["Client", "Collaborator", "Colleague", "Mentor", "Other"]),
+  rating: z.number().int().min(1).max(5),
+  testimonial: z.string().trim().min(20, "Testimonial must be at least 20 characters").max(2000),
+  profileUrl: z.string().trim().url("Must be a valid URL").optional().nullable().or(z.literal("")),
+  verificationToken: z.string().min(1, "Verification token is required").optional(),
+  invitationToken: z.string().optional().nullable(),
+  genuineExperienceConfirmed: z.literal(true, {
+    message: "You must confirm genuine experience",
+  }),
+  publicDisplayConsent: z.literal(true, {
+    message: "You must consent to public display",
+  }),
+});
+
+export const VerificationStartSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+});
+
+export const VerificationConfirmSchema = z.object({
+  email: z.string().trim().email("Invalid email address"),
+  code: z.string().trim().length(6, "Verification code must be 6 digits"),
+});
+
+export const ModerationActionSchema = z.object({
+  action: z.enum(["APPROVE", "REJECT", "FLAG", "UPDATE_NOTE"]),
+  moderationNote: z.string().max(1000).optional().nullable(),
+});
+
+export const TestimonialSettingsSchema = z.object({
+  collectionEnabled: z.boolean().optional(),
+  emailVerificationReq: z.boolean().optional(),
+  autoPublish: z.boolean().optional(),
+  duplicateDetection: z.boolean().optional(),
 });
 
 export const EducationSchema = z.object({
